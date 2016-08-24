@@ -1,0 +1,8 @@
+<%if @errors.size > 0 %>
+	$("#address_error").html("<%= @errors %>");
+	$("#address_error").show();
+<% else %>
+	$("#personal_address").html("<%= escape_javascript(render 'personal_address_detail') %>")
+	$('#modal-window').modal('toggle');
+<% end %>
+$(".ajax-loading").hide();

@@ -1,0 +1,25 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Edit Security pin</h4>
+    </div>
+    <%= simple_form_for(@user, url: update_security_pin_user_path(@user), remote: true, :html => { :method => :put }) do |f| %>
+      <div class="modal-body">
+          <p style="display:none;" class="alert alert-warning" id="error_msg"></p>
+          <div class="form-group">
+            <div class="span3 offset1"><%= f.label :"Security pin" %></div>
+            <div>
+              <%= f.input :security_pin, :as => :text, :label=>false, :input_html=>{:class=>"form-control"}, placeholder: "Please enter 6 digit security_pin " %>
+            </div>
+          </div>
+          <br>
+          <div class="row-fluid">
+            <div class="span3 offset1">&nbsp;</div>
+            <div class="span8"><%= f.submit "Submit", :class=>"btn btn-primary" %></div>
+          </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+

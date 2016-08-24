@@ -1,0 +1,54 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;</h4>
+    </div>
+    
+    <div class="modal-body">
+      <div id="error_msg_social"></div>
+       <div class="container-fluid">
+        <div class="row">
+          <p>
+          <%if @trans.present? %>
+            <p>
+              <strong> Transaction ID: # <%=@trans.transaction_id%>  COMPLETED</strong> 
+            </p>
+            <p>
+              <strong>Withdrawl To : </strong> <%= @trans.payment_method
+            </p>
+            <p>
+              <strong>Total Debited :</strong> <%=number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %>
+            </p>
+            <p>
+              <strong> Sending : </strong> <%= number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %>
+            </p>
+            <p>
+              <strong>Automati order? </strong> Yes
+            </p>
+            <p>
+              <strong>Periodicity: Weekly(next 18 Jan 2014)</strong>
+            </p>
+            <p>
+              <strong>Amount: 100% Total Balance Available(estimated in primary currency</strong>
+            </p>
+            <p>
+              Ending after 8 months 
+            </p>
+
+             
+            <% end %>
+          
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+   
+  </div>
+</div>
+
+
+
+

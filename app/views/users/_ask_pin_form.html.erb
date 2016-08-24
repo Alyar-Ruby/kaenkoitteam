@@ -1,0 +1,31 @@
+ <%= simple_form_for(@user, :url=>check_pin_user_path(@user) , remote: true, :html=>{:name => "ask_pin_form", :id=>"user_form", method: "get"}) do |f| %>
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">Pin</h4>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="alert alert-warning" style="display:none;" id="pin_error_message">
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                  <p>
+                    <b>Enter Pin:</b> 
+                    <%= f.input :security_pin,  as: "password", :placeholder=>"Enter secret pin", label: false, :value => "", input_html: {class: "form-control input-sm"}  %>
+                  </p>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-primary">Proceed</button>
+    </div>
+  </div>
+</div>
+<% end %>

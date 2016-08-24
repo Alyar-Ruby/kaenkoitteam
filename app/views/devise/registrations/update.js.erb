@@ -1,0 +1,9 @@
+<% if @user_updated == true %>
+	$('#modal-window').modal('toggle');
+	$("#password_update").html("Password successfully updated")
+  $("#password_update").show()
+<% else %>
+	$("#password_message").html("<%= @user_updated %>")
+  $("#password_message").show()
+<% end %>
+$(".ajax-loading").hide();

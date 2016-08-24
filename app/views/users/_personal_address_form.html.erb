@@ -1,0 +1,82 @@
+<% @user = current_user %>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Edit Address</h4>
+    </div>
+    <%= simple_form_for(@user, url: update_personal_address_user_path(@user), remote: true, :html => { :method => :put }) do |f| %>
+      <div class="modal-body">
+          <p style="display:none;" class="alert alert-warning" id="address_error"></p>
+          <p style="display:none;" class="alert alert-success"></p>
+          <div class="form-group">
+            <div class="span3 offset1"><%= f.label "Country :" %></div>
+            <div>
+                <%= f.input :country, :as=>"select", label: false, :collection=>@kaenko_countries, :prompt=>"Choose country" , input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "State:" %></div>
+            <div>
+                <%= f.input :state, :as=>"select", label: false, :collection=>@kaenko_countries, :prompt=>"Choose state" , input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "City:" %></div>
+            <div>
+                <%= f.input :city, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "Address:" %></div>
+            <div>
+                <%= f.input :address, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "Postal Code:" %></div>
+            <div>
+                <%= f.input :postal_code, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "Primary Phone:" %></div>
+            <div>
+                <%= f.input :phone, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+
+          </div>
+          <br>
+          <div class="row-fluid">
+            <div class="span3 offset1">&nbsp;</div>
+            <div class="span8"><%= f.submit "Submit", :class=>"btn btn-primary" %></div>
+          </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<script>
+  function get_state(cid, sid, div_id)
+  {
+    $.ajax({
+      url: '<%= list_states_url %>',
+      type: 'get',
+      data: {
+        country_2_code: cid
+      },
+      success: function(response) {
+        $(div_id).html('');
+        $.each(response, function() {
+          if (sid == this[0])
+            $(div_id).append("<option value='" + this[0] + "' selected>" + this[1] + "</option>");
+          else
+            $(div_id).append("<option value='" + this[0] + "'>" + this[1] + "</option>");
+        });
+        $(div_id).show();
+      },
+      error: function(response) {
+        window.console.log(response);
+      }
+    });
+  }
+
+
+  $("#user_country").change(function() {
+    get_state($(this).val(),'', $("#user_state"))
+  });
+
+  <% if @user.country.present? %>
+    get_state('<%= @user.country %>','<%= @user.state %>' , $("#user_state"))
+  <% end %>
+
+</script>

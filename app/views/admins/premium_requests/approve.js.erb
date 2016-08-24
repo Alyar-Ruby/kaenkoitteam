@@ -1,0 +1,32 @@
+$("#modal-window").html("<%= escape_javascript(render 'approve') %>");
+
+$('form').submit(function() {  
+    var valuesToSubmit = $(this).serialize();
+    $(".alert-error").hide()
+    $(".alert-success").hide()
+    $.ajax({
+        type: 'POST',
+        url: $(this).attr('action'), //sumbits it to the given url of the form
+        data: valuesToSubmit,
+        dataType: "JSON", // you want a difference between normal and ajax-calls, and json is standard,
+        success : function(data) {
+          $(".alert-success").html("Premium Request has been approved.")
+          $( "form[id^='edit_premium_request_']").hide()
+          $(".alert-success").show()
+          $('#modal-window').on('hidden', function () {
+             document.location.reload();
+          })
+        },
+        error : function(xhr) {
+          var errors = $.parseJSON(xhr.responseText).errors
+          var error_arr = [];
+          $.each( errors, function( key, value ) {
+            error_arr.push(value)
+          });
+          error_text = error_arr.join('<br>')
+          $(".alert-error").html(error_text)
+          $(".alert-error").show()
+        }
+    });
+    return false; // prevents normal behaviour
+});

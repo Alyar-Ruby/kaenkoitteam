@@ -1,0 +1,31 @@
+<% verified = @user.address_verified %>
+<% if  verified == true %>
+  <div class="alert alert-success fade in">
+    Your Address status is <strong> Verified</strong> Thank You.
+  </div>
+<% else %>
+  <div class="alert alert-warning fade in">
+    Your Address status is <strong> Not Verified</strong> 
+    <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+  </div>
+<% end %>
+  <div class="col-sm-6">
+      <p><strong>Country of Residence:</strong> <%= country_name(@user.country) %></p>
+      <p><strong>City:</strong> <%= @user.city %></p>
+      <p><strong>State/Region/District:</strong> <%= state_name(@user.country, @user.state) %></p>
+      
+  </div>
+  <div class="col-sm-6">
+    <p><strong>Address:</strong> <%= @user.address %></p>
+    <p>
+      <% if verified == true %>
+      <%= link_to "Add new Address", 
+        edit_address_user_path(@user, :user_action =>"_verify") , 
+        class: "btn btn-sm btn-default", remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"  %>
+      <% else %>
+        <%= link_to "Edit", 
+          edit_address_user_path(@user, :user_action => "_edit") , 
+          class: "btn btn-sm btn-default", remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"  %>
+      <% end %>
+    </p>
+  </div>

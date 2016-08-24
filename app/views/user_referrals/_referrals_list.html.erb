@@ -1,0 +1,21 @@
+<%if @referrals.size > 0 %>
+  <% @referrals.each do |referral| %>
+    <tr>
+      <td>
+        <%= referral.email %>
+      </td>
+      <td>
+        <span class="label label-success"><%= referral.status %></span>
+      </td>
+      <td align="right">
+        <%= number_with_precision(referral.current_earnings, precision:2 || 0) %> USD
+      </td>
+    </tr>
+  <% end %>
+<% else %>
+  <tr>
+    <td>
+      No Referral Available.
+    </td>
+  </tr>
+<% end %>

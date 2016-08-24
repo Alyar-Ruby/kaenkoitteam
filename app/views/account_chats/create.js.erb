@@ -1,0 +1,39 @@
+<%if !@cnv_msg.errors.present? %>
+    $("#chatwindow<%=@recipient.id%>").append('<%= j( render :partial => "self_reply_text" , locals: {:cnv_msg => @cnv_msg}) %>')
+    $("#content_box<%=@recipient.id%>").scrollTop($("#content_box<%=@recipient.id%>")[0].scrollHeight);
+    <% if (@recipient.roleable_type == "Personal" and @recipient.users.first.online_status == true) or  @recipient.roleable_type == "Business" %>
+      <% publish_to "/messages/private/#{@recipient.id}" do %>
+        if ($( "#chatwindow<%=current_user.account.id%>" ).length && $("#chatwindow<%=current_user.account.id%>").is(":visible") ) {
+          $("#chatwindow<%=current_user.account.id%>").append('<%= j( render :partial => "other_reply_text" , 
+              locals: {:cnv_msg => @cnv_msg}) %>')
+          $("#content_box<%=current_user.account.id%>").scrollTop($("#content_box<%=current_user.account.id%>")[0].scrollHeight);
+          $("#chat_txt<%=current_user.account.id%>").focus();
+        }
+        else {
+          count = count + 1;
+          if (count <= 3) {
+            if (chatBoxes.length < 3) {
+              chatBoxes.push("<%=current_user.account.id%>")
+            }else {
+              $("#chatbox-prototype"+chatBoxes.splice(0, 1).toString()).removeClass('opened').hide();
+              chatBoxes.push("<%=current_user.account.id%>")
+            }
+            chat_width = chat_width + 290;
+          }else {
+            chat_width = 290;
+            count = 1;
+            $("#chatbox-prototype"+chatBoxes.splice(0, 1).toString()).removeClass('opened').hide();
+            chatBoxes.push("<%=current_user.account.id%>")
+          }
+          $("#chatwindow<%=current_user.account.id%>").append('<%= j( render :partial => "other_reply_text" , locals: {:cnv_msg => @cnv_msg}) %>')
+          $("#chatbox-prototype<%=current_user.account.id%>").addClass("opened").show();
+          $("#chatbox-prototype<%=current_user.account.id%>").css("right", chat_width.toString()+'px')
+          $("#chat_txt<%=current_user.account.id%>").focus();
+          $("#content_box<%=current_user.account.id%>").scrollTop($("#content_box<%=current_user.account.id%>")[0].scrollHeight);
+      }
+    <% end %>
+  <% end %>
+<% else %>
+  $("#chatwindow<%=@recipient.id%>").append('Oops!! unable to send message')
+<% end %>
+$(".ajax-loading").hide();

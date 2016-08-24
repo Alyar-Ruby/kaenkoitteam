@@ -1,0 +1,9 @@
+<li class="other">
+  <div class="avatar">
+    <%= image_tag cnv_msg.account.display_image_profile%>
+  </div>
+  <div class="messages">
+    <p><%= cnv_msg.message %></p>
+    <time datetime="2009-11-13T20:00"><%= cnv_msg.user.name %> • <%= relative_time(cnv_msg.created_at)%></time>
+  </div>
+</li>

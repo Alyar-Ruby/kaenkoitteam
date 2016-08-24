@@ -1,0 +1,30 @@
+
+<div class="comments-list">
+  <div class="ticket">
+    <%= link_to '<i class="fa fa-times"></i>'.html_safe, post_comment_path(@post.id, @comment.id),  class: "delete-comment" , "data-toggle" =>"tooltip" , method: :delete, remote: true, "data-placement"=>"left" , title: "Remove", confirm: "Are you sure?" %>
+    <div class="avatar pull-left <%=@comment.account.online_status == true ? 'avatar-status' : 
+      'avatar-status avatar-offline'%>">
+        <%= link_to (image_tag @comment.account.display_image, 
+          width:30, height:30, class: "img-circle") , social_user_path(@comment.account.id) %>
+    </div>
+    <div class="content">
+      <b class="blue-hl"><%= @comment.account.display_name %></b> said:<br>
+       <% if  @comment.user.account.id == current_user.account.id  %>
+        <div class="social-date-smnm" >
+          <%= @comment.user.name   %> <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="This Name is only visible for Users of this Account" style="color: #009ad9;">[ ? ]</a> • <%= relative_time(@comment.created_at) %>
+        </div>
+      <%else %>
+        <div class="social-date-smnm" ><%= relative_time(@comment.created_at) %></div>
+        <% end %>
+                        
+      <p><%= @comment.title %></p>
+    </div>
+  </div>
+</div>
+<!------------//load tooltip -->
+<script type="text/javascript">
+  $(function() {
+  // Tooltip
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script> 

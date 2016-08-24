@@ -1,0 +1,107 @@
+<div class="row-fluid">
+  <h3 style="display:none;" class="header smaller lighter blue">Faqs</h3>
+  <div class="table-header">
+    Faqs Details
+  </div>
+
+  <table id="table_report" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th class="center">
+          <label>
+            <input type="checkbox" />
+            <span class="lbl"></span>
+          </label>
+        </th>
+     
+        <th class="hidden-480">Question</th>
+
+        <th class="hidden-phone">
+          	Answer
+        </th>
+      
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @faqs.each do |faq| %>
+        <tr>
+          <td class="center">
+            <label>
+              <input type="checkbox" />
+              <span class="lbl"></span>
+            </label>
+          </td>
+
+          <td>
+            <%=link_to faq.question, faq_path(faq)%>
+          </td>
+          <td><%=faq.answer%></td>
+         
+          <td class="td-actions">
+            <div class="inline position-relative">
+              <button data-toggle="dropdown" class="btn btn-minier btn-primary dropdown-toggle">
+                <i class="icon-cog icon-only bigger-110"></i>
+              </button>
+
+              <ul class="dropdown-menu dropdown-icon-only dropdown-light pull-right dropdown-caret dropdown-close">
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-success" href="<%=edit_faq_path(faq) %>" data-original-title="Edit">
+                    <span class="green">
+                      <i class="icon-edit"></i>
+                    </span>
+                  </a>
+                </li>
+
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-error" href="<%=faq_path(faq) %>" data-original-title="Delete" data-method="delete" data-confirm = "Are you sure ?">
+                    <span class="red">
+                      <i class="icon-trash"></i>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+
+      <% end %>
+      
+    </tbody>
+  </table> 
+  <div class = "pull-right" style="padding-top:10px;">
+  	<%= link_to "New", new_faq_path, :class => 'btn btn-info' %>
+  </div>
+</div>
+
+
+<% content_for :script do %>
+  <script src="/assets/admins/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.bootstrap.js"></script>
+<% end %>
+
+<% content_for :inlinescript do %>
+  <script type="text/javascript">
+    $(function() {
+      var oTable1 = $('#table_report').dataTable( {
+      "aoColumns": [
+          { "bSortable": false },
+          null, null,
+        { "bSortable": false }
+      ] } );
+      $('table th input:checkbox').on('click' , function(){
+        var that = this;
+        $(this).closest('table').find('tr &gt; td:first-child input:checkbox')
+        .each(function(){
+          this.checked = that.checked;
+          $(this).closest('tr').toggleClass('selected');
+        });
+          
+      });
+    
+      $('[data-rel=tooltip]').tooltip();
+    })
+  </script>
+<% end %>

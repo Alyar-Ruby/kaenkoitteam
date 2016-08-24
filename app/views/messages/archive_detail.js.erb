@@ -1,0 +1,12 @@
+$(".ticket").removeClass("ticket-active")
+$("#message_detail").html($('<%= j( render( :partial => "show_archive_detail")) %>'))
+$("#conversation<%=@conversation.id%>").addClass("ticket-active")
+$("#who-mail-header").html($('<%= j( render( :partial => "who_mail_header")) %>'))
+$(".ajax-loading").hide();
+$(function() {
+	history.pushState(null, "", "<%= archive_detail_message_path(@conversation.id) %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})
+

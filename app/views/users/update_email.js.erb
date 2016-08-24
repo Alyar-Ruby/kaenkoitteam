@@ -1,0 +1,9 @@
+<%if !@error.present? %>
+	$("#user_email_text").html("<%= @user.email %>").show()
+	$("#edit_user_email").hide();
+	$("#change_user_email").show();
+<% else %>
+	$("#error_msg_email").html("<%= @error %>").show()
+<% end %>
+
+

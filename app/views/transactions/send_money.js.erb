@@ -1,0 +1,8 @@
+$("#ajax-container").html("<%= j(render 'send_money_common') %>")
+$(".ajax-loading").hide()
+$(function() {
+	history.pushState(null, "", "<%= send_money_transactions_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

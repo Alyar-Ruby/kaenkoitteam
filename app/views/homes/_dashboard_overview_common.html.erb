@@ -1,0 +1,367 @@
+<%= render 'dashboard_header' %>
+<!-- DATA AREA TITLE -->
+<section class="main-container container-fluid">
+  <div class="row">
+    <div class="col-lg-12">
+       
+      <div style="padding-top:40px;">
+          <!-- CONTENT -->
+        <div id="everything">
+          <div class="row">
+              
+            <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                    <span class="label label-info">Estimated</span>
+                  <div class="dropdown">
+                      <i class="kk-wallet light"></i>
+                      Total Balance  
+                      
+                      
+                  </div>
+                </div>
+                  <div class="panel-body big-text text-center">
+                    65061.00 CAD <br>
+                    <small>92,013.10 CAD Available</small>
+                  </div>
+              </div>
+              </article>  
+            <!-- CARD -->
+            <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                    <span class="label label-info"><%=current_user.account.kaenko_currency.unit.capitalize%> (Primary)</span>
+                  <div class="dropdown">
+                      <i class="kk-wallet light"></i>
+                      Primary Balance  
+                      
+                      
+                  </div>
+                </div>
+                  <div class="panel-body big-text text-center">
+                    <%= main_balance(current_user.account)%> <%#=current_user.account.kaenko_currency.unit.upcase%><br>
+                    <small>12,013.10 CAD Available</small>
+                  </div>
+              </div>
+              </article>
+                <!-- END CARD -->
+    
+
+                <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                    <a class="label label-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i> PLN</a>
+                            <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">All Currencies</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/US.png"> USD</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/EU.png"> EUR</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/CA.png"> CAD</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/PL.png"> PLN</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/BR.png"> BRL</a>
+                            </li>
+                        </ul>
+                  <div class="dropdown">
+                      <i class="kk-wallet light"></i>
+                      Currency Balance  
+                      
+                      
+                  </div>
+                </div>
+                  <div class="panel-body big-text text-center">
+                    161.00 PLN <br>
+                    <small>1,213.10 PLN Available</small>
+                  </div>
+              </div>
+              </article>
+
+                <!-- CARD -->
+              <% @account_balances.each do |account_balance| %>
+                <article class="card col-sm-6 col-md-4  col-lg-3 col-xs-12" style="display:none">
+                  <div class="panel panel-default ">
+                    <div class="panel-heading balance-heading">
+                        <span class="label label-default"><%=account_balance.kaenko_currency.unit.upcase%></span>
+                        <div class="dropdown">
+                            <i class="kk-wallet light"></i>Currency Balance  
+                            
+                        </div>
+                    </div>
+                    <div class="panel-body big-text text-center">
+                        <%= number_with_precision(account_balance.balance, precision: 2 || 0)%> <%=account_balance.kaenko_currency.unit.upcase%><br>
+                        <small>0,00 USD Available</small>
+                    </div>
+                  </div>
+                </article>
+              <% end %>
+            </div>
+            <!-- row -->
+            <div class="row">
+                <!-- CARD TABLE -->
+              <article class="card card-table col-lg-9">
+                <div class="panel panel-default">
+                  <div class="panel-heading recent-heading">
+                    <span class="label label-info"><%=current_user.account.kaenko_currency.unit.capitalize%> (Primary)</span>
+                      <div class="dropdown">
+                        <i class="kk-trophy light"></i>My Recent Transactions 
+                        <a href="#" class="pull-right dropdown-toggle" data-toggle="dropdown"><i class="kk-settings "></i></a>
+                        <ul class="dropdown-menu">
+                           <li>
+                                <a href="#">All Currencies</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/US.png"> USD</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/EU.png"> EUR</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/CA.png"> CAD</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/PL.png"> PLN</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/BR.png"> BRL</a>
+                            </li>
+                        </ul>
+                      </div>
+                  </div>
+                  <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <thead class="">
+                          <tr>
+                            <td>
+                            &nbsp;
+                            </td>
+                            <td>
+                              Date
+                            </td>
+                            <td>
+                              Type
+                            </td>
+                            <td>
+                              Name/Email
+                            </td>
+                            <td>
+                              Status
+                            </td>
+                            <td>
+                              Gross Amount
+                            </td>
+                            <td>
+                              Net Amount
+                            </td>
+                            <td>
+                              Balance
+                            </td>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        
+                        <%if @transactions.size > 0 %>
+                          <% @transactions.each do |trans| %>
+                          <script>
+                            $(function(){
+                              $(".dwn-btn<%=trans.id%>").click(function(){
+                                $(".hide_detail_row<%=trans.id%>").show();
+                                $(".show_detail_row<%=trans.id%>").hide();
+                              });
+                              $(".up-btn<%=trans.id%>").click(function(){
+                                $(".hide_detail_row<%=trans.id%>").hide();
+                                $(".show_detail_row<%=trans.id%>").show();
+                              })
+                            });
+                          </script>
+                               <%if trans.transaction_type == "AddFund" %>
+                                <tr class ="show_detail_row<%=trans.id%>">
+                                     <td>
+                                     </td>
+                                  <td>
+                                    <%= trans.created_at.strftime("%d-%b-%Y") %>
+                                  </td>
+                                  <td>
+                                    Add Funds 
+                                  </td>
+                                  <td>
+                                     <%#= truncate(trans.payment_method, length: 22) %>
+                                     <%= trans.payment_method %>
+                                  </td>
+                                  <td>
+                                    <span class="<%=trans_status(trans.status)%> "><%= trans.status %> </span>
+                                  </td>
+                                  <td>
+                                    <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                                   <td>
+                                      <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                                  <td>
+                                  <% acc_balance = AccountBalance.where("account_id = ? and kaenko_currency_id=?", current_user.account.id, trans.kaenko_currency.id) %>
+                                  <% acc_balance = (acc_balance.present?) ? acc_balance.first.balance : 0 %>
+                                    <%=number_with_precision(acc_balance, precision: 2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                    <%=link_to '<i class="kk-info-plus active pull-right"></i>'.html_safe, popup_i_addfund_transaction_path(trans.id), remote: true, :'data-target' => "#modal-window", :'data-toggle' => "modal" %>
+                                  </td>
+                                </tr>
+                                
+                          <%elsif trans.transaction_type == "Withdraw" %>
+                            
+                                <tr class ="show_detail_row<%=trans.id%>">
+                                  <td>
+                                  </td>
+                                  <td>
+                                    <%= trans.created_at.strftime("%d-%b-%Y") %>
+                                  </td>
+                                  <td>
+                                    Withdraw 
+                                  </td>
+                                  <td>
+                                     <%#= truncate(trans.payment_method, length: 22) %>
+                                     <%= trans.payment_method %>
+                                  </td>
+                                  <td>
+                                    <span class="<%=trans_status(trans.status)%> "><%= trans.status %> </span>
+                                  </td>
+                                  <td>
+                                    <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                                   <td>
+                                      <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                                  <td>
+                                  <% acc_balance = AccountBalance.where("account_id = ? and kaenko_currency_id=?", current_user.account.id, trans.kaenko_currency.id) %>
+                                  <% acc_balance = (acc_balance.present?) ? acc_balance.first.balance : 0 %>
+                                    <%=number_with_precision(acc_balance, precision: 2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                    <%=link_to '<i class="kk-info-plus active pull-right"></i>'.html_safe, popup_i_withdraw_transaction_path(trans.id), remote: true, :'data-target' => "#modal-window", :'data-toggle' => "modal" %>
+                                  </td>
+                                </tr>
+                                 
+                          <% elsif trans.transaction_type == "Payment" %>
+                                <tr class ="show_detail_row<%=trans.id%>">
+                                  <td><a href="javascript:void(0);"  class="down-btn dwn-btn<%=trans.id%>" class="show_detail_btn<%=trans.id%>"><i class="fa fa-chevron-down"></i></a>
+                                  </td>
+                                  <td>
+                                    <%= trans.created_at.strftime("%d-%b-%Y") %>
+                                  </td>
+                                  <td>
+                                      Payment  <%= (trans.from_account_id == current_user.account.id) ? "To" : "From" %>
+                                  </td>
+                                  <td>
+                                    <%= (trans.from_account_id == current_user.account.id) ? trans.to_account.display_name : trans.from_account.display_name %>
+
+                                  </td>
+                                  <td id="status_parent<%= trans.id %>">
+                                    <%if trans.dispute.present? %>
+                                      <%if  trans.dispute.is_resolved == false %>
+                                       <%= link_to '<span class="label label-default">Dispute Open</span>'.html_safe , "javaScript:void(0);" %>
+                                      <% else %>
+                                        <%#= link_to '<span class="label label-default">Dispute Close</span>'.html_safe , "javaScript:void(0);" %>
+                                        <span class="<%=trans_status(trans.status)%> "><%= trans.status %> </span>
+                                      <% end %>
+                                    <% else %>
+                                      <span class="<%=trans_status(trans.status)%> "><%= trans.status %> </span>
+                                    <% end %>
+                                  </td>
+                                  <td>
+                                    <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                                   <td>
+                                      <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                                  <td>
+                                  <% acc_balance = AccountBalance.where("account_id = ? and kaenko_currency_id=?", current_user.account.id, trans.kaenko_currency.id) %>
+                                  <% acc_balance = (acc_balance.present?) ? acc_balance.first.balance : 0 %>
+                                  <%=link_to '<i class="kk-info-plus active pull-right"></i>'.html_safe, popup_i_payment_transaction_path(trans.id), remote: true, :'data-target' => "#modal-window", :'data-toggle' => "modal" %>
+                                    <%=number_with_precision(acc_balance, precision: 2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                    
+                                  </td>
+                                </tr>
+                                <tr style="display:none;" class="hide_detail_row<%=trans.id%>" >
+                                  <td>
+                                      <a href="javascript:void(0);"  class="down-btn up-btn<%=trans.id%>" class="hide_detail_btn"><i class="fa fa-chevron-up"></i></a><br/><br/>
+                                  </td>
+                                  <td>
+                                    <%= relative_time(trans.created_at) %> <br/><br/>
+                                    <%= relative_time(trans.created_at)%> <br/><br/>
+                                  </td>
+                                  <td>
+                                    Payment <%= (trans.from_account_id == current_user.account.id) ? "To" : "From" %><br/><br/>
+                                    Paid by
+                                  </td>
+                                  <td>
+                                      <%= (trans.from_account_id == current_user.account.id) ? trans.to_account.display_name : trans.from_account.display_name %>
+                                    <br/><br/>
+                                     <%#= truncate(trans.payment_method, length: 22) %>
+                                     <%= trans.payment_method %>
+                                  </td>
+                                  <td>
+                                    <span class="<%=trans_status(trans.status)%> " id="status_child<%= trans.id %>"><%= trans.status %> </span> <br/><br/>
+                                    <% if (trans.from_account_id == current_user.account.id) %>
+                                      <span id= "refund<%=trans.id%>">
+                                        <%if !trans.dispute.present? %>
+                                          <%= link_to '<span class="label label-default">Refund Me</span>'.html_safe , refund_transaction_path(trans.id), remote: true, :'data-target' => "#modal-window", :'data-toggle' => "modal" %>
+                                        <% elsif trans.dispute.is_resolved == false %>
+                                          <%= link_to '<span class="label label-default">Dispute Open</span>'.html_safe , "javaScript:void(0);" %>
+                                        <%elsif  trans.dispute.is_resolved == true %>
+                                           <%= link_to '<span class="label label-default">Dispute Close</span>'.html_safe , "javaScript:void(0);" %>
+                                          
+                                        <% end %>
+                                      </span>
+                                    <% else %>
+                                      <%if trans.status != "Refunded" %>
+                                        <span id="issue_refund<%=trans.id%>">
+                                        <%= link_to '<span class="label label-default">ISSUE REFUND</span>'.html_safe , issue_refund_transaction_path(trans.id), remote: true, :'data-target' => "#modal-window", :'data-toggle' => "modal" %>
+                                        </span>
+                                      <% else %>
+                                        <span>
+                                          <%= link_to '<span class="label label-default">REFUNDED</span>'.html_safe, "javascript:void(0);" %>
+                                        </span>
+                                      <% end %>
+                                    <% end %>
+                                  </td>
+                                  <td align="top">
+                                    <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %> <br/><br/>
+                                    <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                                  <td align="top">
+                                    <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %> <br /><br/>
+                                    <%= number_with_precision(trans.amount, precision:2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                                  <td align="top">
+                                    <%=number_with_precision(acc_balance, precision: 2 || 0) %> <%= trans.kaenko_currency.unit %> <br/><br/>
+                                    <%=link_to '<i class="kk-info-plus active pull-right"></i>'.html_safe, popup_i_payment_transaction_path(trans.id), remote: true, :'data-target' => "#modal-window", :'data-toggle' => "modal" %>
+                                    <%=number_with_precision(acc_balance, precision: 2 || 0) %> <%= trans.kaenko_currency.unit %>
+                                  </td>
+                              </tr>
+                          <% end %>                          
+                        <% end %>
+                        <% end %>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="panel-footer">
+                    <a href="#" class="btn btn-primary btn-sm">
+                      Show All Transactions
+                    </a>
+                  </div>
+                </div>
+              </article>
+                <!-- END CARD TABLE -->
+            </div>
+              <!-- END row -->
+          </div>
+            <!-- END CONTENT -->
+        </div>
+    </div><!-- END col-lg-12 -->       
+  </div><!-- END row -->
+</section>
+

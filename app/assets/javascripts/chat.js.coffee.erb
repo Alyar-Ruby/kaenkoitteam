@@ -1,0 +1,109 @@
+jQuery ->
+  window.chatController = new Chat.Controller($('#chat').val(), true);
+window.Chat = {}
+
+class Chat.User
+  constructor: (@user_name) ->
+  serialize: => { user_name: @user_name }
+
+class Chat.Controller
+  template: (message) ->
+    html =
+      """
+      <div class="message" >
+        <label class="label label-info">
+          [#{message.received}] #{message.user_name}
+        </label>&nbsp;
+        #{message.msg_body}
+      </div>
+      """
+    $(html)
+
+  userListTemplate: (userList) ->
+    userHtml = ""
+    for user in userList
+    	if user
+    	  if user.id != parseInt($("#user_id").val())
+      	  userHtml = userHtml + "<li class='litem'><img src='#{user.img}'>
+          <a href='javascript:void(0)' data-remote='true'><span class='liname'>#{user.user_name}</span></a><span class='status'>Online</span></li>"
+        if user.status == "online"
+          $("#chat_acclist#{user.account_id}").removeClass('offline').addClass('online')
+          $("#acc_status#{user.account_id}").html("Online")
+        else
+          $("#chat_acclist#{user.account_id}").removeClass('online').addClass('offline')
+          $("#acc_status#{user.account_id}").html("Offline")
+        
+        
+    $(userHtml)
+
+  constructor: (url,useWebSockets) ->
+    @messageQueue = []
+    @dispatcher = new WebSocketRails(url, useWebSockets)
+    @dispatcher.on_open = @createGuestUser
+    @dispatcher.on_close = @deleteUser
+    @bindEvents()
+
+
+  bindEvents: =>
+    @dispatcher.bind 'new_message', @newMessage
+    @dispatcher.bind 'user_list', @updateUserList
+    $('#send').on 'click', @sendMessage
+    $("#online-toggle").on 'change', @userStatus
+    window.onbeforeunload = @browserClose
+
+  browserClose: =>
+    @dispatcher.trigger 'offline_browser_close', @user.serialize()
+    return
+
+  deleteUser: =>
+    
+    
+
+  userStatus: (event) =>
+    event.preventDefault();
+    if $("#online-toggle").is(":checked")
+      $('#livechat-content').removeClass('is-offline')
+      @dispatcher.trigger 'online_user', @user.serialize()
+    else
+      $('#livechat-content').toggleClass('is-offline')
+      @dispatcher.trigger 'offline_user', @user.serialize()
+      
+    @user.user_name = ""
+    
+
+  newMessage: (message) =>
+    @messageQueue.push message
+    @shiftMessageQueue() if @messageQueue.length > 15
+    @appendMessage message
+
+  sendMessage: (event) =>
+    event.preventDefault()
+    message = $('#message').val()
+    @dispatcher.trigger 'new_message', {user_name: @user.user_name, msg_body: message}
+    $('#message').val('')
+
+  updateUserList: (userList) =>
+    $('#sortable_user').html @userListTemplate(userList)
+   
+
+  updateUserInfo: (event) =>
+    @user.user_name = $('input#user_name').val()
+    $('#username').html @user.user_name
+    @dispatcher.trigger 'change_username', @user.serialize()
+
+  appendMessage: (message) ->
+    messageTemplate = @template(message)
+    $('#chat').append messageTemplate
+    messageTemplate.slideDown 140
+
+  shiftMessageQueue: =>
+    @messageQueue.shift()
+    $('#chat div.messages:first').slideDown 100, ->
+      $(this).remove()
+
+  createGuestUser: =>
+    rand_num = Math.floor(Math.random()*1000)
+    @user = new Chat.User("Guest_" + $("#user_email").val())
+    $('#username').html @user.user_name
+    
+    @dispatcher.trigger 'new_user', @user.serialize()

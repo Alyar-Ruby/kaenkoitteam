@@ -1,0 +1,38 @@
+<ul>
+  <% @notifications.each do |notification| %>
+    <li id="notification_content<%= notification.id%>">
+      <a href="<%= notification.url %>" data-remote="true" > 
+        <div class="clearfix">
+          <div class="notif_thumb pull-left">      
+             <%=  (image_tag notification.from_user.user_image.present? ? 
+              notification.from_user.user_image : '/assets/av-john.jpg',  alt: "..." , 
+              class: "img-circle") %>
+          </div>
+          <div class="notif_content pull-right">
+            <div class="notif_author">
+              <%= notification.from_user.business_name %>
+            </div>
+            <div class="notif_snippet">
+              <%if notification.roleable_type == "Connection"  and notification.message == "connection_invitation"%>
+                <div  id="notification_action">
+                  Wants to be a connection <br>
+                  <a href="/connections/<%=notification.roleable.id.to_s%>/approve_reject?_action=accept&nid=<%=notification.id%>" 
+                  data-remote='true' class = 'btn btn-primary btn-sm'>Accept</a>
+                  <a href="/connections/<%= notification.roleable.id.to_s%>/approve_reject?_action=reject&nid=<%=notification.id%>" data-remote='true' class = 'btn btn-danger btn-sm'>Ignore</a>
+                </div>
+              <% else %>
+                <%= notification.message.html_safe %>
+              <% end %>
+              </div>
+              <div class="notif_timestamp">
+                <%if notification.roleable_type == "Connection"  and notification.message == "connected"%>
+                  <%= relative_time(notification.updated_at) %>
+                <% else %>
+                  <%= relative_time(notification.created_at) %>
+                <% end %>
+              </div>
+          </div>
+      </a>
+    </li>
+  <% end %>
+</ul>

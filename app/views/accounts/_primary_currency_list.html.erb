@@ -1,0 +1,4 @@
+<%= select_tag :'account[kaenko_currency_id]',
+    options_for_select(@account_currencies.select("id, title").collect{|c|[c.title, c.id]},@account.kaenko_currency_id), :prompt=>"Currency", id: "currency_list", 
+      style: "display:none;"
+%>

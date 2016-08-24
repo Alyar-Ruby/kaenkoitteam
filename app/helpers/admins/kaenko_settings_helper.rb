@@ -1,0 +1,2 @@
+module Admins::KaenkoSettingsHelper
+end

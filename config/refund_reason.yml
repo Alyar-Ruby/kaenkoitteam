@@ -1,0 +1,18 @@
+---
+instance:
+  
+  reasons:
+    0: "I paid twice by mistake or 	technology error"
+    1: "I didn't receive my good/service within the agreed delay"
+    2: "I received an empty package"
+    3: "I received my good/service however partially, or less than i paid for"
+    4: "My Product/item is damaged/broken"
+    5: "I received a different Product/Service than the ordered(different material, color, size, design, functionality etc.)"
+    6: "I received a counterfeit product"
+    7: "I received a product that doesn't work properly"
+    8: "I received a poor quality product/service"
+
+  request:   
+    0: "Full Refund US"
+    1: "Partial Refund US"
+

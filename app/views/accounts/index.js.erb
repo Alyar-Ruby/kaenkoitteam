@@ -1,0 +1,32 @@
+$("#ajax-container").html('<%= j(render current_user._account_type.downcase+"_account_setting")%>')
+$(".ajax-loading").hide();
+$('#usr-info-bar').removeClass("usr-info-bar").addClass("usr-info-bar hidden");
+$("li .active").removeClass("active")
+$("#setting_menu").addClass("active")
+<%if @activate_tab.present? %>
+  $("#busi-prof-tab").removeClass("active")
+    $("#busi-prof").removeClass("in active")
+  <%if @activate_tab == "pay-sett-tab" %>
+      $("#pay-sett-tab").addClass("active")
+      $("#pay-sett").addClass("in active")
+  <%elsif @activate_tab == "priv-sett-tab" %>
+      $("#priv-sett-tab").addClass("active")
+      $("#priv-sett").addClass("in active")
+      $("html, body").animate({ scrollTop: 0}, 600);
+  <%elsif @activate_tab == "view-profile" %>
+       $("#busi-prof-tab").addClass("active")
+       $("#busi-prof").addClass("in active")
+       $("html, body").animate({ scrollTop: $(window).height()}, 600);
+  <%elsif @activate_tab == "account-detail" %>
+       $("#acc-detail-tab").addClass("active")
+       $("#acc-detal").addClass("in active")
+        $("html, body").animate({ scrollTop: 0}, 600);
+        
+  <% end %>
+<% end %>
+$(function(){
+   history.pushState(null, "", "<%= account_setting_path %>")
+  $(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

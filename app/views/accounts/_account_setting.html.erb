@@ -1,0 +1,212 @@
+<!-- AREA TITLE/NAV-->
+<%admin = @account.users.admin_user.first %>
+<section class="settings container-fluid tab-pane fade in active" id="dashboard">
+  <div class="alert alert-success" style="display:none;" id="user_added_message">
+  </div>
+  <h2>Account Settings<small> | Your Security and Payment Options </small></h2>
+  <!-- AREA SUB NAV -->
+</section>
+<!-- DATA AREA TITLE -->
+<section class="settings main-container container-fluid">
+  
+  <div class="row">
+  <article class="col-lg-5 pull-right">
+		<div class="panel panel-default">
+            <div class="panel-heading ">
+                <div class="dropdown">
+                            
+                           My Business Profile [business name]
+                </div>
+            </div>
+			<div class="panel-body panel-lego">
+				<div class="wrap">
+				<div class="profver">
+				<div class="onethird profverimg">
+				<%= image_tag current_user.image.present? ? current_user.image_url(:profile) : '/assets/av2.png', :style=>"width:140px;" %>
+				</div>
+				<div class="twothirdless pull-right">
+				<h4 style="font-weight:800">Verify Account</h4>
+				<p>We have detected that your account haven’t been verified yet. To access all advantages of your Kaenko Business account please verify your account now.</p>
+				<a href="#" class="btn btn-success pull-right">Verify Account</a>
+				</div>
+				</div>
+				
+					<ul>
+						<li><strong>Business Name:</strong> [Business name]</li>
+						<li><strong>Business Form:</strong> [Business Form]</li>
+						<li><strong>Categories:</strong> [Business Category Slug] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+						<li><strong>Email:</strong> [Business email] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+						<li><strong>Phone:</strong> [Business phone] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+						<li><strong>Website:</strong> [Business website] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a><a href="#" class="btn btn-default btn-small">Add More</a></li>
+						<li><strong>Country:</strong> [Business Country] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+						<li><strong>District / Region:</strong> [Business Region] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+						<li><strong>City & Postal:</strong> [Business City+Postal] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+						<li><strong>Address:</strong> [Business Full Address] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+					</ul>
+				</div>
+			</div>
+		</div>			
+    </article>
+    <article class="col-lg-7">
+		<div class="panel panel-default">
+            <div class="panel-heading ">
+                <div class="dropdown">
+                            
+                           Account Overview
+                </div>
+            </div>
+			<div class="panel-body panel-lego">
+				<div class="wrap">
+					<ul>
+						<li><div class="threequarters"><strong>Account Holder:</strong> <%= current_user.username %> (<%= current_user. email %>)</div><div class="onefourth"><strong>ID:</strong> <%=current_user.account.account_number %></div></li>
+						<li><strong><div class="threequarters">Business Name:</strong> [Business name] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></div><div class="onefourth"><strong>Status:</strong> [Verified?]</div></li>
+						<li><div class="halfhalf"><strong>Privacy Settings:</strong> <a href="#" class="btn btn-default btn-small">Change</a></div><div class="halfhalf"><strong>Email Notification</strong> <a href="#" class="btn btn-default btn-small">Change</a></div></li>
+						<li><strong>Default Timezone:</strong> [GTM TIMEZONE] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+						<li><strong>Default Language:</strong> [ACC Language] <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+						<li><strong>Primary Currency:</strong> <%= @account.kaenko_currency.try(:title) %> (<%= @account.kaenko_currency.try(:unit) %>) <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a><a href="#" class="btn btn-default btn-small">Accept More</a><a href="#" class="btn btn-default btn-small">View All</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>				  
+    </article><!-- END col-lg-7 -->
+	
+    <article class="col-lg-7">
+		<div class="panel panel-default">
+            <div class="panel-heading ">
+                <div class="dropdown">
+                            
+                           User Managment
+                </div>
+            </div>
+			<div class="panel-body panel-lego">
+				<div class="wrap">
+				<div class="profver">
+					<div class="twothird">
+					<div class="onethird">
+					<%= image_tag current_user.image.present? ? current_user.image_url(:profile) : '/assets/av2.png', :style=>"width:125px;" %>
+					</div>
+					
+					<div class="twothirdless pull-right">
+					<h4 style="font-weight:800">Admin</h4>
+					Karl Lucas Malota<br>
+					<span style="font-size:12px">Founder at Malota Studio Group LLC</span>
+					</div>
+					</div>
+					<div class="onethird"><a href="#" class="btn btn-primary" style="display:block">Hide</a><br><a href="#" class="btn btn-default" style="display:block; border: 1px solid #e3e8e8!important;">Edit Security</a></div>
+					<div class="halfhalf">
+					<p><strong>Gender:</strong> Male</p>
+					<p><strong>Birth:</strong> 18 July 1982, Poland</p>
+					<p><strong>Email:</strong> karl@malotastudio.com<a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></p>
+					</div>
+					<div class="halfhalf">
+					<p><strong>Country:</strong> Spain</p>
+					<p><strong>Address:</strong> Grande Pisio Loco 8, 1A</p>
+					<p><strong>City & ZIP:</strong> Torremolinos (29620)</p>
+					</div>
+				</div>
+				
+				<div class="profver profver-user-collapsed">
+					<div class="twothird">
+					<div class="onethird">
+					<img src="https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xfa1/t1.0-1/c0.0.160.160/p160x160/10169308_1383740608578990_2269281413536208479_n.jpg" width="125px" height="auto"> 
+					</div>
+					<div class="twothirdless pull-right">
+					<h4 style="font-weight:800">Sub-User</h4>
+					Melanie Martins<br>
+					<span style="font-size:12px">Manager at Malota Studio Group LLC</span>
+					</div>
+					</div>
+					<div class="onethird"><a href="#" class="btn btn-primary" style="display:block">View / Edit</a></div>
+				</div>
+				<span style="text-align: center; display: block; padding: 40px; font-size: 22px; font-weight: 800; color: #E4E5CC; cursor: pointer">Create new user +</span>
+			</div>
+			</div>
+		</div>			
+    </article>	
+  </div><!-- END row -->
+</section>
+<script>
+$("#change_currency").click(function(){
+  $("#currency_list").show();
+  $("#change_currency").hide();
+  $("#currency_text").hide()
+  $("#cancel_currency").show();
+  $("#currency_list").change(function(){
+
+    $("#currency_form").submit();
+
+  })
+})
+$("#cancel_currency").click(function(){
+  $("#currency_list").hide();
+  $("#change_currency").show();
+  $("#currency_text").show()
+  $("#cancel_currency").hide();
+
+})
+$("#change_language").click(function(){
+  $("#language_list").show();
+  $("#change_language").hide();
+  $("#language_text").hide()
+  $("#cancel_language").show();
+  $("#language_list").change(function(){
+    $("#language_form").submit();
+  })
+})
+$("#change_time_zone").click(function(){
+  $("#time_zone_list").show();
+  $("#change_time_zone").hide();
+  $("#timezone_text").hide()
+  $("#cancel_time_zone").show();
+  $("#time_zone_list").change(function(){
+    $("#time_zone_form").submit();
+  })
+})
+
+jQuery(document).ready(function($) {
+  $('.selectpicker').selectpicker();
+});
+</script>
+
+
+
+<%= javascript_tag do %>
+  $(function() {
+    $("#user_image").on("click", function() {
+      $("#user_pic").click();
+    });
+    $("#user_pic").change(function() {
+      //$(this).closest('form').submit();
+      var form_data = new FormData(); // Creating object of FormData class
+        file_content = $("#user_pic")[0].files[0]
+        form_data.append("user_pic", file_content);
+        $.ajax({
+          url: "<%= update_image_users_path %>",
+          type: "POST",
+          processData: false,
+          contentType: false,
+          data: form_data,
+          dataType: "JSON",
+          success: function(response) {
+             $("#user_image").html("<img id='p_img' src='"+response.profile+"' />");
+             $("aside.nav-fixed-left").find("#circle-image").html("<img id='p_img' src='"+response.circle+"' />");
+             <%if current_user.account_admin == true %>
+             if ($("#business_image").length){
+               $("#business_image").html("<img id='p_img' src='"+response.profile+"' />");
+              }
+            <% end %>
+             
+          },
+          error: function(response) {
+          
+            $("#user_image").html("Image not uploaded successfully, Please retry!!");
+          }
+        });
+    });
+    $("#online_status").on("click", function() {
+      $.getScript("<%=update_online_status_users_path %>")
+    });
+  });
+<% end %>
+
+

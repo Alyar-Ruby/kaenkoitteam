@@ -1,0 +1,42 @@
+<!-- Transaction Complete card -->
+<div class="tabular-cardpick col-lg-6 col">
+    <ul>
+        <li class="no-hover">
+            <span><i class="fa fa-check-circle fa-3x text-success"></i></span>
+            <span><h5>Transaction ID: <a href="javascript:void(0);"><%= @transaction.transaction_id %></a></h5></span>
+
+        </li>
+        <li class="no-hover">
+        
+        <span>
+            <strong><%= @card.card_type %></strong>
+                <p>Previously saved and verified debit or credit card</p>
+                <p><b>Info:</b> Instant, 1.4% + $0.25 USD Fee</p>
+        </span>
+        <span class="card-ico">
+            <img src="/assets/ico/mastercard_48.png">
+        </span>
+    </li>
+    </ul>
+</div>
+<div class="tabular-cardpick col-lg-6 col">
+    <ul>
+        <li class="no-hover">
+            <p class="text-blue"><b>Your transaction has been sucessfully completed</b></p>
+            <p>You will receive notification to your email.</p>
+            <span>
+                <p><b>From:</b> <%= @card.card_type %></p>
+                <p><b>Bill To:</b> <%= current_user.name %></p>
+                <p><b>Transaction ID:</b> <%= @transaction.transaction_id %></p>
+                <p><b>Funds Added:</b> <%= @amount %> <%= @transaction.kaenko_currency.unit %> </p>
+                <h5><b>Total Debited:</b> $ 4457.00 USD</h5>
+            </span>
+            
+        </li>
+        
+    </ul>       
+</div>
+<%= link_to "Return to Dashboard" , dashboard_overview_path, remote: true, class: "btn btn-primary right-bottom" %>
+
+
+<!-- Transaction Complete card end-->

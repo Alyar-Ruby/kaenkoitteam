@@ -1,0 +1,17 @@
+
+span.error{
+  clear:both;
+  color:red;
+  display:block;
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input{margin-bottom:0px;}
+
+abbr[title], abbr[data-original-title]{border-bottom:0px;}
+
+/*
+label{
+  margin-bottom:0px;
+  margin-top:15px;
+}
+*/

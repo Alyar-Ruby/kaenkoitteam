@@ -1,0 +1,10 @@
+<%if @account_currency.errors.any? %>
+	$("#currency_error_msg").html("<%= @account_currency.errors.full_messages.join(',') %>").show();
+<% else %>
+	$("#primary_currency_list").html("<%= escape_javascript( render 'primary_currency_list') %>")
+	$("#currency_list").hide();
+	$("#currency_text").show();
+	$("#cancel_currency").hide();
+	$('#modal-window').modal('toggle');
+<% end %>
+$(".ajax-loading").hide();

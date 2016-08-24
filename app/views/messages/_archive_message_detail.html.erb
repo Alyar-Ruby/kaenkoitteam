@@ -1,0 +1,68 @@
+<div class="panel-heading">
+  <a href="#" class="go-mail-list"><i class="kk-close"></i></a>
+  <h2><i class="kk-chat-active larger"></i> <%= @sender.name %> ( <%= @sender.email %> )</h2>
+  <div class="input-group no-shadow pull-left" style="width:260px;">
+    <input type="text" class="form-control" placeholder="Search within the message">
+    <span class="input-group-btn">
+      <button class="btn  btn-success" type="button"><i class="kk-search"></i></button>
+    </span>
+  </div><!-- /input-group -->
+  <div class="input-group pull-left">
+    <%=link_to trash_message_message_path(@conversation) ,  method: :post,  class: "btn btn-default-border", confirm: "Are you sure? It'll be deleted permanently." do %>
+      <i class="kk-trash"></i>
+    <% end %>
+    
+  </div>
+  <div class="clearfix"></div>
+</div>
+ 
+<div class="panel-body ">
+ <div class="messagecontent" style="overflow: hidden; width: auto; height: 460px;">
+      <!-- entry -->
+      <div class="ticket mail-body">
+        <% @receipts.each do |receipt| %>
+          <% receipt_msg = receipt.message %>
+          <a href="">
+            <div class="avatar pull-left <%= receipt_msg.sender.online_status == false ? 'avatar-offline' : '' %> ">
+               <%= image_tag receipt_msg.sender.user_image.present? ? receipt_msg.sender.user_image: '/assets/av3.png', width:50, height: 50, class: "img-circle" %>
+            </div>
+            <div class="content ">
+              <span>
+                <i class="kk-clock"></i>
+                <%#= receipt_msg.created_at.strftime("%I:%M %p") %>
+                <%= relative_time(receipt_msg.created_at) %>
+              </span>
+              <h2><%=(receipt_msg.sender.account.try(:id) == current_user.account.id) ? "#{current_user.name} (me)" : receipt_msg.sender.name %></h2>
+              <p><%#= receipt_msg.subject %></p>
+              <p><%= receipt_msg.body.html_safe %></p>
+            </div>
+          </a>
+        <% end %>
+      </div>
+      <!-- END entry -->
+  </div>
+</div>
+  <div class="panel-footer">
+    <%= form_tag reply_archive_message_path(@conversation.id) do %>
+      <%= hidden_field_tag "subject" , @conversation.subject %>
+      <%= text_area_tag  "body", "", id: "msg_body", name: "body", class: "form-control" , rows: "6" %>
+      <div class="input-group pull-rigth">
+        <button class="btn btn-default-border" type="button"><i class="kk-trash"></i></button>
+        <button class="btn btn-default-border" type="button"><i class="kk-files"></i></button>
+        <%= submit_tag "Send", class: "btn-send btn btn-primary btn-sm" %>
+        
+      </div>
+    <% end %>
+  </div>
+</div>
+<%=javascript_tag do %>
+  $(function() {
+    $('#msg_body').keydown(function() {
+      if (event.keyCode == 13) {
+          this.form.submit();
+          return false;
+       }
+    });  
+  })
+
+<% end %>

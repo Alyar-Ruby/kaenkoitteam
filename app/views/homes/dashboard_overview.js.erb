@@ -1,0 +1,10 @@
+$("#ajax-container").html("<%= j(render 'dashboard_overview_common') %>")
+$(".ajax-loading").hide();
+$('[rel^=popover]').popover('hide');
+$("#dashboard_overview").addClass("active")
+$(function() {
+	history.pushState(null, "", "<%= dashboard_overview_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

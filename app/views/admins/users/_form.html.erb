@@ -1,0 +1,142 @@
+<%= simple_form_for [@user], :html => { :class => 'form-horizontal' } do |f| %>
+	<div class="well-formbox">  
+		<% if @user.errors.any? %>
+		<div id="errorExplanation">
+			<h2><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h2>
+			<ul>
+			<% @user.errors.full_messages.each do |msg| %>
+			  <li><%= msg %></li>
+			<% end %>
+			</ul>
+		</div>
+		<% end %>
+		<div class="control-group">
+			<label class="control-label"> First Name: </label>
+			<div class="controls">
+				<%= f.input :first_name,  :label=>false %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"> Middle Name: </label>
+			<div class="controls">
+				<%= f.input :middle_name,  :label=>false %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"> Last Name: </label>
+			<div class="controls">
+				<%= f.input :last_name,  :label=>false %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"> Gender: </label>
+			<div class="controls">
+				<%= f.input :gender, :as=>"select", :collection=>[["Male","male"],["Female","female"]], :prompt=>"Gender", label: false %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"> Date of Birth: </label>
+			<div class="controls">
+				<%= f.input :date_of_birth, :as => "string" , :label=>false , :readonly => true %>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label"> Nationality: </label>
+			<div class="controls">
+				<%= f.input :nationality, :as=>"select", :collection=>@kaenko_countries, :prompt=>"Nationality", label: false %>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<label class="control-label"> Country: </label>
+			<div class="controls">
+				<%= f.input :country, :as=>"select", :collection=>@kaenko_countries, :prompt=>"Country", label: false %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"> State: </label>
+			<div class="controls">
+				<%= f.input :state, :as=>"select", :collection=>[], :include_blank=>true, :prompt=>"State/Region/District", label: false %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"> City: </label>
+			<div class="controls">
+				<%= f.input :city, :placeholder=>"City", label: false %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"> Postal code: </label>
+			<div class="controls">
+				<%= f.input :postal_code, :placeholder=>"Postal Code", label: false %>
+			</div>
+		</div>		
+		<div class="control-group">
+			<label class="control-label"> Phone: </label>
+			<div class="controls">
+				<%= f.input :phone, :placeholder=>"Phone", label: false %>
+			</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label"> Address: </label>
+			<div class="controls">
+				<%= f.input :address, :as => "text", :placeholder=>"Address" , label: false, :input_html=>{style: "width:390px;height:50px;"} %>
+			</div>
+		</div>
+		 
+		<div class="clearfix form-actions">
+			<div class="col-md-offset-3 col-md-9">
+				<%= f.submit :class => 'btn btn-info' %>
+				<%= link_to :Canel, users_path, :class => 'btn' %>
+			 </div>
+		</div>
+	</div>
+<% end %>
+<% content_for :script do %>
+	<script src="/assets/admins/jquery-ui-1.10.3.custom.min.js"></script>
+	<script src="/assets/admins/date-time/bootstrap-datepicker.min.js"></script>
+	<script>
+
+		function get_state(cid,sid)
+		{
+		  $.ajax({
+		    url: '<%= list_states_url %>',
+		    type: 'get',
+		    data: {
+		      country_2_code: cid
+		    },
+		    success: function(response) {
+		      $("#user_state").html('');
+		      $.each(response, function() {
+		        if (sid == this[0])
+		          $("#user_state").append("<option value='" + this[0] + "' selected>" + this[1] + "</option>");
+		        else
+		          $("#user_state").append("<option value='" + this[0] + "'>" + this[1] + "</option>");
+		      });
+		      $("#user_state").show();
+		    },
+		    error: function(response) {
+		      window.console.log(response);
+		    }
+		  });
+		}
+		$(function() {
+		  $( "#user_date_of_birth" ).datepicker({
+		    defaultDate: "+1D",
+		    maxDate:'-1D',
+		    dateFormat: 'yy-m-d'
+		  });
+		});
+		
+
+		$("#user_country").change(function() {
+		  get_state($(this).val(),'')
+		});
+
+		<% if @user.country.present? %>
+		  get_state('<%=@user.country%>','<%=@user.state%>')
+		<% end %>
+
+	</script>
+<% end %>

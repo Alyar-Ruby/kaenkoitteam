@@ -1,0 +1,101 @@
+<section class="mail main-container container-fluid">
+  <div class="row row-50-top">
+    <div class="col-lg-9">
+      <div class="panel panel-default">
+        <div class="panel-heading panel-heading-mail">  
+          <div class="col-lg-4 nav-links-mail">
+            <span class="nav-mail active"><%=link_to "Inbox" , messages_path, remote: true %></span>
+            <span class="nav-mail">
+            <%= link_to "Unread", unread_list_messages_path, remote: true %></span>
+            <span class="nav-mail"><%= link_to 'Archive', show_archive_messages_path, remote: true %></span>
+          </div>
+          <div class="col-lg-8 header-who-mail">
+            <span class="mail-header">
+               Compose Message
+            </span>
+            <div class="btn-group pull-right">
+                <div class="btn-group">
+                  <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-cog"></i>
+                  </a>
+                  <ul class="dropdown-menu" role="menu">
+                    <li>
+                      <a href="#">
+                      </a>
+                    </li>
+                    <li><%#=link_to trash_message_path(@conversation) , method: :post, remote: true, confirm: "Are you sure you want to delete this conversation?" do %>
+                        <i class="fa fa-ban"></i> Delete Message
+                        <% #end %>
+                    </li>
+                        
+                    <li><%#= link_to archive_message_path(@conversation), method: :post, remote:true do %>
+                        <i class="fa fa-archive"></i> Archive Message
+                        <%# end %>
+                    </li>
+                    <li>
+                      <a href="#">
+                          <i class="fa fa-floppy-o"></i> Save As PDF
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="btn-group">
+                  <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      <i class="fa fa-search"></i>
+                  </a>
+                  <ul class="dropdown-menu" role="menu">
+                      <li>Search form</li>
+                  </ul>
+                </div>
+                  <%= link_to new_message_path , remote: true, class: "btn btn-default", id: "new_message_link" do %> 
+                  New Message
+                <% end %>
+              </div>
+          </div>
+        </div>
+        <div class="panel-body panel-overview">
+          <div class="well-mail col-lg-4">
+            <ul id="messagelist" class="well-mail-list">
+              <%if @latest_messages.size > 0 %>
+                
+            
+            <% else %>
+             <div class="panel panel-mail">
+                <div class="panel-heading">
+                  No message available
+                </div><!-- /input-group -->
+              </div>
+          <% end %>
+            <!-- END entry -->
+            <!-- entry -->
+        </ul>
+    
+      </div>
+
+      <div class="col-lg-8 tabular-content" id="message_detail">
+        <%if @messages.size == 0 %>
+        <div class="panel-body ">
+          <div class="messagecontent" style="overflow: hidden; width: auto; height: 460px;">
+      <!-- entry -->
+            <div class="ticket mail-body">
+              No coversation
+            </div>
+          </div>
+        </div>
+      <% end %>
+      </div>
+    </div>
+  
+</section>
+ 
+<% if @latest_message.size>0 %>
+  <script type="text/javascript">
+    $(function() {
+      <% if !params[:msg_id].present? %>
+        $.getScript("<%= message_path(@latest_messages.first.conversation_id) %>")
+      <% else %>
+        $.getScript("<%= message_path(params[:msg_id]) %>")
+      <% end %>
+    })
+  </script>
+<% end %>

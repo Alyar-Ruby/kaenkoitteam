@@ -1,0 +1,548 @@
+  <%= render 'request_payments/request_payment_header' %>
+<!-- DATA AREA TITLE -->
+<% if current_user._account_type == "Business" %>
+  <% user_ac_info = current_user.user_account %>
+  <% account_name = user_ac_info.organization_name %>
+  <% registration_number = user_ac_info.registration_number %>
+  <% account_address = user_ac_info.address %>
+  <% account_city = user_ac_info.city %>
+  <% account_state = state_name(user_ac_info.country, user_ac_info.state) %>
+  <% account_country = country_name(user_ac_info.country) %>
+  <% account_pincode = user_ac_info.postal_code %>
+  <% account_phone = current_user.account.users.admin_user.first.phone %>
+<% else %>
+  <% account_name = current_user.name %>
+  <% registration_number = "" %>
+  <% account_address = current_user.address %>
+  <% account_city = current_user.city %>
+  <% account_state = state_name(current_user.country, current_user.state) %>
+  <% account_country = country_name(current_user.country) %>
+  <% account_pincode = current_user.postal_code %>
+  <% account_phone = current_user.phone %>
+<% end %>
+<section class="request-money-invoice main-container container-fluid">
+    <div class="row row-50-top">
+        
+        <div class="col-lg-9">
+        <%= simple_form_for(@invoice, remote: true) do |f| %>
+      	<div class="panel panel-default" style="margin-bottom: 60px;">
+        	<div class="panel-heading">
+              <div class="dropdown">Create Invoice</div>
+         	</div>
+          	<div class="panel-body panel-invoice panel-overview-white">
+            <div class="col-lg-4 busi-info-invoice">
+                    
+                    <h1></h1>
+                    <p class="x-text"><%=account_name%></p>
+                    <p><%=account_address%></p>
+                    <p><%=account_city%>, <%=account_pincode%></p>
+                    <p><%=account_state%> <%=account_country%></p>
+                    <p><b>Phone: </b> <%=account_phone%></p>
+                    <p><b>Email: </b><%=current_user.email%></p>
+                    <p><b>Website: </b> www.website.com</p>
+                    
+            </div>
+            <div class="col-lg-8 invoice-right" style="text-align:right;">
+            <a href="#" id="change-logo-invoice" data-toggle="tooltip" data-placement="left" title="Edit/Upload Logo">
+                        <img id="invoice-logo" src="http://i59.tinypic.com/mts0mb.png">
+                    </a>
+                <span><strong>Invoice # </strong> <input type="text"></span>
+                <span><strong>Invoice Date </strong> <input type="text" placeholder="DD/MM/YY"></span>
+                <span><strong>Invoice Due </strong> <input type="text" placeholder="DD/MM/YY"></span>
+                </div>
+            <div class="col-lg-12 busi-info-invoice" style="margin-top: 20px;">
+            <ul style="list-style: none;padding: 10px;background:#f9f9f9;">
+                <li>
+                    <h5>Billing Information</h5>
+                </li>    
+                <li>
+  <div>
+                                        <span>
+                                        <label>Email:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" step="4" max="30" size="30" value="company@company.nz">
+                                        </p>
+                                        </span>
+                                        <span>
+                                        <label>First name:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" value="Gregory">
+                                        </p>
+                                        </span>
+      <span>
+                                        <label>Last Name:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" value="Pumpkin">
+                                        </p>
+                                        </span>
+      <span>
+                                        <label>Address:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" step="4" max="30" size="30" value="Av. Joan Miro 19, 1B">
+                                        </p>
+                                        </span>
+                                        </div>
+                   
+                                        <div>
+                                        
+                                        <span>
+                                        <label>City:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" value="Torremolinos" size="30">
+                                        </p>
+                                        </span>
+                                            <span>
+                                            <label>ZIP/Postal:</label>
+                                            
+                                            <p>
+                                            <input id="exp-number" type="text" max="6" size="10" value="29620" placeholder="ZIP / Postal Code">
+                                            </p>
+                                            </span>
+                                            <span>
+                                        <label>Region:</label>
+                                        <p>
+                                        <input id="exp-number" type="text" value="Andalusia" placeholder="Region / District" size="30">
+                                        </p>
+                                            </span>
+                                        
+                                            <span>
+                                            <label>Country:</label>
+                                            <p>
+                                            <select id="country-select-cc" class="ES-cc pd40">
+                                                <option class="ES-cc">Spain</option>
+                                                <option class="DE-cc">Germany</option>
+                                                <option class="ZA-cc">Zimbabwe</option>
+                                                <option class="GB-cc">United Kingdom</option>
+                                            </select>
+                                            </p>
+                                            </span>
+                                        </div>
+
+                                    </li>
+                
+            </ul>
+            </div>
+            <div class="col-lg-12">
+                
+                 <table class="table table-hover">
+                          <thead class="">
+                              <tr>
+                                  <td>Item Name</td>
+                                  <td>Description</td>
+                                  <td>Quantity</td>
+                                  <td>Unit Price</td>
+                                  <td>Tax</td>
+                                  <td>Amount</td>
+                                  <td>&nbsp;</td>
+                              </tr>
+                          </thead>
+                          <tbody id="invoice-items">
+                            <tr>
+                               <%= f.fields_for :invoice_items do |ia| %>
+                                <td>
+                                   <%= ia.input :item_name,  
+                                   :label=> false,   input_html: 
+                                  {class: "form-control", size: 21}, :required=>"required" 
+                                  %>
+                                </td>
+                                <td>
+                                    <input type="text" size="40">
+                                </td>
+                                <td>
+                                  <%= ia.input :quantity,  
+                                   :label=> false,   input_html: 
+                                  {class: "form-control invoice-item-quantity input-75", size: "3"}, :required=>"required" 
+                                  %>
+                                </td>
+                                <td>
+                                  
+                                   <%= ia.input :unit_price,  
+                                   :label=> false,   input_html: 
+                                  {class: "form-control invoice-item-unit-price input-75", size: "3"}, :required=>"required" 
+                                  %>
+                                </td>
+                                <td>
+                                    <select>
+                                        <option>n/a</option>
+                                        <option>VAT</option>
+                                        <option>TAX</option>
+                                    </select>
+                                </td>
+                                <td style="display:none;">
+                                  <%= ia.input :tax_type, label: false, :as=>"select", 
+                                  :collection =>[["VAT", "VAT"], ["Tax", "Tax"], ["N/A", "N/A"]] , 
+                                  input_html: {class: "form-control selectpicker"}
+                                %>
+                                    
+                                </td>
+
+                                <td> <b class="invoice-item-amount">0.00</b> USD
+                                <%= ia.input :amount, :as => "hidden", :input_html=>{:class=>"invoice_item_amount"} %> 
+                                <%= ia.input :kaenko_currency_id, :as => "hidden", :value=>current_user.account.kaenko_currency_id %> </td>
+                                <% end %>
+                                <td>
+                                    <button type="button" class="add-invoice-item btn btn-success"><i class="fa fa-plus"></i></button>
+                                    
+                                </td>
+                            </tr>
+                        </tbody>
+                        </table>    
+            </div>
+            <div class="col-lg-6">
+                <h5>Terms &amp; Conditions <a class="info-badge-cvc" href="#" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="When user will receive confirmation email, in registration process he will be asked to introduce One-Time code. This code should be unique and you shall be responsible for passing it over to user."><i class="fa fa-info-circle"></i></a></h5>
+                <%= f.input :terms_conditions, 
+                        :as => "text",  :label=> false, input_html: 
+                        {class: "form-control", rows: "3", placeholder: "Introduce Terms and Conditions of payment. This will help you stay secure and avoid any miscommunication", style:"height: 150px;" }, :required=>"required" 
+                      %>  
+                      <%= f.hidden_field :kaenko_currency_id, value: 1 %>
+                </div>
+            <div class="col-lg-6 tabular-cardpick">
+	           <ul class="invoice-summary">
+                <li>Sub-total: <span id="invoice-subtotal">0.00</span> USD</strong>
+                             <%= f.input :subtotal, :as=>"hidden" %></li>
+                <li>Shipping: <%= f.input :shipping,  
+                                 :label=> false,   input_html: 
+                                {class: "form-control input-sm", size: "5"}, :required=>"required" 
+                              %>
+                
+                </li>
+                <li>Discount: <%= f.input :discount,  
+                                 :label=> false,   input_html: 
+                                {class: "form-control input-sm", size: "5"}, :required=>"required" 
+                              %></li>
+                <li class="total">Total: <span id="invoice-total">0.00</span> USD
+                             <%= f.input :total, :as=>"hidden" %></td>
+            <br><br><a href="#" class="btn btn-primary btn-sm" style="
+">
+                        Process Invoice
+                      </a>
+                </li>    
+	           </ul>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+        
+        <div class="col-lg-12" style="display:none;">
+            <%= simple_form_for(@invoice, remote: true) do |f| %>
+                <!-- row -->
+                <div class="row">
+                        <!-- CARD CONTENT -->
+                  <div class="alert alert-warning" id="error_msg" style="display:none;"></div>
+                  <article class="card col-md-6 col-sm-12"> 
+                      <div class="panel panel-default"> 
+                          <div class="panel-heading">
+                              <i class="kk-doc light"></i>Business Information
+                          </div> 
+                          <div class="panel-body"> 
+                              <img src="http://static.zara.net/wcsstore/ZaraStorefrontAssetStore//assets/logo_Zara.png"><br>
+                              <br>
+                              <%=account_name%>.<br>
+                              <%=account_address%>,<br> 
+                              <%=account_city%> <%=account_state%><br> 
+                              <%=account_country%><br>
+                              <%=account_pincode%><br>
+                              <br> 
+                              Phone: <%=account_phone%><br>
+                              Fax: +44-123-456-780<br> 
+                              <%=current_user.email%><br> 
+                              <br> 
+                              Company Reg: <%=registration_number%><br> 
+                              Vat No.: GB1234567890<br> 
+                          </div> 
+                      </div> 
+                  </article> 
+                  <!-- END CARD CONTENT -->          
+
+                    <!-- CARD CONTENT -->
+                  <article class="card col-md-6 col-sm-12"> 
+                    <div class="panel panel-default"> 
+                        <div class="panel-heading">
+                            <i class="kk-doc light"></i>Invoice Details
+                        </div> 
+                        <div class="panel-body">
+                          <div class="row form-group"> 
+                            <div class="col-xs-6"> 
+                              <label>Invoice Number</label> 
+                              <%= f.input :number, 
+                                 :label=> false, input_html: 
+                                {class: "form-control"}, :required=>"required" 
+                              %>
+                            </div> 
+                          </div>
+                          <div class="row form-group">
+                              <div class="col-xs-6">
+                                  <label>Invoice Date</label>
+                                  <%= f.input :invoice_date, as: :date, 
+                                 :label=> false, input_html: 
+                                {class: "form-control"}, :required=>"required" 
+                              %>
+                              </div>
+
+                              <div class="col-xs-6">
+                                  <label>Due Date</label>
+                                  <%= f.input :due_date, as: :date, 
+                                     :label=> false, input_html: 
+                                    {class: "form-control"}, :required=>"required" 
+                                  %>
+                              </div>
+
+                          </div>
+
+                          <div class="row form-group">
+                              <div class="col-xs-12">
+                                  <label>Invoice Receipent</label>
+                                   <%= f.input :receipent, as: :email, 
+                                   :label=> false, placeholder: "ID or Email",  input_html: 
+                                  {class: "form-control"}, :required=>"required" 
+                                  %>
+                              </div>
+                          </div>
+                        </div>
+                      </div> 
+                  </article> 
+                    <!-- END CARD CONTENT -->
+                </div>
+                <!-- END row -->
+               
+                <div class="row">
+                  <!-- CARD TABLE -->
+                  <article class="card card-table col-lg-12">
+                    <div class="panel panel-default">
+                      <div class="panel-heading ">
+
+                        <div class="dropdown">
+                          <i class="kk-doc light"></i>Your Invoice
+                          <a href="#" class="pull-right dropdown-toggle" data-toggle="dropdown">Select Currency<i class="kk-settings "></i></a>
+                          <ul class="dropdown-menu">
+                            <li>
+                                <a href="#">USD</a>
+                            </li>
+                            <li>
+                                <a href="#">EUR</a>
+                            </li>
+                            <li>
+                                <a href="#">CNY</a>
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+
+                      <div class="panel-body table-responsive">
+                        <table class="table table-hover">
+                          <thead class="">
+                              <tr>
+                                  <td>Item Name</td>
+                                  <td>Quantity</td>
+                                  <td>Unit Price</td>
+                                  <td>Tax</td>
+                                  <td>Amount</td>
+                                  <td>&nbsp;</td>
+                              </tr>
+                          </thead>
+                          <tbody id="invoice-items">
+                            <tr>
+                               <%= f.fields_for :invoice_items do |ia| %>
+                                <td>
+                                   <%= ia.input :item_name,  
+                                   :label=> false,   input_html: 
+                                  {class: "form-control", size: 40}, :required=>"required" 
+                                  %>
+                                </td>
+                                <td>
+                                  <%= ia.input :quantity,  
+                                   :label=> false,   input_html: 
+                                  {class: "form-control invoice-item-quantity", size: "3"}, :required=>"required" 
+                                  %>
+                                </td>
+                                <td>
+                                  
+                                   <%= ia.input :unit_price,  
+                                   :label=> false,   input_html: 
+                                  {class: "form-control invoice-item-unit-price", size: "3"}, :required=>"required" 
+                                  %>
+                                </td>
+                                <td>
+                                  <%= ia.input :tax_type, label: false, :as=>"select", 
+                                  :collection =>[["VAT", "VAT"], ["Tax", "Tax"], ["N/A", "N/A"]] , 
+                                  input_html: {class: "form-control selectpicker"}
+                                %>
+                                    
+                                </td>
+
+                                <td> <span class="invoice-item-amount">0.00</span> USD
+                                <%= ia.input :amount, :as => "hidden", :input_html=>{:class=>"invoice_item_amount"} %> 
+                                <%= ia.input :kaenko_currency_id, :as => "hidden", :value=>current_user.account.kaenko_currency_id %> </td>
+                                <% end %>
+                                <td>
+                                    <button type="button" class="add-invoice-item btn btn-success"><i class="fa fa-plus"></i></button>
+                                    <button type="button" class="remove-invoice-item btn btn-danger"><i class="fa fa-times"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </article>
+                  <!-- END CARD TABLE -->
+                    
+                </div>
+                <!-- END row -->
+                <!-- row -->
+                <div class="row">
+                    
+                  <div class="col-sm-6">
+                    <div class="from-group">
+                      <label>Terms and Conditions</label>
+                      <%= f.input :terms_conditions, 
+                        :as => "text",  :label=> false, input_html: 
+                        {class: "form-control", rows: "3", style:"height: 150px;" }, :required=>"required" 
+                      %>  
+                      <%= f.hidden_field :kaenko_currency_id, value: 1 %>
+
+                    </div> 
+                  </div>
+                  <div class="col-sm-6 pull-right">
+                    <label>Invoice Resumé</label>
+                    <table class="table table-grey">
+                      <tbody>
+                        <tr>
+
+                            <td>Subtotal:</td>
+                            <td><strong><span id="invoice-subtotal">0.00</span> USD</strong>
+                             <%= f.input :subtotal, :as=>"hidden" %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Shipping</td>
+                            <td>
+                              <%= f.input :shipping,  
+                                 :label=> false,   input_html: 
+                                {class: "form-control input-sm", size: "5"}, :required=>"required" 
+                              %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Discount %</td>
+                            <td>
+                              <%= f.input :discount,  
+                                 :label=> false,   input_html: 
+                                {class: "form-control input-sm", size: "5"}, :required=>"required" 
+                              %>
+                            </td>
+                        </tr>
+                        
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td><strong><span id="invoice-total">0.00</span> USD</strong>
+                             <%= f.input :total, :as=>"hidden" %></td>
+                        </tr>
+
+                        <tr>
+                          <td>&nbsp;</td>
+                          <td><%= f.submit "Create Invoice", class: "btn btn-success" %></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                    
+                </div>
+                <!-- END row -->
+            <% end %>
+        </div><!-- END col-lg-12 -->       
+    </div><!-- END row -->
+</section>
+<%= javascript_tag do %>
+  var invoice_item_count = 1
+  $("#invoice-items").on("click", ".add-invoice-item", function(){
+    invoice_item_count = invoice_item_count + 1
+    $("#invoice-items").append('<tr>                                                             <td>                                  <div class="input string required invoice_invoice_items_item_name"><input type="text" size="40" required="required" name="invoice[invoice_items_attributes]['+invoice_item_count+'][item_name]" maxlength="255" id="invoice_invoice_items_attributes_'+invoice_item_count+'_item_name" class="string required form-control" aria-required="true"></div>                               </td>                               <td>                                 <div class="input integer required invoice_invoice_items_quantity"><input type="number" step="1" size="3" required="required" name="invoice[invoice_items_attributes]['+invoice_item_count+'][quantity]" id="invoice_invoice_items_attributes_'+invoice_item_count+'_quantity" class="numeric integer required form-control invoice-item-quantity input-75" aria-required="true"></div>                               </td>                               <td>                                                                   <div class="input decimal required invoice_invoice_items_unit_price"><input type="number" value="0.0" step="any" size="3" required="required" name="invoice[invoice_items_attributes]['+invoice_item_count+'][unit_price]" id="invoice_invoice_items_attributes_'+invoice_item_count+'_unit_price" class="numeric decimal required form-control invoice-item-unit-price input-75" aria-required="true"></div>                               </td>                               <td>                                 <div class="input select optional invoice_invoice_items_tax_type"><select name="invoice[invoice_items_attributes]['+invoice_item_count+'][tax_type]" id="invoice_invoice_items_attributes_'+invoice_item_count+'_tax_type" class="select optional form-control selectpicker" style="display: none;"><option value=""></option><option value="VAT">VAT</option><option value="Tax">Tax</option><option value="N/A">N/A</option></select><div class="btn-group bootstrap-select select optional form-control"><button data-toggle="dropdown" class="btn dropdown-toggle selectpicker btn-default" type="button" data-id="invoice_invoice_items_attributes_'+invoice_item_count+'_tax_type" title="n/a"><span class="filter-option pull-left">n/a</span>&nbsp;<span class="caret"></span></button><div class="dropdown-menu open"><ul role="menu" class="dropdown-menu inner selectpicker"><li rel="0" class="selected"><a style="" class="" tabindex="0"><span class="text"></span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="1"><a style="" class="" tabindex="0"><span class="text">VAT</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="2"><a style="" class="" tabindex="0"><span class="text">Tax</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li><li rel="3"><a style="" class="" tabindex="0"><span class="text">N/A</span><i class="glyphicon glyphicon-ok icon-ok check-mark"></i></a></li></ul></div></div></div>                                                                  </td>                               <td> <span class="invoice-item-amount">0.00</span> USD                               <div class="input hidden invoice_invoice_items_amount"><input type="hidden" value="0.0" name="invoice[invoice_items_attributes]['+invoice_item_count+'][amount]" id="invoice_invoice_items_attributes_'+invoice_item_count+'_amount" class="hidden invoice_item_amount"></div>                                <div class="input hidden invoice_invoice_items_kaenko_currency_id"><input type="hidden" value="<%=current_user.account.kaenko_currency_id%>" name="invoice[invoice_items_attributes]['+invoice_item_count+'][kaenko_currency_id]" id="invoice_invoice_items_attributes_'+invoice_item_count+'_kaenko_currency_id" class="hidden"></div> </td>                               <td>                                   <button class="add-invoice-item btn btn-success" type="button"><i class="fa fa-plus"></i></button>                                   <button class="remove-invoice-item btn btn-danger" type="button"><i class="fa fa-times"></i></button>                               </td>                           </tr>');
+  });
+  
+  $("#invoice-items").on("click", ".remove-invoice-item", function(){
+    $(this).parent().parent().remove();
+  });
+  
+  function calculate_total_price()
+  {
+    sub_total = 0
+    $("#invoice-items").find('.invoice-item-amount').each(function(){
+      sub_total = sub_total + parseFloat($(this).html())
+    })
+    $("#invoice-subtotal").html(sub_total)
+    $("#invoice_subtotal").val(sub_total)
+    
+    shipping = parseFloat($("#invoice_shipping").val())
+    discount = parseFloat($("#invoice_discount").val())
+    discount_value = parseFloat((discount/100)*sub_total)
+    total = (sub_total - discount_value) + shipping
+    $("#invoice-total").html(total)
+    $("#invoice_total").val(total)
+  }
+  
+  $("#invoice-items").on("change", ".invoice-item-quantity", function(){
+    if ($.isNumeric( $(this).val() ))
+    {
+      unit_price = $(this).parent().parent().parent().find('.invoice-item-unit-price').val()
+      $(this).parent().parent().parent().find('.invoice-item-amount').html($(this).val() * unit_price)
+      $(this).parent().parent().parent().find('.invoice_item_amount').val($(this).val() * unit_price)
+      calculate_total_price()
+    }
+    else
+    {
+      alert('Only numbers are allowed');
+      $(this).val("")
+    }
+  });
+  
+  $("#invoice-items").on("change", ".invoice-item-unit-price", function(){
+    if ($.isNumeric( $(this).val() ))
+    {
+      quantity = $(this).parent().parent().parent().find('.invoice-item-quantity').val()
+      $(this).parent().parent().parent().find('.invoice-item-amount').html($(this).val() * quantity)
+      $(this).parent().parent().parent().find('.invoice_item_amount').val($(this).val() * quantity)
+      calculate_total_price()
+    }
+    else
+    {
+      alert('Only numbers are allowed');
+      $(this).val("")
+    }
+  });
+  
+  $("#invoice_shipping").change(function(){
+    if ($.isNumeric( $(this).val() ))
+    {
+      calculate_total_price()
+    }
+    else
+    {
+      alert('Only numbers are allowed');
+      $(this).val("")
+    }
+  });
+  
+  $("#invoice_discount").change(function(){
+    if ($.isNumeric( $(this).val() ))
+    {
+      calculate_total_price()
+    }
+    else
+    {
+      alert('Only numbers are allowed');
+      $(this).val("")
+    }
+  });
+  
+<% end %>
+
+<%= javascript_tag do %>
+  $(function() {
+    $('input[type="radio"]').iCheck({
+     radioClass: 'iradio_minimal-grey-white',
+    });
+    $('.selectpicker').selectpicker();
+  })
+<% end %>

@@ -1,0 +1,14 @@
+<li class="message-send" >
+  <%= form_tag reply_message_path(cnv), remote: true , id: "reply_form" do %>
+    <%= file_field_tag :'attachment_pic[]', id: "attachment_pic", style: 'display: none;', accept: "image/*", multiple: true %>
+    <%= file_field_tag :'file_attachment[]', id: "file_attachment", style: 'display: none;',  multiple: true %>
+    <%= text_area_tag  "body", "", name: "body", class: "form-control" , rows: "6" , style: "resize:none;" , id: "msg_body", placeholder: "Write a reply..." %>
+    <div class="input-group bottom-control">
+      <button class="btn btn-default-border" type="button" id="any_attachment"><i class="kk-attach"></i>Attach File</button>
+      <button class="btn btn-default-border" type="button" id="attach_image"><i class="kk-money-send"></i>Send Money</button>
+      <input type="checkbox" id="press_enter"> Press Enter to send
+      <%= submit_tag "Reply", class: "btn-send btn btn-primary btn-sm" , type: "button" , id: "btn_send" %>
+      
+    </div>
+  <% end %>
+</li>

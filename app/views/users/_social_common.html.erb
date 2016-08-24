@@ -1,0 +1,496 @@
+<style>
+  .text{ width:340px; height:217px; background:#FFF; opacity:0; } 
+  .user_pic:hover .text { opacity:0.6; text-align:justify; color:#000000; font-size:12px; font-weight:700;  padding:22px; } 
+
+  .panel .friends-footer ul li span {
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 12px;
+    line-height: 14px;
+    color: #666;
+    font-weight: normal;
+    font-size: 11px;
+    line-height: 40px;
+    min-height: 30px;
+    border: none;
+    min-width: 90px;
+    -webkit-transition: all 0s ease 0s;
+    -moz-transition: all 0s ease 0s;
+    -o-transition: all 0s ease 0s;
+    transition: all 0s ease 0s;
+    -moz-transition: all 250ms ease-out;
+    -webkit-transition: all 250ms ease-out;
+    -o-transition: all 250ms ease-out;
+    transition: all 250ms ease-out; 
+  }
+  .panel .friends-footer ul li span i {
+    font-size: 11px;
+  }
+</style>
+<section class="dashboard container-fluid tab-pane fade in active" id="dashboard">
+  <h2></h2>
+</section>
+
+<!-- DATA AREA TITLE -->
+<section class="main-container container-fluid" >
+
+<script>$('body').scroll(function() {
+    $('#mydiv').scrollToFixed({ marginTop: 80 });
+  });
+</script>
+<%if @account.present? %>
+<% account_admin = @account.users.where("account_admin = ?", true).first %>
+  <div id="social_error" class="alert alert-warning" style="display:none;"></div>
+    <div class="row">
+    <div class="col-md-5">
+    <article class="cardssocial avatar ">
+      <div class="panel panel-default">
+        <div class="panel-heading dropdown social-head">
+        <%if current_user.account.id == @account.id %>
+		        <%= link_to "#{@account.social_profile_name(current_user.account.id)}" , account_setting_path, 
+            remote: true, style: "text-transform: capitalize;" %>
+        <% else %>
+            <%= link_to "#{@account.social_profile_name(current_user.account.id)}" , "javascript:void(0)", 
+           style: "text-transform: capitalize;" %>
+        <% end %>
+		    </div>
+		  <div class="panel-body social-profile">
+	    
+		  <div class="profsoc">
+				<div class="col-lg-4" style="padding-left: 5px;">
+          <a href="#" class= "<%=(current_user.id == account_admin.id )? 'change-photo-action-lg' : '' %>">
+  				  <%= image_tag @account.display_image_profile , :class => "social-profile-img" %>
+				  </a>
+        </div>
+				<div class="col-lg-8">
+          <%if @account.roleable_type == "Business" %>       
+    				<h4><%= @account.display_name %></h4>
+    				<span>
+              <i class="fa fa-map-marker"></i><%= @account.roleable.try(:city) %>, <%= country_name(@account.roleable.try(:country)) %> | <%= @account.roleable.category.name %>
+            </span>
+            <p class="social-info" style="font-size:12px;margin-bottom: 0;margin-top: 10px;">
+              <i class="fa fa-globe"></i><%=link_to @account.display_website, "http://#{@account.display_website}" , target: "_blank" %><br/><i class="fa fa-envelope"></i><%= mail_to @account.roleable.email %><br/><i class="fa fa-phone"></i><%= @account.roleable.phone %><br/>            
+                <%if @account.roleable_type == "Business" %>
+                <span style="display:block;margin-top:10px;">
+                  <%= @account.roleable.description %>
+                </span>
+                <% end %>
+            </p>
+            
+          <% else %>
+            <% user = @account.users.first %>
+            <h4><%= user.name %></h4>
+            <span><i class="fa fa-map-marker"></i><%= user.city %>, <%= country_name(user.country) %></span>
+            <p class="social-info">
+              <i class="fa fa-globe"></i><%#= website personal %><br/><i class="fa fa-envelope"></i><%= mail_to user.email %><br/><i class="fa fa-phone"></i><%= user.phone %><br/>
+
+            </p>
+    			  
+          <% end %>
+				</div>
+		      
+        </div>
+      </div>
+  	  <div class="panel-footer friends-footer">
+    		<ul class="friends-footer-pagination">
+    			<li>
+            <!--<button><i class="fa fa-link"></i>Connect</button>-->
+            <%=form_tag connections_path, remote: true do %> 
+              <%if  current_user.account.id != @account.id %>
+                <% if @connection.size == 0 %>
+                  <%= hidden_field :to_account, @account.id , name: "to_account_id", value: @account.id %>
+                  <% if  account_admin.id == current_user.id || current_user.user_permission("Add Connections") == true %> 
+                   <button type="submit" id="connect_button"><i class="fa fa-link"></i>Connect</button>
+                   <span id="connect_message"></span>
+                  <% end %>
+                <% elsif @connection.first.status == "Pending" %>
+                  <span><i class="fa fa-link"></i>Pending</span>
+                <% elsif @connection.first.status == "Reject" %>
+                  <span><i class="fa fa-link"></i>Rejected</span>
+                <% else %>
+                  <span><i class="fa fa-link"></i>Connected</span>
+                <% end %>
+              <% end %>
+            <% end %>
+          </li>
+    			<li>
+            <%if current_user.account.id != @account.id %>
+              <button name="commit" id="btn_msg" , data-target = "#modal-window", data-toggle = "modal"><i class="fa fa-envelope"></i>Message</button>
+            <% end %>
+          </li>
+    			<li class="share-slide">
+    				<button><i class="fa fa-share"></i>Share</button>
+    				<button class="social-share-btn social-fb"><i class="fa fa-facebook"></i></button>
+    				<button class="social-share-btn social-gp"><i class="fa fa-google-plus"></i></button>
+    				<button class="social-share-btn social-li"><i class="fa fa-linkedin"></i></button>
+    				
+    			</li>	
+    		</ul>
+  	  </div>
+    </div>
+		
+	  <div id="mydiv" class="panel panel-default">
+      <div class="panel-heading dropdown social-head">
+        <% if @user_connections.size > 0 %>
+          <a class="user">
+            Connections (<%= @user_connections.size %>)
+          </a>
+  		    <a class="pull-right" style="margin:-3px;">
+    			 <form>
+    				  <input type="search" placeholder="">
+    			 </form>
+  		    </a>
+        <% else %>
+          <a class="user">
+            No connection
+          </a>
+        <% end %>
+      </div>
+      <div class="panel-body friends-list">
+        <div class="friends-warper">
+          <%if @user_connections.size > 0 %>
+            <% @user_connections.each do |con| %>
+              <div class="friend text-left">
+                <%if con.to_account.id == @account.id %>
+
+                  <%= link_to (image_tag (con.from_account.display_image_profile), width: 60, height: 60 ), social_user_path(con.from_account.id) , :class => "pull-left"  %>
+        					 <strong class="blue-hl">
+        					   <span> <%=link_to con.from_account.display_name, social_user_path(con.from_account.id) %> </span>
+        					 </strong>
+					         <span class="company-brief">
+                    <i class="fa fa-map-marker"></i> 
+
+                    <%= "#{con.from_account.display_city} , #{country_name(con.from_account.display_country)}" %> 
+                    </span>
+					         <span class="web-link">
+                      <%= link_to con.from_account.display_website, "http://#{con.to_account.display_website}" , target: "_blank"%>
+                   </span>
+				        <% else %>
+                  <%= link_to (image_tag (con.to_account.display_image_profile), width: 60, height: 60), social_user_path(con.to_account.id), :class => "pull-left" %> 
+                    <strong class="blue-hl">
+					            <span> <%= link_to con.to_account.display_name, social_user_path(con.to_account.id) %> </span>
+					          </strong>
+					          <span class="company-brief">
+                      <i class="fa fa-map-marker"></i>
+                       <%= "#{con.to_account.display_city} ,  #{country_name(con.to_account.display_country)}" %>
+                    </span>
+					          <span class="web-link"><%= link_to con.to_account.display_website, "http://#{con.to_account.display_website}", target: "_blank" %></span>
+                <% end %>                
+              </div>
+            <% end %>
+          <% end %>
+          <div class="clearfix"></div>
+        </div>    
+      </div>
+		  <div class="panel-footer friends-footer">
+		  <% if @user_connections.size >= 7 %>
+        <ul class="friends-footer-pagination">
+  				<li><button class="text-left previous" id="prevpage-friends"><i class="fa fa-chevron-left"></i>Previous</button></li>
+  				<li><button class="text-right next" id="nextpage-friends">Next<i class="fa fa-chevron-right"></i></button></li>
+			  </ul>
+      <% end %>
+		  </div>
+    </div>
+		
+  </article>
+	  
+	</div> <!--End Column md-5-->
+	<div class="col-md-4">
+	  <article class="cardssocial avatar ">
+  	  <div class="quick-send">
+         <%= form_for(Post.new, remote: true) do |f| %>
+      		  <div class="input-group no-shadow">
+            <div class="rating-post">
+                <div class="stars" data-toggle="tooltip" data-placement="bottom" title="Rate this post">
+                    <i class="fa fa-star starred"></i>
+                    <i class="fa fa-star starred"></i>
+                    <i class="fa fa-star starred"></i>
+                    <i class="fa fa-star "></i>
+                    <i class="fa fa-star"></i>
+                </div>
+            </div>
+              <%= f.text_area :title  , placeholder: "Write something", label: false %>
+      				<%= f.hidden_field :to_account_id , value: @account.id %>       
+            </div><!-- /input-group -->
+      			<div class="postnow-bottom">
+      				<span class="postbtns">
+        				<a href="#" data-toggle="tooltip" data-placement="bottom" title="Tag Place"><i class="fa fa-map-marker"></i></a>
+        				<a href="#" data-toggle="tooltip" data-placement="bottom" title="Attach File"><i class="fa fa-paperclip"></i></a>
+        				<a href="#" data-toggle="tooltip" data-placement="bottom" title="Review"><i class="fa fa-star"></i></a>
+        				<%= f.submit " " , class: "commitnow" %>
+      				</span>
+      			</div>
+                
+          <% end %>
+      </div>
+	  </article>
+    <div id = "all-post">
+        
+    <!-- PRIVATE POST EXAMPLE PLEASE DONT USE THIS MARKUP ITS JUST HERE FOR EXAMPLE -->
+    
+    
+        
+    <!-- end -->
+        
+    <%if @posts.size > 0 %>
+      <% @posts.each do |post| %>
+        <%post_account = post.from_account %>
+        <%if (current_user.account.id == post.from_account_id) && post.is_private == true %> 
+          <article class="cardssocial card-private" id="cardssocial<%= post.id %>">
+            <div class="panel panel-default"> 
+               <span class="label label-private">P</span>
+              <div class="panel-heading dropdown" style="border:none!important;">
+                <div class="user">
+                  <div class="user-avatar">
+                    <%= link_to (image_tag(post_account.display_image)), social_user_path(post_account.id), remote: true %> 
+                  </div>
+                    <b class="blue-hl"><%= post_account.display_name %></b> posted: 
+                    <% if  post_account.roleable_type == "Business" %>
+                      <%if post.from_account.id == current_user.account.id %>
+                        <div class="social-date-sm"><%= post.from_user.name %> <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="This Name is only visible for Users of this Account">[ ? ]</a> • <%= relative_time(post.created_at) %></div>
+                        
+                      <% else %>
+                        <div class="social-date-sm"><%= relative_time(post.created_at) %></div>
+                      <% end %>
+                    <% else %>
+                    <div class="social-date-sm"><%= relative_time(post.created_at) %></div>
+                    <% end %>
+                   
+                    <div id = "private_msg<%=post.id%>" class="social-date-sm"></div>
+                   
+                </div>
+                <%if current_user.account.id == @account.id %>
+                  <a href="#" class="pull-right dropdown-toggle" data-toggle="dropdown"><i class="fa fa-pencil "></i></a>
+                  <ul class="dropdown-menu">
+                    <%if current_user.id == post.from_user_id %>
+                      <li>
+                        <%=link_to "<i class='fa fa-pencil'></i> Edit".html_safe, edit_post_path(post.id) , id: "btn-edit#{post.id}" , remote: true  if post.from_user_id == current_user.id %>
+                      </li>
+                      <li id = "make_private<%= post.id %>">
+                        <%if post.is_private == true %>
+                          <%= link_to "<i class='fa fa-eye-slash'></i> Make Public".html_safe, make_public_post_path(post.id), remote: true %>
+                        <% else %>
+                          <%= link_to "<i class='fa fa-eye-slash'></i> Make Private".html_safe, make_private_post_path(post.id), remote: true %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                    <%if (current_user.id == post.from_user_id) || (current_user.id == account_admin.id) %>
+                      <li>
+                        <%= link_to "<i class='fa fa-ban'></i> Delete Post".html_safe, post_path(post.id), remote:true, method: :delete, confirm: "Are you sure?" %>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </div>
+              <div class="info">
+               <p id="post_title_text<%= post.id %>"> <%= post.title %> </p>
+               <div id="update_post<%= post.id %>" class="quick-update" style="display:none;">
+                  <%= form_for(post, remote: true) do |f| %>
+                    <div class="input-group no-shadow">
+                      <%= f.text_area :title  , placeholder: "Write something" %>
+                      <%= f.hidden_field :to_account_id , value: @account.id %>       
+                    </div><!-- /input-group -->
+                    <span class="bottom-control"> 
+                      <%= f.submit "Done Editing" , class: "updt-btn" %>
+                      <%= link_to "Cancel", "javascript:void(0)" , class: "cancel-btn", onclick: "hideEditForm('#{post.id}')" %>
+                     </span>    
+                  <% end %>
+                </div>
+              </div>
+              <div class="comments" id="comment_size<%=post.id%>"><%=post.comments.size %> comments</div>
+              <div id="comment<%=post.id%>" style="overflow:auto;max-height:200px;">
+                <%if post.comments.size > 0 %>
+                  <% post.comments.each do |comment| %>
+                   <div class="comments-list" id= "comment<%=comment.id%>">
+                      <div class="ticket">
+
+                        <%if (comment.user_id == current_user.id) || ( current_user.id == account_admin.id) %>
+                          <%= link_to post_comment_path(post.id, comment.id),  class: "delete-comment" , "data-toggle" =>"tooltip" , method: :delete, remote: true, "data-placement"=>"left" , title: "Remove", confirm: "Are you sure?" do %>
+                            <i class="fa fa-times"></i>
+                          <% end %>
+                        <% end %>
+
+						          <div class="user">
+                        <div class="user-avatar">
+                          <%= link_to (image_tag comment.account.display_image, width:30, height:30, class: "img-circle"), social_user_path(comment.account.id), remote: true  %>
+                        </div>
+						  
+						          <b class="blue-hl"><%= comment.account.display_name %></b> commented: 
+                        <% if  comment.user.account.id == current_user.account.id  %>
+                          <div class="social-date-smnm" ><%= comment.user.name   %> <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="This Name is only visible for Users of this Account" style="color: #009ad9;">[ ? ]</a> • <%= relative_time(comment.created_at) %></div>
+                        <% else %>
+                      
+                        <div class="social-date-smnm" ><%= relative_time(comment.created_at) %></div>
+                        <% end %>
+                          </div>
+						          <p style="padding: 15px 0px 0px 45px;"><%= comment.title %></p>
+                      </div>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+               <%= form_for ([post, post.comments.new]), remote: true do |f| %>
+                <div class="input-group no-shadow postnow-comment">
+                  <ul>
+                     <li>
+                      <div>
+                        <%= link_to (image_tag current_user.account.display_image_profile, width:30, height:30), social_user_path(current_user.account.id), remote: true  %>
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <%= f.text_area :title, id: "comment_box#{post.id}", placeholder: "Add comment to this entry" %>
+                        <%= hidden_field_tag :to_account , @account.id %>
+                      </div>
+                    </li>
+                    <li style="position:relative; float:right;">
+                      <%= f.submit " ", class: "commitnow" %>
+                    </li>
+                  </ul>
+                <span class="input-group-btn">
+                  <%= hidden_field_tag :r_user , @account.id %>
+                </span>
+              </div><!-- /input-group -->
+                <% end %>
+              </div>
+          </article>
+        <% elsif post.is_private == false %>
+          <article class="cardssocial " id="cardssocial<%= post.id %>">
+            <div class="panel panel-default">
+             <span class="label label-private">P</span>
+              <div class="panel-heading dropdown" style="border:none!important;">
+                <div class="user">
+                  <div class="user-avatar">
+                    <%= link_to (image_tag(post_account.display_image)), social_user_path(post_account.id), remote: true %> 
+                  </div>
+                    <b class="blue-hl"><%= post_account.display_name %></b> posted: 
+                    <% if  post.from_account.id == current_user.account.id %>
+                      <div class="social-date-sm"> <%= post.from_user.name %> <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="This Name is only visible for Users of this Account">[ ? ]</a> • <%= relative_time(post.created_at) %></div>
+                    <% else %>
+                    <div class="social-date-sm"><%= relative_time(post.created_at) %></div>
+                    <% end %>
+                    
+                    <div id = "private_msg<%=post.id%>" class="social-date-sm"></div>
+                    
+                </div>
+                <%if current_user.account.id == @account.id %>
+                  <a href="#" class="pull-right dropdown-toggle" data-toggle="dropdown"><i class="fa fa-pencil "></i></a>
+                  <ul class="dropdown-menu">
+                    <%if current_user.id == post.from_user_id %>
+                      <li>
+                        <%=link_to "<i class='fa fa-pencil'></i> Edit".html_safe, edit_post_path(post.id) , id: "btn-edit#{post.id}" , remote: true  if post.from_user_id == current_user.id %>
+                      </li>
+                      <li id = "make_private<%= post.id %>">
+                        <%if post.is_private == true %>
+                          <%= link_to "<i class='fa fa-eye-slash'></i> Make Public".html_safe, make_public_post_path(post.id), remote: true %>
+                        <% else %>
+                          <%= link_to "<i class='fa fa-eye-slash'></i> Make Private".html_safe, make_private_post_path(post.id), remote: true %>
+                        <% end %>
+                      </li>
+                    <% end %>
+                    <%if (current_user.id == post.from_user_id) || (current_user.id == account_admin.id) %>
+                      <li>
+                        <%= link_to "<i class='fa fa-ban'></i> Delete Post".html_safe, post_path(post.id), remote:true, method: :delete, confirm: "Are you sure?" %>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </div>
+              <div class="info">
+               <p id="post_title_text<%= post.id %>"> <%= post.title %> </p>
+               <div id="update_post<%= post.id %>" class="quick-update" style="display:none;">
+                  <%= form_for(post, remote: true) do |f| %>
+                    <div class="input-group no-shadow">
+                      <%= f.text_area :title  , placeholder: "Write something" %>
+                      <%= f.hidden_field :to_account_id , value: @account.id %>       
+                    </div><!-- /input-group -->
+                    <span class="bottom-control"> 
+                      <%= f.submit "Done Editing" , class: "updt-btn" %>
+                      <%= link_to "Cancel", "javascript:void(0)" , class: "cancel-btn", onclick: "hideEditForm('#{post.id}')" %>
+                     </span>    
+                  <% end %>
+                </div>
+              </div>
+              <div class="comments" id="comment_size<%=post.id%>"><%=post.comments.size %> comments</div>
+              <div id="comment<%=post.id%>" style="overflow:auto;max-height:200px;">
+                <%if post.comments.size > 0 %>
+                  <% post.comments.each do |comment| %>
+                   <div class="comments-list" id= "comment<%=comment.id%>">
+                      <div class="ticket">
+
+                        <%if (comment.user_id == current_user.id) || ( current_user.id == account_admin.id) %>
+                          <%= link_to post_comment_path(post.id, comment.id),  class: "delete-comment" , "data-toggle" =>"tooltip" , method: :delete, remote: true, "data-placement"=>"left" , title: "Remove", confirm: "Are you sure?" do %>
+                            <i class="fa fa-times"></i>
+                          <% end %>
+                        <% end %>
+
+                      <div class="user">
+                        <div class="user-avatar">
+                          <%= link_to (image_tag comment.account.display_image, width:30, height:30, class: "img-circle"), social_user_path(comment.account.id), remote: true  %>
+                        </div>
+              
+                      <b class="blue-hl"><%= comment.account.display_name %></b> commented: 
+                        <% if  comment.user.account.id == current_user.account.id  %>
+                          <div class="social-date-smnm" ><%= comment.user.name   %> <a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="This Name is only visible for Users of this Account" style="color: #009ad9;">[ ? ]</a> • <%= relative_time(comment.created_at) %></div>
+                        <% else %>
+                      
+                        <div class="social-date-smnm" ><%= relative_time(comment.created_at) %></div>
+                        <% end %>
+                          </div>
+                      <p style="padding: 15px 0px 0px 45px;"><%= comment.title %></p>
+                      </div>
+                    </div>
+                  <% end %>
+                <% end %>
+              </div>
+               <%= form_for ([post, post.comments.new]), remote: true do |f| %>
+                <div class="input-group no-shadow postnow-comment">
+                  <ul>
+                     <li>
+                      <div>
+                        <%= link_to (image_tag current_user.account.display_image_profile, width:30, height:30), social_user_path(current_user.account.id), remote: true  %>
+                      </div>
+                    </li>
+                    <li>
+                      <div>
+                        <%= f.text_area :title, id: "comment_box#{post.id}", placeholder: "Add comment to this entry" %>
+                        <%= hidden_field_tag :to_account , @account.id %>
+                      </div>
+                    </li>
+                    <li style="position:relative; float:right;">
+                      
+                      <%= f.submit " ", class: "commitnow" %>
+                    </li>
+                  </ul>
+                <span class="input-group-btn">
+                  <%= hidden_field_tag :r_user , @account.id %>
+                </span>
+              </div><!-- /input-group -->
+                <% end %>
+              </div>
+          </article>
+        <% end %>
+      <% end %>
+      <% end %>
+	   </div>
+    </div>
+  </div>
+  <% end %>
+</section>
+
+<%= javascript_tag do %>
+  $(function() {
+    $("#btn_msg").click(function() {
+      $.getScript("<%= social_message_user_path(@account.id) %>")
+     })
+  })
+  function hideEditForm(id) {
+    $("#update_post"+id).hide();
+    $("#post_title_text"+id).show();
+  }
+  
+<% end %>
+  

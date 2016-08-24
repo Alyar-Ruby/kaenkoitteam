@@ -1,0 +1,4 @@
+$("#notify_circle_size").hide();
+<%if  @notifications. size > 0 %>
+	$("#notification_circle").html('<span class="badge pull-right" id="notify_circle_size"><%= @notifications.size %></span><i class="kk-bell <%=(@current_top_menu == "notification") ? 'active' : ''%>"></i>')
+<% end %>

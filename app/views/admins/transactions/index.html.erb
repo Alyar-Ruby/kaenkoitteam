@@ -1,0 +1,179 @@
+<div class="row-fluid">
+  <div style="display:none;">
+      Last 30min :
+  </div>
+  <div style="display:none;">
+      Search :
+  </div>
+  <div>
+      <%= form_tag transactions_path, :method => :get  do %>
+        <div class="well-formbox">  
+          <div class="control-group">
+            <label class="control-label"> Search : from  </label>
+            <div class="controls">
+              <%= text_field_tag :from, params[:from] %> 
+            </div>
+          </div> 
+          <div class="clearfix">
+            <div class="col-md-offset-3 col-md-9">
+              <%= submit_tag :Search %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+  </div>
+  
+  <h3 style="display:none;" class="header smaller lighter blue"></h3>
+  <div class="table-header">
+    transactions
+  </div>
+	
+  <table id="table_report" class="table table-striped table-btransactioned table-hover">
+    <thead>
+      <tr>
+      <!--
+        <th class="center">
+          <label>
+            <input type="checkbox" />
+            <span class="lbl"></span>
+          </label>
+        </th>
+        -->
+        <th class="hidden-phone">
+          <i class="icon-time hidden-phone"></i>
+          Date
+        </th>
+        <th>From</th>
+        <th>To</th>
+        <th>Type of Transaction</th>
+        <th>Currency</th>
+        <th>Amount</th>
+        <th>Fee Payer</th>
+        <th>Fee</th>
+        <th>Batch ID</th>
+        <th>Status</th>
+        <th>Note</th>
+        <!--<th>Action</th> -->
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @transactions.each do |transaction| %>
+        <tr>
+        <!--
+          <td class="center">
+            <label>
+              <input type="checkbox" />
+              <span class="lbl"></span>
+            </label>
+          </td>
+         -->
+
+         
+          <td><%=	transaction.created_at.strftime("%d-%m-%y")%></td>
+          <td><%= transaction.transaction_from %></td>
+          <td><%= transaction.transaction_to %></td>
+          <td><%= transaction.transaction_type %></td>
+          <td><%= transaction.kaenko_currency.title %></td>
+          <td><%= transaction.amount %></td>
+          <td><%= transaction.fee_payer %></td>
+          <td><%= transaction.fee_percent.to_s + transaction.fee_value.to_s %><br/><%= transaction.fee_percent %> % + <%= transaction.fee_value %></td>
+          <td><%= transaction.batch_id %></td>
+          <td><%= transaction.status %></td>
+          <td><%= transaction.note %> </td>
+         <!--
+          <td class="td-actions">
+            <div class="inline position-relative">
+              <button data-toggle="dropdown" class="btn btn-minier btn-primary dropdown-toggle">
+                <i class="icon-cog icon-only bigger-110"></i>
+              </button>
+
+              <ul class="dropdown-menu dropdown-icon-only dropdown-light pull-right dropdown-caret dropdown-close">
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-success" href="#" data-original-title="Edit">
+                    <span class="green">
+                      <i class="icon-edit"></i>
+                    </span>
+                  </a>
+                </li>
+
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-warning" href="#" data-original-title="Flag">
+                    <span class="blue">
+                      <i class="icon-flag"></i>
+                    </span>
+                  </a>
+                </li>
+
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-error" href="#" data-original-title="Delete">
+                    <span class="red">
+                      <i class="icon-trash"></i>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td> -->
+        </tr>
+
+      <% end %>
+      
+    </tbody>
+  </table> 
+  <div class = "pull-right" style="padding-top:10px;">
+  	<%#= link_to "New", new_feesfromto_path, :class => 'btn btn-info' %>
+  </div>
+</div>
+
+<% content_for :stylem do %>
+		<link rel="stylesheet" href="/assets/admins/datepicker.css" />
+<% end %>
+<% content_for :script do %>
+  <script src="/assets/admins/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.bootstrap.js"></script>
+  <script src="/assets/admins/date-time/bootstrap-datepicker.min.js"></script>
+  <script>
+  	$(function() {
+  		$("#txtFromDate").datepicker({
+          numberOfMonths: 2,
+          onSelect: function(selected) {
+           $("#txtToDate").datepicker("option","minDate", selected)
+        }
+      });
+      $("#txtToDate").datepicker({
+          onSelect: function(selected) {
+           $("#txtFromDate").datepicker("option","maxDate", selected)
+        }
+
+      });
+  	});
+  </script>
+<% end %>
+
+<% content_for :inlinescript do %>
+  <script type="text/javascript">
+    $(function() {
+      var oTable1 = $('#table_report').dataTable( {
+    
+      "aoColumns": [
+          { "bSortable": false },
+          null, null, null, null, null, null, null, null, null, 
+        { "bSortable": false },
+       
+      ] } );
+      $('table th input:checkbox').on('click' , function(){
+        var that = this;
+        $(this).closest('table').find('tr &gt; td:first-child input:checkbox')
+        .each(function(){
+          this.checked = that.checked;
+          $(this).closest('tr').toggleClass('selected');
+        });
+          
+      });
+    
+      $('[data-rel=tooltip]').tooltip();
+    })
+  </script>
+<% end %>

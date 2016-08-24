@@ -1,0 +1,8 @@
+<%if !@error.present? %>
+	$("#user_phone_text").html("<%= @user.phone %>").show()
+<% else %>
+	$("#user_phone_text").html("<%= @error %>").show()
+<% end %>
+$("#edit_user_phone").hide();
+$("#change_user_phone").show();
+

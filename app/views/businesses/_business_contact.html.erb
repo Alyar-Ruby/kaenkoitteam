@@ -1,0 +1,6 @@
+<span><strong>Website</strong>
+  <%#= business_account.business_websites.where("is_primary=?", true).first.try(:website_url)%> 
+  <%= business_account.organization_url %>
+</span>
+<span><strong>Email:</strong><%= business_account.email %> </span>
+<span><strong>Phone Number:</strong><%= business_account.phone %></span>

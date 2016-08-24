@@ -1,0 +1,29 @@
+<ul>
+   <%if @latest_messages.size > 0 %>
+    <% @latest_messages.each  do |latest_message|  %> 
+      <% other_users = ConversationUser.where("conversation_id = ? and account_id <> ?", latest_message.conversation_id, current_user.account.id).first.try(:account)%>
+      <li>
+        <%=link_to message_path(latest_message.conversation_id), remote: true do %>  
+          <div class="clearfix">
+            <div class="notif_thumb pull-left">
+             <%= image_tag other_users.display_image,  alt: "..." , class: "img-circle" %>
+            </div>
+            <div class="notif_content pull-right">
+              <div class="notif_author">
+                <%= other_users.display_name %>
+              </div>
+              <div class="notif_snippet">
+               <span> <%= image_tag "/assets/reply_hover.png" , style: "width: 16px; height: 16px" if latest_message.account_id == current_user.account.id %></span>
+                <%= truncate(latest_message.message, length: 30, separator: ' ') %>
+               
+              </div>
+              <div class="notif_timestamp">
+                <%= relative_time(latest_message.created_at) %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

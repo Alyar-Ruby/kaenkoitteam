@@ -1,0 +1,161 @@
+<%= javascript_tag  do %>
+  window.chat_width = 0;
+  window.count = 0;
+  window.chatBoxes = new Array()
+<% end %>
+<aside id="livechat" class="livechat-slided">
+    <div class="livechat-top">
+      <ul>
+        <li class="litem">
+          <%=image_tag current_user.image_url(:profile) %>
+          <span class="liname"><%= current_user.name %></span>
+          <span class="status">
+          <div class="switch">
+            <input id="online-toggle" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
+            <label for="online-toggle"></label>
+          </div>
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div id="livechat-content" class="livechat-content" style="position:relative;">
+        <div id="uncat" class="circle-group">
+            <ul id="sortable1" class="livechat-list droptrue">
+              <%if connection_list.size > 0 %>
+                <% connection_list.each do |con| %>
+                  <%if con.to_account.id == current_user.account.id %>
+                    <!-- <a href='<%#= new_account_account_chat_path(con.from_account.id) %>' data-remote = 'true'> -->
+                      <li class='litem offline' id="chat_acclist<%= con.from_account.id %>">
+                        <%= image_tag (con.from_account.display_image_profile) %>
+                        <span class='liname'><%=con.from_account.display_name%></span>
+                        <span class='status' id="acc_status<%= con.from_account.id %>">Offline</span>
+                      </li>
+                      <%= javascript_tag do %>
+                      
+                        $("#chat_acclist<%= con.from_account.id %>").on('click',function(e){
+                          e.preventDefault();
+                          if( $("#chatbox-prototype<%=con.from_account.id%>").prop("class") != "chatbox opened") {
+                            count = count + 1;
+                            if (count <= 3) {
+                              if (chatBoxes.length < 3) {
+                                chatBoxes.push("<%= con.from_account.id %>")
+                              } else {
+                                $("#chatbox-prototype"+chatBoxes.splice(0, 1).toString()).removeClass('opened').hide();
+                                chatBoxes.push("<%= con.from_account.id %>")
+                              }
+                              if (chat_width < 870 ) {
+                                chat_width = chat_width + 290;
+
+                              }else {
+                                  chat_width = 290;
+                              }
+                            
+                          }else {
+                            chat_width = 290;
+                            count = 1;
+                            $("#chatbox-prototype"+chatBoxes.splice(0, 1).toString()).removeClass('opened').hide();
+                            chatBoxes.push("<%= con.from_account.id %>")
+                          }
+                            
+                            $("#chatbox-prototype<%=con.from_account.id%>").addClass('opened').show();
+                            $("#content_box<%=con.from_account.id%>").scrollTop($("#content_box<%=con.from_account.id%>")[0].scrollHeight);
+                            $("#chat_txt<%=con.from_account.id%>").focus();
+                            $("#chatbox-prototype<%=con.from_account.id%>").css("right", chat_width.toString()+'px')
+                          }
+                          else{
+                            $("#chat_txt<%=con.from_account.id%>").focus();
+                          }
+                        })
+                      
+                      <% end %>
+                    <!-- </a> -->
+                  <% else %>
+                    <!-- <a href='<%#= new_account_account_chat_path(con.to_account.id) %>' data-remote = 'true'> -->
+                      <li class='litem offline' id="chat_acclist<%= con.to_account.id %>">
+                        <%= image_tag (con.to_account.display_image_profile) %>
+                        <span class='liname'><%=con.to_account.display_name%></span>
+                        <span class='status' id="acc_status<%= con.to_account.id %>">Offline</span>
+                      </li>
+                      <%= javascript_tag do %>
+                        window.chat_width = 0;
+                        window.count = 0;
+                        window.chatBoxes = new Array()
+                        $("#chat_acclist<%= con.to_account.id %>").on('click',function(e){
+                           e.preventDefault();
+                          if( $("#chatbox-prototype<%=con.to_account.id%>").prop("class") != "chatbox opened") {
+                            count = count + 1;
+                            if (count <= 3) {
+                              if (chatBoxes.length < 3) {
+                                chatBoxes.push("<%= con.to_account.id %>")
+                              } else {
+                                $("#chatbox-prototype"+chatBoxes.splice(0, 1).toString()).removeClass('opened').hide();
+                                chatBoxes.push("<%= con.to_account.id %>")
+                              }
+                              if (chat_width < 870 ) {
+                                chat_width = chat_width + 290;
+
+                              }else {
+                                  chat_width = 290
+                              }
+                              
+                            }else {
+                              chat_width = 290;
+                              count = 1
+                              $("#chatbox-prototype"+chatBoxes.splice(0, 1).toString()).removeClass('opened').hide();
+                              chatBoxes.push("<%= con.to_account.id %>")
+                            }
+                            $("#chatbox-prototype<%=con.to_account.id%>").addClass('opened').show();
+                            $("#content_box<%=con.to_account.id%>").scrollTop($("#content_box<%=con.to_account.id%>")[0].scrollHeight);
+                            $("#chat_txt<%=con.to_account.id%>").focus();
+                            $("#chatbox-prototype<%=con.to_account.id%>").css("right", chat_width.toString()+'px')
+
+                          }
+                          else{
+                            $("#chat_txt<%=con.to_account.id%>").focus();
+                          }
+                          
+                        })
+                        
+
+                      <% end %>
+                    <!-- </a> -->
+                  <% end %>
+                <% end %>
+              <% end %>
+            </ul>
+            <%if current_user._account_type == "Business" %>
+              <ul id="sortable2" class="livechat-list droptrue">
+                  <li class="litem circle-title">
+                      <span class="liname">My Staff</span>
+                      <span class="status">(1/<%= account_staffs.size %>)</span>
+                  </li>
+                  <% if account_staffs.size.size > 0 %>
+                    <% account_staffs.each do |as| %>
+                    <li class="litem offline" id="chat_acclist<%= as.account.id %>">
+                      <%= image_tag as.image_url(:profile) %>
+                      <span class="liname"><%= as.name %></span>
+                      <span class="status" id="acc_status<%= as.account.id %>">Offline</span>
+                    </li>
+                  <% end %>
+                  <% end %>
+              </ul>
+            <% end %>
+        </div>
+    </div>
+    <div class="livechat-bottom">
+      <ul class="livechat-search">
+        <li>
+          <span class="livechat-input-search-ico"><i class="fa fa-search"></i></span>
+          <span id="headers"></span>
+          
+          <a href="#" class="buttonchat pull-right" data-toggle="tooltip" data-placement="top" title="New Message"><i class="fa fa-plus"></i></a>
+        </li>
+      </ul>
+    </div>
+    <div id="connection_result" style="overflow:auto;">
+        
+    </div>
+</aside>
+
+
+

@@ -1,0 +1,11 @@
+<%if @error.present? %>
+   $("#modal-window").html("<%= j(render(:partial => 'error_popup', locals: { error_msg: @error})) %>")
+   $('#modal-window').modal('show');
+<% else %>
+  $("#conversation_text<%=@conversation.id%>").html("<%= truncate(@msg.gsub(%r{</?[^>]+?>}, ''), length: 32, separator: ' ') %>");
+  $(".discussion").append('<%= j( render :partial => "messages/current_user_reply" , 
+            locals: {:conv_msg => @conversation_message}) %>')
+  $('#messagecontent').scrollTop($('#messagecontent')[0].scrollHeight);
+  $(".message-send").html("<%= j(render(:partial => 'reply_msg', locals: {cnv: @conversation.id})) %>");
+<% end %>
+$(".ajax-loading").hide();

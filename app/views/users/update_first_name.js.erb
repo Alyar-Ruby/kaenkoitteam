@@ -1,0 +1,8 @@
+<%if !@error.present? %>
+	$("#user_first_name_text").html("<%= @user.first_name %>").show()
+<% else %>
+	$("#user_first_name_text").html("<%= @error %>").show()
+<% end %>
+$("#edit_user_first_name").hide();
+$("#change_user_first_name").show();
+

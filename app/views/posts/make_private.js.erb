@@ -1,0 +1,5 @@
+<%if !@post.errors.present? %>
+	$("#make_private<%= @post.id %>").html('<a href="<%= make_public_post_path(@post.id) %>" data-remote="true"><i class="fa fa-eye"></i> Make Public</a>')
+	$("#cardssocial<%= @post.id %>").addClass('card-private')
+<% end %>
+$(".ajax-loading").hide();

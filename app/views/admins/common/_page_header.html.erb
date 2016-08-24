@@ -1,0 +1,9 @@
+<div class="page-header position-relative">
+  <h1>
+    <%=params[:controller].gsub("admins/","").gsub("_"," ").capitalize%>
+    <small>
+      <i class="icon-double-angle-right"></i>
+      <%=(params[:action] == "index") ? "Listing" : params[:action].capitalize%>
+    </small>
+  </h1>
+</div>

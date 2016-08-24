@@ -1,0 +1,9 @@
+$("#ajax-container").html("<%= j(render 'dashboard_payment_common') %>")
+$(".ajax-loading").hide()
+$("#dashboard_payment").addClass("active")
+$(function() {
+	history.pushState(null, "", "<%= dashboard_payment_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

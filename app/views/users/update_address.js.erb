@@ -1,0 +1,8 @@
+<%if !@error.present? %>
+	$("#user_address_text").html("<%= @user.address %>").show()
+<% else %>
+	$("#user_address_text").html("<%= @error %>").show()
+<% end %>
+$("#edit_user_address").hide();
+$("#change_user_address").show();
+

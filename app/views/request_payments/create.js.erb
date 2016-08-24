@@ -1,0 +1,8 @@
+<%if @request_payment.persisted? %>
+	$(function() {
+	 	$.getScript("<%= invoices_path %>")
+	})
+<% else %>
+	$("#error_msg").html("<%= @request_payment.errors.full_messages.join(',') %>").show();
+<% end %>
+$(".ajax-loading").hide()

@@ -1,0 +1,13 @@
+<h2>Premium Request</h2>
+
+<%= simple_form_for(@premium_request, :html => { :method => :post }) do |f| %>
+
+  <div class="row-fluid">
+    <div class="span12">
+      <div><%= f.input :request, :as=>"text", :label=>"Please Describe below a little about your Organization and why you will need a Premium Account", :input_html=>{:rows=>"10", :cols=>"110", :style=>"width:auto;"} %></div>
+      <div><br><%= f.submit "Submit Request" %><%=link_to "Cancel", :back, :style=>"float:right"%></div>
+    </div>
+  </div>
+  
+<% end %>
+

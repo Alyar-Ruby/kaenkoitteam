@@ -1,0 +1,67 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;</h4>
+    </div>
+    
+    <div class="modal-body">
+      <div id="error_msg_social"></div>
+       <div class="container-fluid">
+        <div class="row">
+          <p>
+          <%if @trans.present? %>
+            <% user =  User.where(id: @trans.transaction_from_id).first%>
+                <strong> Transaction ID: # <%=@trans.transaction_id%>  <%= @trans.status %></strong> <br>
+                <strong>Payment  <%= (@trans.from_account_id == current_user.account.id) ? "To" : "From" %>:
+                <%= (@trans.from_account_id == current_user.account.id) ? @trans.to_account.display_name : @trans.from_account.display_name %></strong><br>
+                <strong>Gross Debit :</strong> <%=number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %><br>
+                <strong> Net Sent : </strong> <%= number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %><br>
+                <strong> Paid By: </strong>
+                <%if @trans.roleable_type == "Bank" %>
+                  <%= @trans.roleable.name %> x- <%= @trans.roleable.account_number[-4..-1] %><br>
+                <% else %>
+                  <%= @trans.roleable.card_type %> x- <%= @trans.roleable.card_number[-4..-1] %><br>
+                <% end %>
+                <strong>Contact Info: </strong> 
+                <%if (@trans.from_account_id == current_user.account.id) %>
+                 <%= @trans.to_account.display_email %>
+                 <%#= user.try(:email) %>
+                <% else %>
+                 <%= @trans.from_account.display_email %>
+
+                <% end %>
+                  
+                <br>
+                <strong>For further info, check  <%= (@trans.from_account_id == current_user.account.id) ? @trans.to_account.display_name : @trans.from_account.display_name %> Profile</strong><br>
+
+                <br><br><br>
+                <strong>Recurring Pay-In? </strong> Yes ACTIVE<br>
+                <strong>Started: </strong> <br>
+                <strong>Periodicity: </strong> <br>
+                <strong>Debit From: </strong> 
+                <%if @trans.roleable_type == "Card" %>
+                  <%= @trans.roleable.card_type%> x- <%= @trans.roleable.card_number[-4..-1] %> 
+                <% else %>
+                  <%= @trans.roleable.name%> x- <%= @trans.roleable.account_number[-4..-1] %> 
+                <% end %>
+                <br>
+                <strong>Gross Amount: </strong> <%= number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %><br>
+                <strong>Net Amount: </strong> <%=number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %><br>
+                <strong>Ending: </strong>  When Subscriber cancel it
+
+            <% end %>
+          
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+   
+  </div>
+</div>
+
+
+
+

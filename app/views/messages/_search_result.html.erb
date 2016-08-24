@@ -1,0 +1,50 @@
+<div class="panel panel-mail">
+  <div class="panel-heading">
+    <ul class="mail-nav list-inline">
+      <li class="inbox-info inbox active"><%=link_to "Inbox" , messages_path, remote: true %></li>
+      <li class="inbox-info"><%= link_to "Unread", unread_list_messages_path, remote: true %></li>
+      <li class="inbox-info"><%= link_to 'Archive', show_archive_messages_path, remote: true %></li>
+    </ul>
+    <%=form_tag :search_message_messages, remote: true, method: :get do %>
+      <div class="input-group no-shadow">
+        <%=text_field_tag :search, params[:query] , name: "query" ,  class: "form-control", placeholder: "Search for message" %>
+        <span class="input-group-btn">
+          <button class="btn btn-success" type="submit"><i class="kk-search"></i></button>
+        </span>
+      </div><!-- /input-group -->
+    <% end %>
+  </div>
+  <div class="panel-body">
+      <!-- entry -->
+    <div class="messagelist">
+      <%if @conversation_messages.size > 0 %>
+        <% @conversation_messages.each do |cnv_msg| %>
+          <% cnv_user = cnv_msg.conversation_users.where("is_deleted = ?",   false).first %>
+          <% if cnv_user.present? %>
+            <% receipt_user = cnv_user.account %>
+            <a href="<%= message_path(cnv_user.conversation_id)%>" class="read-mail "   data-id="" data-remote = "true" >
+              <div class="ticket" >
+                <div class="avatar pull-left">
+                <%= image_tag receipt_user.display_image, width:50, height: 50, class: "img-circle" %>
+                </div>
+                <div class="content ">
+                  <span><i class="kk-clock"></i><%= relative_time(cnv_msg.created_at)%></span>
+                  <h2><%= receipt_user.try(:display_name) %></h2>
+                  <p><%= cnv_msg.message %></p>
+                </div>
+              </div>
+            </a>
+          <% end %>
+        <% end %>
+
+    <% else %>
+      <div>
+        No search results.
+      </div>
+    <% end %>
+    </div>
+  </div>
+</div>
+
+
+

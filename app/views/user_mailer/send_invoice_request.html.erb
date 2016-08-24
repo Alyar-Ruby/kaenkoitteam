@@ -1,0 +1,12 @@
+
+<p><%= image_tag attachments['user_image.png'].url%><br>Dear <%= @name %></p>
+<p><%= "#{@user.business_name} (ID:#{@user.id})" %> 
+	sent you a payment request</p>
+<p> Request to Pay:  
+	<%= "#{@invoice.total} #{@invoice.kaenko_currency.unit}" %>  
+<p>
+	Invoice number : <%= @invoice.number %>
+</p>
+<p><%= link_to 'Pay Now' , @pay_link %></p>
+
+<p>For any query about this Request, contact <%= @user.business_name %>  at <%= @user.email %></p>

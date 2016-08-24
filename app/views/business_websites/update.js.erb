@@ -1,0 +1,10 @@
+<%if !@error.present? %>
+	$("#business_website_text").html("<%= @business_website.website_url %>").show()
+<% else %>
+	$("#business_website_text").html("<%= @error %>").show()
+<% end %>
+$("#cancel_business_website").hide();
+$("#business_website_list").hide();
+$("#change_business_website").show();
+$(".ajax-loading").hide();
+

@@ -1,0 +1,2 @@
+module AccountCurrenciesHelper
+end

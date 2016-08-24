@@ -1,0 +1,6 @@
+$("#message_circle_size").hide();
+<%if @unread_messages.size > 0 %>
+	$("#msg_circle").html('<span class="badge pull-right" id="message_circle_size"> <%= @unread_messages.size %></span><i class="kk-message <%=(@current_top_menu == "message") ? 'active' : ''%>"></i>')
+<% else %>
+	$("#message_circle_size").hide();
+<% end %>

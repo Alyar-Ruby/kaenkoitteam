@@ -1,0 +1,67 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">All my currencies</h4>
+      <div id="error_msg" class="alert alert-warning" style="display:none;"></div>
+    </div>
+     <div class="modal-body">
+       <div class="panel-body table-responsive">
+          <table class="table table-hover">
+            <thead class="">
+              <tr>
+                <td>
+                  Currency
+                </td>
+                <td>
+                  Balance
+                </td>
+              </tr>
+            </thead>
+            <tbody>
+              <%if @account_currencies.size > 0 %>
+                <% @account_currencies.each do |currency| %>
+                <tr>
+                  <td>
+                    <%= currency.kaenko_currency.try(:title) %> <%= currency.is_primary == true ? "(Primary)" : ""%>
+                  </td>
+                  <td>
+                    <%= number_with_precision(currency.balance, precision:2 || 0) %>
+                  </td>
+                  <td>
+                    <%= link_to "Remove" , remove_currency_account_currency_path(currency.id), remote: true if currency.is_primary == false   %>
+                  </td>
+                </tr>
+                <% end %>
+                <tr>
+                  <td>
+                    <strong>
+                      Total (<%= @account.kaenko_currency.try(:unit) %> ) equivalent
+                    </strong>
+                  </td>
+                  <td>
+                      <%= number_with_precision(primary_currency_balance(@account), precision: 2 || 0) %>
+                  </td>
+                  <td>
+                    &nbsp;
+                  </td>
+                </tr>
+              <% else %>
+                Currency not available.
+              <% end %>      
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+         <%= link_to "Add more currency" , "javascript:void(0)", id: "add_more" , class: "btn btn-primary btn-sm "%> 
+      </div>
+    </div>
+</div>
+<%= javascript_tag do %>
+  $(function() {
+    $("#add_more").click(function() {
+      $.getScript("<%= new_account_currency_path %>")
+     })
+  })
+<% end %>

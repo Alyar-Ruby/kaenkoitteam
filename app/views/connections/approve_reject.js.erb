@@ -1,0 +1,10 @@
+<%if @permission == true %>
+	<%if @connection.status == "Approved" %>
+		$("#notification_action").html('<%= link_to "is now a Connection", @notification.try(:url) %>')
+	<% else %>
+		$("#notification_content<%= @nid %>").html("")
+	<% end %>
+<% else %>
+	$("#notification_action").html("Sorry!! You don't have permission to accept/reject connection")
+<% end %>
+$(".ajax-loading").hide();

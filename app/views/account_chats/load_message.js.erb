@@ -1,0 +1,8 @@
+$("#chatwindow<%=@account.id%>").prepend("<%= j (render partial: 'load_message', locals: {account: @account, messages: @messages} )%>")
+
+<% if (@messages.current_page < @messages.num_pages) %>
+        $("#chatwindow<%=@account.id%>").find('.pagination').replaceWith('<%= j paginate(@messages, params: {controller: "account_chats", action: "load_message", method: :get, account_id: current_user.account.id, id: @account.id}) %>');
+<% else %>
+        $("#chatwindow<%=@account.id%>").find('.pagination').remove();
+<% end %>
+

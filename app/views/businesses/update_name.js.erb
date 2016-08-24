@@ -1,0 +1,8 @@
+<%if !@error.present? %>
+	$("#business_name_text").html("<%= @business.organization_name %>").show()
+<% else %>
+	$("#business_name_text").html("<%= @error %>").show()
+<% end %>
+$("#edit_business_name").hide();
+$("#change_business_name").show();
+

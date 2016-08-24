@@ -1,0 +1,132 @@
+
+  <div class="panel panel-default">
+    <div class="panel-body panel-lego">
+      <div class="wrap">
+        <div class="profver">
+          <div class="twothird">
+          <div class="onethird" id= "subuser_image<%=su.id%>">
+            <%= image_tag (su.image.present? ? su.image_url(:profile) : '/assets/av2.png') , width:"125px" , height: "auto" %>
+          </div>
+          <%= file_field_tag :subuser_pic, id: "subuser_pic#{su.id}", style: 'display: none;', accept: "image/*" %>
+          <div class="twothirdless pull-right">
+            <h4 style="font-weight:800">Sub-User</h4>
+            <%= su.name %><br>
+            <span id="su<%= su.id%>" style="font-size:12px"><%= "#{su.job_title.try(:titleize)} at #{su.account.roleable.organization_name.try(:titleize)}"%></span>
+          </div>
+          </div>
+          <div class="onethird">
+          <%= link_to "Hide" , "javascript:void(0);" , class:"btn btn-primary" , 
+            style:"display:block" , id: "sub_user_hide#{su.id}" %> 
+         
+          
+          <br>
+          <%= link_to "Edit Permisssion" , edit_permission_user_path(su) , class:"btn btn-default" , style:"display:block; border: 1px solid #e3e8e8!important;", remote: true, 
+          'data-target' => "#modal-window", 'data-toggle' => "modal" %>
+          </div>
+          <div class="halfhalf">
+              <p class="hide-content">
+                <strong>Gender:</strong> 
+                <span id="user_gender_text"> <%= su.gender %></span>
+                </span>
+              </p>
+              <p class="hide-content">
+                <strong>Birth:</strong> 
+                <span id="user_user_dob_text">
+                  <%= su.date_of_birth.strftime("%d-%b-%Y") if su.date_of_birth.present? %> 
+                  <%= ", #{country_name(su.nationality)}" if su.nationality.present?%>
+                </span>
+              </p>
+              <p>
+                <strong>Email:</strong> 
+                <span id="user_email_text"> <%= su.email  %></span> 
+              </p>
+             
+            </div>
+            <div class="halfhalf">
+              <p class="hide-content">
+                <strong>Country:</strong>
+                <span id="user_country_text">
+                  <%= country_name(su.country) %> 
+                </span>
+              </p>
+              <p>
+                <strong>Address:</strong> 
+                <span id="user_address_text"><%= su.address %></span> 
+              </p>
+              <p>
+                <strong>City & ZIP:</strong> 
+                <span id="user_city_postal_text">
+                  <%= "#{su.city} (#{su.postal_code})"%>
+                </span>
+              </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  <div class="halfhalf">
+    <span class="list-titles"><strong>Allowed</strong></span>
+    <ul class="list-unstyled list-success">
+      <% su.roles.each do |role| %>
+      <p><strong><i class="fa fa-check-square"></i><%= role.title %></strong></p>
+        <% end %>
+        <% su.user_capabilities.each do |cap| %>
+        <p><strong><i class="fa fa-check-square"></i></strong><%=cap.capability.title %> <small>($<%= number_with_precision(cap.daily_limit, precision: 2 || 0)%>  per day)</small></p>
+        <% end %>
+      </ul>
+    </div>
+      <div  class="halfhalf">
+        <span><strong>Disallowed</strong></span>
+        <ul class="list-unstyled list-danger">
+          <% role_ids = su.role_ids.size > 0 ? su.role_ids : 0 %>
+          <%  Role.where("id not in (?)", role_ids).each do |role| %>
+          <p><strong><i class="fa fa-minus-square"></i><%= role.title %></strong><p>
+          <% end %>
+          <% cap_ids = su.capability_ids.size > 0 ? su.capability_ids : 0 %>
+          <%  Capability.where("id not in (?)", cap_ids ).each do |cap| %>
+          <p><strong><i class="fa fa-minus-square"></i><%= cap.title %></strong><p>
+          <% end %>
+        </ul>
+    </div>
+    <div class="halfhalf">
+      <%= link_to "Suspend User" , suspend_account_user_path(su) , class:"btn btn-danger" , style:"display:block", remote: true,  confirm: "Are you sure to suspend account?" %>
+    </div>
+    <div class="halfhalf">
+      <%= link_to "Delete User" , user_path(su) , class:"btn btn-danger " , style:"display:block" , remote: true, method: :delete, confirm: "Are you sure to delete account?"%>
+    </div>
+    <div style="margin-bottom:10px;"></div>
+          
+
+<%= javascript_tag do %>
+   
+    $(function() {
+      $("#sub_user_hide<%= su.id %>").click(function() {
+        $("#sub_user<%= su.id %>").show();
+        $("#sub_user_detail<%= su.id %>").hide();
+      })
+     
+      $("#subuser_image<%=su.id%>").on("click", function() {
+        $("#subuser_pic<%=su.id%>").click();
+      });
+      $("#subuser_pic<%=su.id%>").change(function() {
+        //$(this).closest('form').submit();
+        var form_data = new FormData(); // Creating object of FormData class
+          file_content = $("#subuser_pic<%=su.id%>")[0].files[0]
+          form_data.append("user_image", file_content);
+          $.ajax({
+            url: "<%= upload_subuser_image_user_path(su) %>",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: form_data,
+            dataType: "JSON",
+            success: function(response) {
+               $("#subuser_image<%=su.id%>").html("<img id='p_img' style= 'width:125px;' src='"+response.profile+"' />");    
+            },
+            error: function(response) {
+              $("#subuser_image<%=su.id%>").html($.parseJSON(response.responseText).errors);
+            }
+          });
+      });
+    })
+<% end %>
+

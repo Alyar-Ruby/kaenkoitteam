@@ -1,0 +1,19 @@
+<div class="panel panel-default">
+  <div class="panel-heading ">
+    <div class="dropdown">
+     Account Overview
+   </div>
+ </div>
+ <div class="panel-body panel-lego">
+  <div class="wrap">
+    <ul>
+      <li><div class="threequarters"><strong>Account Holder:</strong> <%= current_user.username %> (<%= current_user. email %>)</div><div class="onefourth"><strong>ID:</strong> <%=current_user.account.account_number %></div></li>
+      <li><div class="onefourth"><strong>Status:</strong> <%= @account.verified == true ? "Verified" : "Not verified" %></div></li>
+      <li><strong>Privacy Settings:</strong> <a href="#" class="btn btn-default btn-small">Change</a></li>
+      <li><strong>Default Timezone:</strong> <%= @account.time_zone %><a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+      <li><strong>Default Language:</strong> <%= current_user.language %> <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a></li>
+      <li><strong>Primary Currency:</strong> <%= @account.kaenko_currency.try(:title) %> (<%= @account.kaenko_currency.try(:unit) %>) <a href="#" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil"></i></a><a href="#" class="btn btn-default btn-small">Accept More</a><a href="#" class="btn btn-default btn-small">View All</a></li>
+    </ul>
+  </div>
+</div>
+</div>          

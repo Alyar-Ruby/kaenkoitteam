@@ -1,0 +1,39 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Add Website</h4>
+      <div id="error_msg" class="alert alert-warning" style="display:none;"></div>
+    </div>
+    <%= simple_form_for(@business_website, remote: true) do |f| %>
+      <div class="modal-body">
+          <p style="display:none;" class="alert alert-warning" id="business_website_error"></p>
+          <p style="display:none;" class="alert alert-success"></p>
+          <div class="form-group">
+            <div>
+                <%= f.label " " %>
+               <%= f.input :website_protocol, :as=>"select", label: false, 
+                :collection=>["http://", "https://"], :include_blank => false , input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div>
+            		<%= f.label "Website:" %>
+                <%= f.input :website_url, as: :string , label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div>
+            		<%#= f.label "Primary:" %>
+                <%#= f.input :website_url,  label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div>
+                <%#= f.label "Primary:" %>
+                <%#= f.input :is_primary, :as=>:select, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+          </div>
+          <br>
+          <div class="row-fluid">
+            <div class="span3 offset1">&nbsp;</div>
+            <div class="span8"><%= f.submit "Submit", :class=>"btn btn-primary" %></div>
+          </div>
+      </div>
+    <% end %>
+  </div>
+</div>

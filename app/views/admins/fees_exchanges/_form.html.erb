@@ -1,0 +1,90 @@
+
+	
+		<%= simple_form_for [:admins , @fees_exchange], :html => { :class => 'form-horizontal' } do |f| %>
+		<div class="well-formbox">  
+			<% if @fees_exchange.errors.any? %>
+			<div id="errorExplanation">
+				<h2><%= pluralize(@fees_exchange.errors.count, "error") %> prohibited this user from being saved:</h2>
+				<ul>
+				<% @fees_exchange.errors.full_messages.each do |msg| %>
+				  <li><%= msg %></li>
+				<% end %>
+				</ul>
+			</div>
+			<% end %>
+			<div class="control-group">
+				<label class="control-label"> From: </label>
+				<div class="controls">
+					
+					<%= f.input :from_currency, as: :select, :collection => 
+						CURRENCIES.each{|c| [c, c]}, label: false %>
+					
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> To: </label>
+				<div class="controls">
+					<%= f.input :to_currency, as: :select, :collection => 
+						CURRENCIES.each{|c| [c, c]}, label: false %>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"> Fee Percent: </label>
+				<div class="controls">
+					<%= f.input :fee_percent, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Fee Value: </label>
+				<div class="controls">
+					<%= f.input :fee_value, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Our Fee: </label>
+				<div class="controls">
+					<%= f.input :our_fee, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Fx Fee: </label>
+				<div class="controls">
+					<%= f.input :fx_fee, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Provider: </label>
+				<div class="controls">
+					<%= f.input :provider, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Limit (p/d): </label>
+				<div class="controls">
+					<%= f.input :limit_pd, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Group: </label>
+				<div class="controls">
+					<%= f.input :exchange_group, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Type: </label>
+				<div class="controls">
+					<%= f.input :account_type, label: false %>
+				</div>
+			</div>
+			
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<%= f.submit  :class => 'btn btn-info' %>
+					<%= link_to "Cancel", fees_exchanges_path, :class => 'btn' %>
+				 </div>
+			</div>
+			</div>
+		<% end %>
+	
+

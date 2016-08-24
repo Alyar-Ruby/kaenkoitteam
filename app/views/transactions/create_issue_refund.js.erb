@@ -1,0 +1,9 @@
+<%if @error.present? %>
+  $("#error_msg_refund").html("<%= @error %>").css("color", "red")
+<% else %>
+  $("#issue_refund<%=@trans.id%>").html("<a href='javascript:void(0)'><span class='label label-warning'>Refunded</span></a>")
+  $("#status_parent<%=@trans.id %>").html("<a href='javascript:void(0)'><span class='label label-warning'>Refunded</span></a>")
+  $("#status_child<%=@trans.id %>").html("Refunded").removeClass("label-success").addClass("label-warning")
+  $('#modal-window').modal('toggle');
+<% end %>
+$(".ajax-loading").hide();

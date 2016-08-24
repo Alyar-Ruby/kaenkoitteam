@@ -1,0 +1,30 @@
+	<% @msgs.each do |message| %>
+		<div class="message" >
+	        <label class="label label-info">
+	        	[<%= message.created_at.to_s(:short) %>] <%= message.user.email %>
+	        </label>&nbsp;
+	        <%= message.msg %>
+	    </div>
+	<% end %>
+</div>
+
+<div class="form-inline well">
+  <fieldset>
+    <input type="text" class="input-xlarge" id="message"/>
+    <input type="hidden" id="user_email" value = "<%= current_user.try(:email) %>" />
+    <input type="hidden" id="user_id" value = "<%= current_user.try(:id) %>" />
+    <button id="send" class="btn btn-primary">Send</button>
+  </fieldset>
+</div>
+<%= javascript_tag do %>
+	window.currentUserId = <%= current_user.try(:id)  %>
+<% end %>
+<script type="text/javascript">
+	function email_user() {
+		var sList = "";
+		$('.user_name').each(function () {
+			sList += "(" + $(this).val() + "-" + (this.checked ? "checked" : "not checked") + ")";
+		});
+		console.log(sList);
+	}
+</script>

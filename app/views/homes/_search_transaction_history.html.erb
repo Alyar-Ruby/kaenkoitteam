@@ -1,0 +1,68 @@
+<div class="panel-body table-responsive">
+    <table class="table table-hover">
+        <thead class="">
+          <tr>
+            <td>
+              Date
+            </td>
+            <td>
+              Type
+            </td>
+            <td>
+              Name/Email
+            </td>
+            <td>
+              Batch ID
+            </td>
+            <td>
+              Status
+            </td>
+            <td>
+              Net Amount
+            </td>
+            
+          </tr>
+        </thead>
+        <tbody>
+        <%if @transactions.size > 0 %>
+          <% @transactions.each do |transaction| %>
+            <tr>
+              <td>
+               <%= relative_time(transaction.created_at) %>
+              </td>
+              <td>
+                <%= transaction.transaction_type %>
+              </td>
+              <td>
+                <%= transaction.transaction_to %>
+              </td>
+              <td>
+                <%= transaction.batch_id %>
+              </td>
+              <td>
+                <%if transaction.status == "refund" %>
+                  <span class="label label-default">Issue Refund</span>
+                <% else %>
+                  <span class="label label-success"><%= transaction.status %></span> 
+                <% end %>
+              </td>
+              <td>
+                 <%= number_with_precision(transaction.amount, :precision => 2 || 0) %> <%= transaction.kaenko_currency.unit %> <a href="#"><i class="kk-info-plus active pull-right"></i></a>
+              </td>
+             
+            </tr>
+          <% end %>
+        <% else %>
+          <tr colspan="7">
+            <td>Transaction not available.</td>
+          </tr>
+        <% end %>
+          
+        </tbody>
+    </table>
+</div>
+<div class="panel-footer">
+    <ul class="pagination pagination-sm">
+       <%= paginate @transactions , :remote => true %>
+    </ul>
+</div>

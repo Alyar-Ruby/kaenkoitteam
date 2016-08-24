@@ -1,0 +1,8 @@
+$("#ajax-container").html($('<%= escape_javascript( render( :partial => "unread_all")) %>'))
+$(".ajax-loading").hide()
+$(function() {
+	history.pushState(null, "", "<%= unread_list_messages_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

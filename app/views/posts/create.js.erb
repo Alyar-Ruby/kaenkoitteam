@@ -1,0 +1,18 @@
+<%if @permission == true %>
+	<% if @post.persisted? %>
+		$("#post_title").val('');
+		$("#all-post").prepend("<%= j(render 'post') %>")
+	<% else %>
+		$("#social_error").html("Unbale to post. Please try again.")
+	<% end %>
+<% else %>
+ html = "" 
+ html = '<div id="myModal" class="modal"><div class="modal-dialog">\
+ 				<div class="modal-content"><div class="modal-header">\
+ 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>\
+        <h4 class="modal-title" id="myModalLabel"></h4><h5>Information</h5></div>\
+        <div class="modal-body"><p> Sorry, but You don'+"'"+'t have permission to do so.</p>\
+        </div><div class="modal-footer"></div></div></div></div>'
+ $(html).modal('show');
+<% end %>
+$(".ajax-loading").hide();

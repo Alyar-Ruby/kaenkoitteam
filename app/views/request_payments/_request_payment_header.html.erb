@@ -1,0 +1,33 @@
+<section class="request-money container-fluid tab-pane fade in active" >
+
+
+  <!-- AREA SUB NAV -->
+  <ul class="areas-sub-nav list-inline">  
+    <li id="request_payment">
+      <%= link_to new_request_payment_path, remote: true do %>
+      <i class="kk-money-receive larger"></i>
+      Request
+      <% end %>
+    </li>
+    <li id="create_invoice"> 
+      <%= link_to new_invoice_path, remote: true do %>
+      <i class="kk-create-invoice larger"></i>
+        Invoice
+        <% end %>
+    </li>
+    <li id="manage_invoice"> 
+        <%= link_to invoices_path, remote: true do %>
+        <i class="kk-manage-invoice larger"></i>
+          Manage
+          <% end %>
+    </li>
+  </ul>
+
+</section>
+<script>
+  $(function() {
+    var activeurl = window.location.pathname;
+    $('a[href="'+activeurl+'"]').parent('li').addClass('active');
+  })
+</script>
+

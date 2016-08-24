@@ -1,0 +1,52 @@
+<div class="panel-heading">
+    <a href="#" class="go-mail-list"></a>
+    <h2>
+      
+    </h2>
+
+    </div>
+    <div class="clearfix"></div>
+  </div>
+   
+  <div class="panel-body ">
+   <div class="messagecontent">
+        <!-- entry -->
+        <div>
+          <% @conversation_messages.each do |cnv_msg| %>
+            <% receipt_user = cnv_msg.user %>
+            
+              <a href="">
+                <div class="avatar pull-left <%= receipt_user.online_status == false ? 'avatar-offline' : '' %> ">
+                   <%= image_tag receipt_user.image.present? ? "#{Rails.root}/public/"+receipt_user.image_url(:circle) : "#{Rails.root}/public/assets/av2.png"  , width:50, height: 50, class: "img-circle" %>
+                </div>
+                <div class="content ">
+                  <span>
+                    <%= relative_time(cnv_msg.created_at) %>
+                  </span>
+                  <h2><%=(receipt_user.try(:id) == current_user.id) ? "#{current_user.name} (me)" : receipt_user.name %></h2>
+                  <p><%= simple_format(cnv_msg.message.try(:html_safe)) %></p>
+                   <%if cnv_msg.message_images.present? %>
+                    <% cnv_msg.message_images.each do |attach| %>
+                      <ul>
+                       <li class="img" style="list-style-type: none;">
+                        <%extension = attach.attachment.file.extension.downcase %>
+                        <%if %w{jpg png jpg gif bmp}.include?(extension)%>
+                          <%= image_tag "#{Rails.root}/public/"+attach.attachment_url(:profile) , width:50, height: 50 , class: "a_image"%>
+                        <%else%>
+                          <%=link_to attach.attachment.file.filename, download_attachment_message_path(attach.id), method: :post  %>
+                        <% end %>
+                        
+                        </li>
+                      </ul>
+                    <% end %>
+                  <% end %>
+                </div>
+              </a>
+            
+        <% end %>
+        </div>
+        <!-- END entry -->
+    </div>
+  </div>
+  
+</div>

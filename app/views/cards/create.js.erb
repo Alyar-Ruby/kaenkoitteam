@@ -1,0 +1,9 @@
+<%if @card.errors.present? %>
+	$(".alert-warning").html("<%= @errors.join("") %>")
+  $(".alert-warning").show()
+<% else %>
+	$('#modal-window').modal('toggle');
+	$(".alert-warning").hide();
+	$("#card-list").html("<%= escape_javascript(render 'cards') %>");
+<% end %>
+$(".ajax-loading").hide();

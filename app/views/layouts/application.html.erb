@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= content_for?(:title) ? yield(:title) : "Kaenko" %></title>
+    <%= csrf_meta_tags %>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6.1/html5shiv.js" type="text/javascript"></script>
+    <![endif]-->
+      
+    <%= stylesheet_link_tag "application", :media => "all" %>
+    
+
+    <!-- For third-generation iPad with high-resolution Retina display: -->
+    <!-- Size should be 144 x 144 pixels -->
+    <%= favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144' %>
+
+    <!-- For iPhone with high-resolution Retina display: -->
+    <!-- Size should be 114 x 114 pixels -->
+    <%= favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114' %>
+
+    <!-- For first- and second-generation iPad: -->
+    <!-- Size should be 72 x 72 pixels -->
+    <%= favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72' %>
+
+    <!-- For non-Retina iPhone, iPod Touch, and Android 2.1+ devices: -->
+    <!-- Size should be 57 x 57 pixels -->
+    <%= favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png' %>
+
+    <!-- For all other devices -->
+    <!-- Size should be 32 x 32 pixels -->
+    <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+
+    <%= javascript_include_tag "application" %>
+    <%= stylesheet_link_tag  "token-input-facebook" %>
+    <%= javascript_include_tag  "jquery.tokeninput" %>
+    <%= javascript_include_tag "autocomplete-rails.js" %>
+    <%= subscribe_to "/messages/private/#{current_user.account.id}" if current_user.present? %>
+    <%#= subscribe_to "/messages/public" %>
+    <%if current_user.present? %>
+		<script>
+			 $(function() {
+    			 	var private_subscription = PrivatePub.subscribe('/messages/private/<%=current_user.account.id%>', function(data) {
+              $.getScript("<%= unread_message_messages_path %>")  
+              //$("[rel=popovermsg]").popover('show');
+
+           });
+			  });
+		</script>
+		
+		<% end %>
+    <style>
+      div.ajax-loading{
+        width: 100%;
+        height: 100%;
+        top: 0px;
+        left: 0px;
+        position: fixed;
+        display: none;
+        background: rgba(51,51,51,0.9);
+        z-index: 99;
+        text-align: center;
+
+        }
+        div.ajax-loading span{
+            position:absolute;
+            top:50%;
+            left:50%;
+            margin-left:-75px;
+            margin-top:-30px;
+            
+        }
+        div.ajax-loading span p{
+            padding-top:10px;
+            padding-right:10px;
+            
+        }
+        div.ajax-loading span p i{
+            color: #009ad9;
+        }
+        
+
+    </style>
+	
+	
+  <script>
+  
+      
+  $(function() {
+    $( "#sortable1, #sortable2" ).sortable({
+      items: "li:not(.circle-title)"
+    }).disableSelection();
+  });
+      
+
+  </script>
+<script> 
+	(function ($) {
+	  jQuery.expr[':'].Contains = function(a,i,m){
+		  return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+	  };
+	 
+	  function listFilter(header, list) {
+		var form = $("<form>").attr({"class":"filterform","action":"#"}),
+			input = $("<input>").attr({"class":"filterinput livechat-input-search","type":"text","placeholder":"Search..."});
+		$(form).append(input).appendTo(header);
+	 
+		$(input)
+		  .change( function () {
+			var filter = $(this).val();
+			if(filter) {
+			  // $(list).find("span:not(:Contains(" + filter + "))").parent().hide();
+			  // $(list).find("span:Contains(" + filter + ")").parent().show();
+        $.ajax({
+          type: "GET",
+          url: "<%= search_connection_users_path %>",
+          data: "search_word="+filter,
+          cache: false,
+          success: function(html){
+            $("#connection_result").html(html).show();
+          }
+        });
+			} else {
+			  $(list).find("li").show();
+			}
+			return false;
+		  })
+		.keyup( function () {
+			$(this).change();
+		});
+	  }
+	
+	  $(function () {
+		  listFilter($("#headers"), $("#sortable1"));
+	  });
+
+	}(jQuery));
+</script>
+
+  </head>
+  <body style="height:auto;">
+	  <!--
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
+    -->
+   <%= render 'layouts/header' %>
+   <%= render 'layouts/livechat' %>
+   <%= render 'layouts/chatbox_prototype' %>
+   <%#= render 'layouts/chatbox_prototype2' %>
+    <%if connection_list.size > 0 %>
+      <% connection_list.each do |con| %>
+        <%if con.to_account.id == current_user.account.id %>
+          <% account_list = [con.from_account.id, current_user.account.id].sort!.join("") %>
+          <% @cnv = Conversation.where("accounts = ?", account_list).first %>
+          <% if @cnv.present? %>
+            <% @messages =  @cnv.conversation_users.where("account_id =? and archive =? and is_deleted =? ", current_user.account.id, false, false).order("created_at desc").page(params[:page]).per(5) %>
+          <% else %>
+            <% @messages = Kaminari.paginate_array([]).page(params[:page]).per(1) %>
+          <% end %>
+          <%= render partial: '/account_chats/chat_prototype', locals: {messages: @messages, account: con.from_account} %>
+        <% else %>
+          <% account_list = [con.to_account.id, current_user.account.id].sort!.join("") %>
+          <% @cnv = Conversation.where("accounts = ?", account_list).first %>
+          <% if @cnv.present? %>
+           <% @messages =  @cnv.conversation_users.where("account_id =? and archive =? and is_deleted =? ", current_user.account.id, false, false).order("created_at desc").page(params[:page]).per(5) %>
+          <% else %>
+            <% @messages = Kaminari.paginate_array([]).page(params[:page]).per(1) %>
+          <% end  %>
+          <%= render partial: '/account_chats/chat_prototype', locals: {messages: @messages, account: con.to_account} %>
+        <% end %>
+      <% end %>
+    <% end %>
+   <%= render 'layouts/sidemenu' if current_user.present? %>
+
+    
+          
+    </div><!--/span-->
+   	<!-- AJAX CONTAINER -->
+    <div class="ajax-loading">
+        <span>
+            <img src="/assets/loader.png">
+            <p><i class="fa fa-refresh fa-2x fa-spin"></i></p>
+        </span>
+    </div>
+		<div id="ajax-container" class="site-warper sb-site">
+		  
+		    <%= bootstrap_flash %>
+		    <%= yield %>
+		</div>
+		
+		
+		<!-- End AJAX CONTAINER -->
+     
+
+	<input type ="hidden" id="chat"  value="<%= request.host %>:<%= request.port %>/websocket"/>
+	<input type="hidden" id="user_email" value = "<%= current_user.try(:id) %>" />
+	<input type="hidden" id="user_id" value = "<%= current_user.try(:id) %>" />
+  </body>
+  <div class="modal fade" id="modal-window" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    
+  </div>
+<script>
+  $('.open-chat').on('click',function(e){
+		e.preventDefault();
+		$('#livechat').toggleClass('chat-open');
+	})
+  $('.title-min').on('click',function(e){
+		e.preventDefault();
+		$('#chatbox-prototype').toggleClass('opened');
+	})
+  $('#trigger-usr-menu').on('click',function(e){
+		e.preventDefault();
+    $('#usr-info-bar').show();
+		$('#usr-info-bar').toggleClass('hidden');
+	})
+  $('#stars-toggle').on('click',function(e){
+		e.preventDefault();
+		$('.review-top').toggleClass('hidden');
+	})
+
+</script>
+<script>
+  <% if current_user.online_status == true %>
+    $("#online-toggle").prop("checked", true)
+       $('#livechat-content').removeClass('is-offline'); 
+  <% else %>
+    $("#online-toggle").prop("checked", false)
+    $('#livechat-content').toggleClass('is-offline'); 
+  <% end %>
+   // $("#online-toggle").change(function(e) {
+   //   e.preventDefault();
+   //   if ($("#online-toggle").is(':checked')) {
+   //    $('#livechat-content').removeClass('is-offline'); 
+   //   }else {
+   //    $('#livechat-content').toggleClass('is-offline'); 
+   //   }
+     
+   // })
+
+</script>
+
+</html>
+

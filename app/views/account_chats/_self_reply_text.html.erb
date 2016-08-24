@@ -1,0 +1,10 @@
+<li class="self">
+  <div class="avatar">
+    <%= image_tag cnv_msg.account.display_image_profile%>
+      <!-- <img src="http://development.kaenko.com/uploads/user/image/13/profile_me.png" /> -->
+  </div>
+  <div class="messages">
+      <p><%= cnv_msg.message %></p>
+      <time datetime="2009-11-13T20:00"><%= cnv_msg.user.name %> • <%= relative_time(cnv_msg.created_at)%></time>
+  </div>
+</li>

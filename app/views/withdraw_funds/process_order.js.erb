@@ -1,0 +1,12 @@
+<%if @error.present? %>
+	$("#with_draw_msg").html("<%= @error %>")
+<% else %>
+	$("#complete-withdraw-card-panel").html("<%= j(render 'transaction_complete') %>")
+	$("#with_draw_msg").html("Transaction Complete")
+	$("#complete-withdraw-card-panel").removeClass("in-out");
+<% end %>
+$(".ajax-loading").hide();
+// $("#close-complete-withdraw-card-panel").click(function(){
+//   $("#complete-withdraw-card-panel").addClass("in-out");
+// }) 
+

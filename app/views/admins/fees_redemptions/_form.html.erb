@@ -1,0 +1,100 @@
+
+	
+		<%= simple_form_for [:admins , @fees_redemption], :html => { :class => 'form-horizontal' } do |f| %>
+		<div class="well-formbox">  
+			<% if @fees_redemption.errors.any? %>
+			<div id="errorExplanation">
+				<h2><%= pluralize(@fees_redemption.errors.count, "error") %> prohibited this user from being saved:</h2>
+				<ul>
+				<% @fees_redemption.errors.full_messages.each do |msg| %>
+				  <li><%= msg %></li>
+				<% end %>
+				</ul>
+			</div>
+			<% end %>
+			<div class="control-group">
+				<label class="control-label"> Account: </label>
+				<div class="controls">
+					<%= f.input :account, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Payment Option: </label>
+				<div class="controls">
+					<%= f.input :payment_option, label: false %>
+				</div>
+			</div>
+
+			<div class="control-group">
+				<label class="control-label"> Type: </label>
+				<div class="controls">
+					<%= f.input :account_type, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Payout Currencies </label>
+				<div class="controls">
+					<%= f.fields_for :payout_currencies do |pc| %>
+					<%= pc.input :currency, as: :select, :collection => 
+						CURRENCIES.each{|c| [c, c]}, label: false %>
+					<% end %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Brute Fee Percent </label>
+				<div class="controls">
+					<%= f.input :brute_fee_percent, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Brute Fee Value </label>
+				<div class="controls">
+					<%= f.input :brute_fee_value, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Total Fee Percent </label>
+				<div class="controls">
+					<%= f.input :total_fee_percent, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label">Total Fee Value </label>
+				<div class="controls">
+					<%= f.input :total_fee_value, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Our Margin </label>
+				<div class="controls">
+					<%= f.input :our_margin, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Limits </label>
+				<div class="controls">
+					<%= f.input :limits, label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Provider </label>
+				<div class="controls">
+					<%= f.input :provider , label: false %>
+				</div>
+			</div>
+			<div class="control-group">
+				<label class="control-label"> Timing </label>
+				<div class="controls">
+					<%= f.input :timings , label: false %>
+				</div>
+			</div>
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<%= f.submit  :class => 'btn btn-info' %>
+					<%= link_to "Cancel", fees_redemptions_path, :class => 'btn' %>
+				 </div>
+			</div>
+			</div>
+		<% end %>
+	
+

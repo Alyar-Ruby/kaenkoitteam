@@ -1,0 +1,18 @@
+<%if messages.present? && messages.size > 0 %>
+    <%messages.each do |msg| %>
+
+    <li class="<%= (msg.conversation_message.account.id == current_user.account.id) ? 'self' : 'other' %>">
+      <div class="avatar">
+        <%= image_tag msg.conversation_message.account.display_image_profile%>
+          <!-- <img src="http://development.kaenko.com/uploads/user/image/13/profile_me.png" /> -->
+      </div>
+      <div class="messages">
+          <p><%= simple_format(msg.conversation_message.message, {}, sanitize: false) %></p>
+          <time datetime="2009-11-13T20:00"><%= msg.conversation_message.user.name %> • <%= relative_time(msg.created_at)%></time>
+      </div>
+    </li>
+  <% end %>
+<% end %>
+
+
+<%#= paginate messages, params: {controller: "account_chats", action: "load_message", method: :get, account_id: current_user.account.id, id: @account.id, } %>

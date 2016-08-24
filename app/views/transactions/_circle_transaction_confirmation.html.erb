@@ -1,0 +1,16 @@
+
+<article class="card col-sm-12 col-md-12 col-lg-12 col-xs-12"> 
+  <div class="panel panel-default"> 
+    <div class="panel-heading">
+      <i class="kk-user light"></i>Mass Payment
+    </div> 
+    <div class="panel-body">
+			<div>
+				 <%= @success_transaction.size > 0 ? "Successfull transaction of users :"+@success_transaction.join(',') :  @success_transaction.size %>
+			</div>
+			 <div>
+			 	 <%= @rejected_transaction.size > 0 ? "Rejected transaction of users :"+@rejected_transaction.join(',') : "" %>
+			 </div>
+		</div>
+	</div>
+</article>

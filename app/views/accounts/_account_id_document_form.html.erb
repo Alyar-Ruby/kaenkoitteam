@@ -1,0 +1,50 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Verify Account ID</h4>
+    </div>
+    <div class="modal-body">
+        <p style="display:none;" class="alert alert-warning" id="document_error"></p>
+        <p style="display:none;" class="alert alert-success"></p>
+        <div class="form-group">
+          <div class="span3 offset1"><label>Account Id Document:<label></div>
+          <div>
+              <%= file_field_tag :account_id_document, id: "account_id_document" ,    class: "form-control input-sm" %>
+          </div>
+        </div>
+        <br>
+        <div class="row-fluid">
+          <div class="span3 offset1">&nbsp;</div>
+          <div class="span8"><%= submit_tag "Submit", type: "button", id: "doc_button" , :class=>"btn btn-primary" %></div>
+        </div>
+    </div>
+    
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(function() {
+   
+    $("#doc_button").on("click", function() {
+      //$(this).closest('form').submit();
+      var form_data = new FormData(); // Creating object of FormData class
+        file_content = $("#account_id_document")[0].files[0]
+        form_data.append("account_id_document", file_content);
+        $.ajax({
+          url: "<%= upload_account_id_document_accounts_path %>",
+          type: "POST",
+          processData: false,
+          contentType: false,
+          data: form_data,
+          success: function(response) {
+             $("#account_id_status").text(response).removeClass("alert alert-warning fade in").addClass("alert alert-success fade in");
+             $('#modal-window').modal('toggle');
+          },
+          error: function(response) {
+            $("#document_error").html('Your Registered Address status is <strong>Not Verified</strong>');
+          }
+        });
+    });
+    
+  });
+<% end %>

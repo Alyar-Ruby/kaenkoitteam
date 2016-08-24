@@ -1,0 +1,4 @@
+<%= select_tag :'business_website[website_url]',
+    options_for_select(@business_websites.select("id, website_url").collect{|c|[c.website_url, c.id]}, @business_website.website_url), :prompt=>"select website", id: "business_website_list", 
+      style: "display:none;"
+%>

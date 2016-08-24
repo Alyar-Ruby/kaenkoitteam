@@ -1,0 +1,6 @@
+<%if @conversation.errors.present? %>
+  $("#error_msg_social").html("<%= @conversation.errors.full_messages.join(',') %>")
+<% else %>
+  $('#modal-window').modal('toggle');
+<%end %>
+$(".ajax-loading").hide();

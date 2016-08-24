@@ -1,0 +1,44 @@
+
+<div class="modal-dialog">
+  <div class="modal-content">
+    <%=form_tag create_issue_refund_transaction_path(@trans.id) , id:"dispute_form", remote: true do %>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;</h4>
+      </div>
+      <div class="modal-body">
+         <div class="container-fluid">
+          <div class="row" style="height:200px;">
+            <div id="error_msg_refund"></div>
+            <p><strong>Issue Refund for Transaction ID:#</strong><%= @trans.transaction_id %> </p>            
+            <p><strong>Payment From: <%= @trans.user.name %>(Account ID:# <%= @trans.transaction_id %>)</strong></p>
+            <p><strong>Total Paid: <%= number_with_precision(@trans.amount, precision: 2 || 0)%> <%= @trans.kaenko_currency.unit %></strong>
+            <p> <strong>Refund Amount: </strong><%=text_field_tag :refund_amount, "" %> <%= @trans.kaenko_currency.unit %> (max. <%= number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %>)
+            <p>Note: Refunds have a cost of EUR: 3 (or equivalent)</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button  class= "btn btn-danger" data-dismiss="modal">Cancel </button>
+        <%= submit_tag :'Refund Now', class: "btn btn-primary", style: "height:31px;" %>
+      </div>
+    <% end %> 
+   </div>
+</div>
+<script>
+  $(function() {
+    $("#request_partial_refund").click(function() {
+        $("#txt_partial").removeAttr("disabled")
+    });
+    $("#request_full_refund").click(function(){
+      // body...
+       $("#txt_partial").prop("disabled", true)
+    }) 
+
+  });
+  
+</script>
+
+
+
+

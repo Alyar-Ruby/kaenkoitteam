@@ -1,0 +1,31 @@
+<%if @cards.size > 0 %>
+  <% @cards.each do |card| %>
+    <tr <%=  Date.today > card.expiry_date ? "class=danger" : ""%>>
+      <td>
+        <%= card.name %>  
+        <%if card.primary %>
+          <span class="label label-info">Primary</span>
+        <% end %>
+      </td>
+      <td>
+        <%= card.expiry_date.strftime("%m/%Y") %>
+      </td>
+      <td>
+        <%= card_status(card) %>
+      </td>
+       <td align="right">
+          <%if !card.primary %>
+            <%=link_to "make primary", make_primary_card_path(card), remote: true, 
+              class: "btn btn-sm btn-info" %>
+          <% end %>
+          <%= link_to "Delete", confirm_delete_card_path(card) , remote: true,class: "btn btn-sm btn-danger", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+      </td>
+    </tr>
+  <% end %>
+<% else %>
+  <tr>
+    <td>
+      No Cards Available.
+    </td>
+  </tr>
+<% end %>

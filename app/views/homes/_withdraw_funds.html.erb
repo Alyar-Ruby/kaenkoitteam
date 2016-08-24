@@ -1,0 +1,101 @@
+<section class="withdraw container-fluid ">
+    
+    <h2></h2>
+   
+</section>
+<!-- DATA AREA TITLE -->
+<section class="withdraw main-container container-fluid">
+    
+<div class="row">
+    <div class="col-lg-9">
+    
+        <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div id="add-funds-panel-title" class="dropdown">
+                        <span class="text-blue">Redeem Funds:</span>
+                        <span id="with_draw_msg"> Create Order</span>
+                    </div>
+                </div>    
+            <%=form_tag process_order_account_withdraw_funds_path(current_user.account), remote: true  do %>
+            <div class="panel-body panel-overview panel-overview-white">
+                <div  class="tabular-content col-lg-6 col">
+                    <ul id="add-funds-left-col">
+                        <li class="no-hover">
+                            <div>
+                                <span>
+                                  <label>I want to redeem from:</label>
+                                  <p>
+                                      <%= select_tag :'account_balance',
+                                  options_for_select(@account_balances.collect{|c|["Currency balance  #{c.balance} #{c.kaenko_currency.unit}", c.id]}) %>
+                                  </p>
+                                </span>
+                            </div>
+                        </li>
+                        <li class="no-hover">
+                            <div>
+                                <span style="display:inline-block;">
+                                    <label>Amount</label>
+                                    <p>
+                                        <input name= "amount" id="amount-field" type="text" placeholder="$ 0.00 USD" size="21">   
+                                    </p>
+                                </span>
+                                <span class="info-small">
+                                    
+                                    <p>
+                                        <b class="text-blue">Info:</b>Fee will be automatically substracted in Net Amount. Click here for <a href="#">Fees Info</a> 
+                                    </p>
+                                </span>
+                                
+                            </div>    
+                        </li>
+                        <li class="no-hover">
+                            <strong>Disclaimer:</strong>
+                            <p>Please note that KAENKO Limited shall be not responsible for any additional fees applied by your local bank branch. Additional fees may apply. Please contact your bank directly regarding additional costs.</p>
+                        </li>
+
+                    </ul>
+                </div>
+                
+                <div id="add-funds-right-col" class="tabular-cardpick col-lg-6 col">
+                    <ul>
+                      <%if @banks.size > 0 %>
+                        <% @banks.each do |bank| %>
+                          <li>
+                              <span><input type="radio" class="radio" name= "bank" value="<%= bank.id %>"></span>
+                              <span>
+                                 <%=link_to account_setting_path(:activate=>"pay-sett-tab"), remote: true do %>
+                                  <strong><%= bank.name %></strong>
+                                      <span style="display:block;"><b>Processing time:</b> <%= bank.processing_time %></span>
+                                      <span><b>Currency:</b> <%= bank.kaenko_currency.unit %></span>
+                                      <p><b>Country:</b> <%=country_name(bank.country) %></p>
+                                  <% end %>
+                              </span>
+                              
+                          </li>
+                          
+                          <% end %>
+                        <% end %>
+                        <li class="no-hover"><h5><b>Total:</b> 1,000.00 EUR (Net)</h5></li>
+                        
+                    </ul>
+                </div>
+                <%= submit_tag :"Process Order", class:"btn btn-primary right-bottom" %>
+                <!--  <a href="javascript:void(0);" id="complete-withdraw-proceed" class="btn btn-primary right-bottom">Process Order</a> -->
+                
+                <!-- Transaction Complete card -->
+                <div id="complete-withdraw-card-panel" class="slided-slide card-slide in-out">
+                    
+                </div>
+            </div>
+            <% end %>
+        </div>
+    </div>
+</section>
+<script>
+$("#complete-withdraw-proceed").click(function(){
+  $("#complete-withdraw-card-panel").removeClass("in-out");
+})
+// $("#close-complete-withdraw-card-panel").click(function(){
+//   $("#complete-withdraw-card-panel").addClass("in-out");
+// }) 
+</script>

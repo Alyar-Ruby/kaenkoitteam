@@ -1,0 +1,309 @@
+<%= render 'dashboard_header' %>
+<!-- DATA AREA TITLE -->
+<section class="dashboard-history main-container container-fluid">
+  <div class="row row-50-top">
+    <div class="col-lg-12">
+
+      <div class="row">
+          <!-- CARD SEARCH HISTORY-->
+        <article class="card col-sm-12 col-md-12 col-lg-9 col-xs-12">
+          <div class="panel panel-default">
+            <!--div class="panel-heading ">
+              <i class="kk-info-plus light"></i>Search<br>
+            </div-->
+            <div class="panel-body">
+                
+               <%=form_tag :dashboard_history, class: "form-inline", role: "form", remote: true,  method: "get" do  %>  
+                  <div class="form-group">
+                    From: <%= text_field_tag :from_date ,"", class: "form-control ", id: "from_date" , placeholder: "DD/MM/YYYY", style: "width:80px;" %>
+                   
+                  </div>
+                  <div class="form-group">
+                     To: <%= text_field_tag :to_date ,"", class: "form-control ", id:  "to_date" , placeholder: "DD/MM/YYYY" , style: "width:80px;" %>
+                  </div>
+                  <div class="form-group" style="display:none;">
+                       <%= select_tag "currency" , options_from_collection_for_select(KaenkoCurrency.all, :id, :unit, params[:currency] ), :prompt => "Currency" ,  class: "form-control selectpicker" %>
+                  </div>
+
+                  <div class="form-group">
+                     <%= select_tag "type" , options_for_select([["payment_from", "Payment From"], ["invoice", "Invoice"], ["withdraw", "Withdraw"], ["pay_out", "Pay Out"], ["pay_in", "Pay In"], ["refund" , "Refund"]], params[:type]), :prompt => "Type" ,  class: "form-control selectpicker" %>
+                  </div>
+
+                  <div class="form-group">
+                     <%= select_tag "status" , options_for_select([["Refunded", "refunded"], ["Completed", "completed"], ["Paid", "paid"], ["Pending", "pending"], ["Cancelled", "cancelled"], ["Rejected" , "rejected"]], params[:status]), :prompt => "Status" ,  class: "form-control selectpicker" %>
+                  </div>
+
+                  <div class="form-group ">
+                     <%=text_field_tag "batch_id" , params[:batch_id] , class: "form-control " , placeholder: "Batch ID" %>
+                  </div>
+
+                  <div class="form-group">
+                       <%= text_field_tag :email, params[:email], class: "form-control", placeholder:"Name or Email" %>
+                  </div>
+                  <div class="form-group pull-right">
+                    <%= submit_tag :Submit, class: "btn btn-info" %>
+                  </div>
+              <% end %>
+            </div>
+          </div>
+        </article>
+      <!-- END CARD SEARCH HISTORY-->
+         
+      </div>
+              <!-- end row -->
+      <div class="row">
+          
+                        <article class="card card-table col-lg-9">
+        <div class="panel panel-default">
+          <div class="panel-heading recent-heading">
+            <span class="label label-info">Last 30 Days</span>
+              <div class="dropdown">
+                <i class="kk-trophy light"></i>All Transactions History 
+                <a href="#" class="pull-right dropdown-toggle" data-toggle="dropdown"><i class="kk-settings "></i></a>
+                <ul class="dropdown-menu">
+                   <li>
+                        <a href="#">All Currencies</a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="/assets/flag/US.png"> USD</a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="/assets/flag/EU.png"> EUR</a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="/assets/flag/CA.png"> CAD</a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="/assets/flag/PL.png"> PLN</a>
+                    </li>
+                    <li>
+                        <a href="#"><img src="/assets/flag/BR.png"> BRL</a>
+                    </li>
+                </ul>
+              </div>
+          </div>
+          <div class="panel-body table-responsive">
+            <table class="table table-hover">
+                <thead class="">
+                  <tr>
+                    <td>
+                    &nbsp;
+                    </td>
+                    <td>
+                      Date
+                    </td>
+                    <td>
+                      Type
+                    </td>
+                    <td>
+                      Name/Email
+                    </td>
+                    <td>
+                      Status
+                    </td>
+                    <td>
+                      Gross Amount
+                    </td>
+                    <td>
+                      Net Amount
+                    </td>
+                    <td>
+                      Balance
+                    </td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr id="show_detail_row">
+                      <td><a href="javascript:void(0);"  class="down-btn" id="show_detail_btn"><i class="fa fa-chevron-down"></i></a></td>
+                    <td>
+                      18-Jan-2014
+                    </td>
+                    <td>
+                      Payment From
+                    </td>
+                    <td>
+                      Kaenko Zara.com
+                    </td>
+                    <td>
+                      <span class="label label-success">Completed</span>
+                    </td>
+                    <td>
+                      2000.12 USD
+                    </td>
+                    <td>
+                      2000.12 USD
+                    </td>
+                    <td>
+                      3165.34 USD <a href="#"><i class="kk-info-plus active pull-right"></i></a>
+                    </td>
+                  </tr>
+                  <tr style="display:none;" id="hide_detail_row">
+                      <td>
+                          <a href="javascript:void(0);"  class="down-btn" id="hide_detail_btn"><i class="fa fa-chevron-up"></i></a><br/><br/>
+                      </td>
+                      <td>
+                        
+                        2 Min ago <br/><br/>
+                        2 Min ago
+                      </td>
+                      <td>
+                        Payment To <br/><br/>
+                        Paid by
+                      </td>
+                      <td>
+                        <br/><br/>
+                        Kaenko Wallet
+                      </td>
+                      <td>
+                        <span class="label label-success">Completed</span> <br/><br/>
+                        <span class="label label-default">As a Friend</span>
+                      </td>
+                      <td>
+                        2000.12 USD <br/><br/>
+                        2000.12 USD 
+                      </td>
+                      <td>
+                        2000.12 USD <br /><br/>
+                        2000.12 USD 
+                      </td>
+                      <td>
+                        3165.34 USD <br/><br/><a href="#"><i class="kk-info-plus active pull-right"></i></a>
+                        3165.34 USD
+                      </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      17-Jan-2014
+                    </td>
+                    <td>
+                      Payment From
+                    </td>
+                    <td>
+                      Employer Smith LLC
+                    </td>
+                    <td>
+                      <span class="label label-success">Completed</span>
+                    </td>
+                    <td>
+                      275.12 USD
+                    </td>
+                    <td>
+                      2000.12 USD
+                    </td>
+                    <td>
+                      1165.22 USD<a href="#"><i class="kk-info-plus active pull-right"></i></a>
+                    </td>
+                  </tr>
+                  <tr>
+                      <td></td>
+                    <td>
+                      17-Jan-2014
+                    </td>
+                    <td>
+                      Payment From
+                    </td>
+                    <td>
+                      Credit Card
+                    </td>
+                    <td>
+                      <span class="label label-success">Completed</span>
+                    </td>
+                    <td>
+                      890.10 USD
+                    </td>
+                     <td>
+                      890.10 USD
+                    </td>
+                    <td>
+                     890.10 USD<a href="#"><i class="kk-info-plus active pull-right"></i></a>
+                   </td>
+                 </tr>
+                 <tr class="warning">
+                     <td></td>
+                  <td>
+                    16-Jan-2014
+                  </td>
+                  <td>
+                    Withdraw
+                  </td>
+                  <td>
+                    Bank Acc 4889
+                  </td>
+                  <td>
+                    <span class="label label-warning">Pending</span>
+                  </td>
+                  <td>
+                    - 1023.98 USD
+                  </td>
+                   <td>
+                      890.10 USD
+                    </td>
+                  <td>
+                    0.00 USD<a href="#"><i class="kk-info-plus active pull-right"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="panel-footer">
+              <a href="#" class="btn btn-primary btn-sm">
+                Show All Transactions
+              </a>
+          </div>
+        </div>
+      </article>
+          <!-- OLD TABLE -->
+          <article class="card card-table col-lg-9" style="display:none;">
+            <div class="panel panel-default">
+              <div class="panel-heading recent-heading">
+                  <span class="label label-info">Last 30 days</span>
+                  <div class="dropdown">
+                    <!--i class="kk-trophy light"></i-->&nbsp;All Transactions History 
+                    <a href="#" class="pull-right dropdown-toggle" data-toggle="dropdown"><i class="kk-settings "></i></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#">USD</a>
+                        </li>
+                        <li>
+                            <a href="#">EUR</a>
+                        </li>
+                        <li>
+                            <a href="#">CNY</a>
+                        </li>
+                    </ul>
+                  </div>
+
+                </div>
+
+                <%= render 'search_transaction_history' %>
+            </div>
+          </article>
+          <!-- END CARD TABLE -->
+      </div>
+      <!-- END row -->
+  </div><!-- END col-lg-12 -->       
+  </div><!-- END row -->
+</section>
+<%= javascript_tag do %>
+
+$(function() {
+    $( "#from_date" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 3,
+      onClose: function( selectedDate ) {
+        $( "#to" ).datepicker( "option", "minDate", selectedDate );
+      }
+    });
+    $( "#to_date" ).datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 3,
+      onClose: function( selectedDate ) {
+        $( "#from" ).datepicker( "option", "maxDate", selectedDate );
+      }
+    });
+  });
+
+<% end %>

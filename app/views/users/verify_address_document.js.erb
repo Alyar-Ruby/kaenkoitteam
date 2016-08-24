@@ -1,0 +1,6 @@
+<%if current_user.errors.any? %>
+	$("#document_error").html("<%= current_user.errors.full_messages.join('') %>")
+<% else %>
+	$("#address_status").html("Your Registered Address status is <strong>Not Verified</strong>.")
+<% end %>
+$(".ajax-loading").hide();

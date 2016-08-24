@@ -1,0 +1,8 @@
+$("#inbox_conversation").html("<%= j(render 'search_result') %>")
+$(".ajax-loading").hide()
+$(function() {
+	history.pushState(null, "", "<%= search_message_messages_path(:query => params[:query]) %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

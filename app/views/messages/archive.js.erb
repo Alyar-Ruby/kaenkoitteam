@@ -1,0 +1,9 @@
+$("#ajax-container").html("<%= escape_javascript(render 'archive_all') %>");
+$(".ajax-loading").hide();
+$(function() {
+
+	history.pushState(null, "", "<%= show_archive_messages_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

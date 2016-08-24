@@ -1,0 +1,141 @@
+
+<style>
+  p {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -o-user-select: text;
+    user-select: text;
+  }
+</style>
+<ul style="margin-bottom:0;">    
+  <li class="no-hover message-bodywork">
+   <div class="messagecontent" id = "messagecontent" style="overflow: hidden; width: auto;
+         height: 460px;overflow-y:auto;">
+  
+        <!-- entry -->
+        <div class="ticket mail-body">
+          <ol class="discussion">
+            <% @conversation_messages.each do |cnv_msg| %>
+              <% receipt_user = cnv_msg.user %>
+                <li class= "<%=(receipt_user.try(:id) == current_user.id) ? 'content self' : 'content other' %>">
+                  <div class="avatar <%= receipt_user.online_status == false ? 'avatar-offline' : '' %> ">
+                     <%= image_tag receipt_user.image.present? ? receipt_user.image_url(:profile) : '/assets/av2.png', width:50, height: 50 %>
+                  </div>
+                  <div class="messages">
+                    <p>
+                    <p><%= simple_format(cnv_msg.message.try(:html_safe)) %> </p>
+                    <%if cnv_msg.message_images.present? %>
+                      <% cnv_msg.message_images.each do |attach| %>
+                        <ul>
+                         <li class="img" style="list-style-type: none;">
+                          <%extension = attach.attachment.file.extension.downcase %>
+                          <%if %w{jpg png jpg gif bmp}.include?(extension)%>
+                            <%= image_tag attach.attachment_url(:profile) , width:50, height: 50 , class: "a_image"%>
+                            <span data-src="<%= attach.attachment %>"></span>
+                          <%else%>
+                            <%=link_to attach.attachment.file.filename, download_attachment_message_path(attach.id), method: :post  %>
+                          <% end %>
+                          
+                          </li>
+                        </ul>
+                      <% end %>
+                    <% end %>
+                    </p>
+                    <time datetime="2009-11-13T20:14"><%=(receipt_user.try(:id) == current_user.id) ? "#{current_user.name} (me)" : receipt_user.name %> • <%= relative_time(cnv_msg.created_at) %></time>
+                  </div>
+              </li>
+            <% end %>
+          </ol>
+        </div>
+      </div>
+  </li>
+  
+ <li class="message-send">
+    <%= form_tag reply_message_path(@conversation.id), remote: true , id: "reply_form" do %>
+       <%= file_field_tag :'attachment_pic[]', id: "attachment_pic", style: 'display: none;', accept: "image/*", multiple: true %>
+      <%= file_field_tag :'file_attachment[]', id: "file_attachment", style: 'display: none;',  multiple: true %>
+      <%= text_area_tag  "body", "", name: "body", class: "form-control" , rows: "6" , placeholder: "Write a reply...", style: "resize:none;" , id: "msg_body" %>
+      <div class="input-group bottom-control">
+        <button class="btn btn-default-border" type="button" id="any_attachment"><i class="kk-attach"></i></button>
+        <button class="btn btn-default-border" type="button" id="attach_image"><i class="kk-money-send"></i></button>
+         <input type="checkbox" id="press_enter"> Press Enter to send
+        <%= submit_tag "Reply", class: "btn-send btn btn-primary btn-sm" %>
+        
+      </div>
+    <% end %>
+   
+  </li>
+</ul>
+<script>
+jQuery(document).ready(function($) {
+    $('#messagecontent').slimScroll({
+        height: '400px',
+        alwaysVisible: true
+    });
+});
+</script>
+<%=javascript_tag do %>
+  $(function() {
+    $("#msg_body").focus();
+
+    $('#msg_body').keydown(function(event) {
+      if (event.keyCode == 13  && $("#press_enter").is(":checked") == true) {
+         validate_image();
+      }
+      
+    });
+    
+    //========== attachment================
+    $("#attach_image").on("click", function() {
+      $("#attachment_pic").click();
+    });    
+
+    $("#attachment_pic").change(function() {
+      $("#msg_body").focus();
+    })
+
+    $("#btn_send").click(function() {
+      validate_image();
+    })
+
+    $('.a_image').on('click',function(){
+      var src = $(this).next().data('src');
+      var img = '<img src="' + src + '" class="img-responsive"/>';
+
+      $('#modal-window').html("<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title'>&nbsp;</h4></div><div class='modal-body'>"+img+"</div></div></div> ");
+
+      $('#modal-window').modal();
+      $('#modal-window').on('hidden.bs.modal', function(){
+          $('#modal-window .modal-body').html('');
+      });
+    });  
+
+    //=============image attachment=============
+    $("#any_attachment").on("click", function() {
+      $("#file_attachment").click();
+    });    
+    $("#file_attachment").change(function() {
+      $("#msg_body").focus();
+    });
+
+
+  })
+
+  function validate_image() {
+    fileName = $("#attachment_pic").val();
+        if(fileName.length > 0) {
+
+        if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(fileName)) {              
+          alert('Sorry!! You must select an image file only');               
+          return
+        }
+        else {
+          $("#reply_form").submit();
+        }
+      }else {
+        $("#reply_form").submit();
+      }
+  }
+
+<% end %>

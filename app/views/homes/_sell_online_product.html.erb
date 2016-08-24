@@ -1,0 +1,144 @@
+<%= render 'sell_online_header' %>
+
+<section class="top-up main-container container-fluid">
+    <div id="everything">
+        <div class="row row-50-top" id="client_header">
+            <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12 card-active" id="customer_box">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                    <span class="label label-info">Total</span>
+                  <div class="dropdown">
+                      <i class="kk-star light"></i>
+                      My Customers  
+                      
+                  </div>
+                </div>
+                  <div class="panel-body big-text text-center">
+                    4,543,771.00 CAD <br>
+                    <small>From 4,521 Customers</small>
+                  </div>
+              </div>
+              </article>
+            <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12" id="dispute_box">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                    <span class="label label-info">TOTAL 1386</span>
+                  <div class="dropdown">
+                      <i class="kk-bulb light"></i>
+                     Disputes 
+                      
+                  </div>
+                </div>
+                  <div class="panel-body big-text text-center">
+                    <%= @open_disputes.size %> Open <br>
+                    <small><%= @closed_disputes.size  %> Resolved</small>
+                  </div>
+              </div>
+            </article>
+            <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12" id="review_box">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                    <span class="label label-info">134 Reviews</span>
+                  <div class="dropdown">
+                      <i class="kk-trophy light"></i>
+                      Overall Rating
+                      
+                  </div>
+                </div>
+                  <div class="panel-body panel-rating big-text text-center">
+                   
+                    <div class="rating-post">
+                      <div id="stars-toggle" class="stars" data-toggle="tooltip" data-placement="bottom" title="Click here for more information">
+                          <i class="fa fa-star starred"></i>
+                          <i class="fa fa-star starred"></i>
+                          <i class="fa fa-star starred"></i>
+                          <i class="fa fa-star "></i>
+                          <i class="fa fa-star"></i>
+                      </div>
+                    </div>
+                      <small>Rating Score:  4.8 / 5</small>
+                      
+                  </div>
+                  <div class="review-top hidden">
+                        <div class="progress" data-toggle="tooltip" data-placement="bottom" title="5 Stars - 129 reviews">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">
+                               
+                            </div>
+                          </div>
+                          <div class="progress" data-toggle="tooltip" data-placement="bottom" title="4 Stars - 20 reviews">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;">
+                                
+                            </div>
+                          </div>
+                          <div class="progress" data-toggle="tooltip" data-placement="bottom" title="3 Stars - 5 reviews">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100" style="width: 5%;">
+                               
+                            </div>
+                          </div>
+                          <div class="progress" data-placement="bottom" title="2 Stars - 0 Reviews">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="" aria-valuemin="0" aria-valuemax="100" style="width: 0%;" data-toggle="tooltip">
+                               
+                            </div>
+                          </div>
+                          <div class="progress" data-toggle="tooltip" data-placement="bottom" title="1 Star - 5 Reviews">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" style="width: 10%;">
+                               
+                            </div>
+                          </div>
+                      </div>
+              </div>
+              </article>
+        </div>
+        <div class="row" id= "sell_online_reports">
+                <!-- CUSTOMERS TABLE -->
+          <%= render 'sell_onlines/customer_glossary' %>
+                <!-- END customer CARD TABLE -->
+                
+            <!-- DISPUTE TABLE TABLE -->
+             
+                <!-- END dispute CARD TABLE -->
+            <!-- REVIEW TABLE TABLE -->
+             
+                <!-- END review CARD TABLE -->
+    
+     
+        
+    <!-- new karl -->    
+      
+      </div>
+  </div>
+</section>
+<script>
+  $("#save-grant").click(function(){
+    $("#grant-success-panel").removeClass("in-out");
+    $("#accordion-grant-perm").removeClass("in");
+  })
+  $("#close-grant-success-panel").click(function(){
+    $("#grant-success-panel").addClass("in-out");
+  })
+
+  $("#save-req").click(function(){
+    $("#req-success-panel").removeClass("in-out");
+    $("#accordion-req-api").removeClass("in");
+  })
+  $("#close-req-success-panel").click(function(){
+    $("#req-success-panel").addClass("in-out");
+  })
+  $("#dispute_box").click(function() {
+    $(".card").removeClass("card-active");
+    $(this).addClass("card-active")
+    $.getScript("<%=dispute_glossary_sell_onlines_path %>")
+  })
+  $("#customer_box").click(function() {
+    $(".card").removeClass("card-active");
+    $(this).addClass("card-active")
+    $.getScript("<%=customer_glossary_sell_onlines_path %>")
+  })
+  $("#review_box").click(function() {
+    $(".card").removeClass("card-active");
+    $(this).addClass("card-active")
+    $.getScript("<%=review_glossary_sell_onlines_path %>")
+  })
+  
+  
+</script>

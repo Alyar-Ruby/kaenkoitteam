@@ -1,0 +1,8 @@
+<%if @error.present? %>
+	$("#error_msg").html("<%= @error %>").show();
+<% else %>
+	$("#my_circles").html("<%=j(options_for_select(current_user.owned_circles.map{|k| [k.name,k.id]})) %>")
+	$('#modal-window').modal('toggle');
+<% end %>
+$(".ajax-loading").hide();
+$('#my_circles').selectpicker('refresh');

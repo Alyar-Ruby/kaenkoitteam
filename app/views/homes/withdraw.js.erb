@@ -1,0 +1,8 @@
+$("#ajax-container").html("<%= j(render 'withdraw_funds') %>")
+$(".ajax-loading").hide()
+$(function() {
+	history.pushState(null, "", "<%= withdraw_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

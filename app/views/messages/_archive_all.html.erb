@@ -1,0 +1,240 @@
+<section class="mail main-container container-fluid">
+  <div class="row row-50-top">
+    <div class="col-lg-9">
+        <div class="panel panel-default">
+          <div class="panel-heading panel-heading-mail">
+            <div class="col-lg-4 nav-links-mail">
+              <span class="nav-mail">
+                <%=link_to "Inbox" , messages_path, remote: true %>
+                <%if @unread_messages.size > 0 %>
+                    <span class="badge pull-right"><%= @unread_messages.size%></span>
+                <% end %>
+              </span>
+              <span class="nav-mail"><%= link_to "Unread", unread_list_messages_path, remote: true %></span>
+              <span class="nav-mail active"><%= link_to 'Archive', show_archive_messages_path, remote: true %></span>
+            </div>
+            <div class="col-lg-8 header-who-mail" id="who-mail-header">
+              <span class="mail-header" >
+                <%if @latest_message.present? %>
+                 <% @latest_users = ConversationUser.where("conversation_id = ? and account_id <> ?", @latest_message.first.conversation_id, current_user.account.id).group("account_id").count %>
+                <!-- <a href="#" class="go-mail-list"><i class="kk-close"></i></a> -->
+                    <%if @latest_users.size >= 2 %>
+                    <% s = 1 %>
+                      <%@latest_users.each do |k, v| %>
+                        <%= "#{Account.find_by_id(k).try(:display_name)} " %> <%= ", " if s < @latest_users.size %>
+                        <% s = s + 1%>
+                      <% end %>
+                    <% else %>
+                      <% other_user = ConversationUser.where("conversation_id = ? and account_id <> ?",  @latest_message.first.conversation_id, current_user.account.id).first %>
+                      <%= other_user.try(:account).try(:display_name) %>
+                    <% end %>
+                <% end %>
+              </span>
+
+              <div class="btn-group pull-right">
+                <div class="btn-group">
+                  <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-cog"></i>
+                  </a>
+                  <ul class="dropdown-menu" role="menu">
+                      <li>
+                          <a href="#">
+                              
+                          </a>
+                      </li>
+                      <li>
+                        <%if @latest_message.present? %>
+                        <%=link_to trash_message_path(@latest_message.first.conversation_id) , method: :post, remote: true, confirm: "Are you sure you want to delete this conversation?" do %>
+                          <i class="fa fa-ban"></i> Delete Message
+                          <% end %>
+                        <% end %>
+                      </li>
+                      
+                      <li>
+                      <!-- <a href="#">
+                          <i class="fa fa-floppy-o"></i> Save As PDF
+                      </a> -->
+                      </li>
+                          
+                  </ul>
+                </div>
+                <div class="btn-group">
+                  <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                      <i class="fa fa-search"></i>
+                  </a>
+                  <ul class="dropdown-menu" role="menu">
+                      <li>Search form</li>
+                  </ul>
+                </div>
+                  <%= link_to new_message_path , remote: true, class: "btn btn-default", id: "new_message_link" do %> 
+                  New Message
+                <% end %>
+              </div>  
+          </div>
+        </div>
+        <div class="panel-body panel-overview">
+          <!-- entry -->
+          <div class="well-mail col-lg-4">
+            <ul id="messagelist" class="well-mail-list">
+            <%if @latest_messages.size > 0 %>
+              <% @latest_messages.each  do |latest_message|  %>
+               <%id = latest_message.conversation_id %>
+                <% other_users = ConversationUser.where("conversation_id = ? and account_id <> ?",id, current_user.account.id).first.try(:account)%>          
+               <% multiple_users =  ConversationUser.where("conversation_id = ? and account_id <> ?",latest_message.conversation_id, current_user.account.id).group("account_id").count %>
+                  <li>
+                  <a href="<%= archive_detail_message_path(id)%>" class="read-mail " data-id="conversation<%=id%>" data-remote = "true" >
+                    <div id = "conversation<%=id%>" class="ticket <%=params[:id].to_i == id ? 'ticket-active' : "" %> ">
+                      <%if multiple_users.size == 2 %>
+
+                      <div class="avatar pull-left">
+                        <div class="kk-inbox-img">
+                          <% i = 0 %>
+                          <% multiple_users.each do |id, v| %>
+                            <% cnv_user = Account.find_by(id: id) %>
+                              <div class="inbox-circle-img-half<%= i = i+1 %> half-inbox-circle-img">    
+                                <div class=".multi-img-content">
+                                  <%= image_tag cnv_user.display_image_profile, width:50, height:25 %>
+                                </div>                                  
+                              </div>
+                            <% end %>
+                        </div>
+                      </div>   
+                    <%elsif multiple_users.size == 3%>
+                      <div class="avatar pull-left">
+                         <div class="kk-inbox-img">
+                           <% i = 0 %>
+                            <% multiple_users.each do |id, v| %>
+                              <% cnv_user = Account.find_by(id: id) %>
+                                <% i = i +1 %>
+                                <%if i ==3 %>
+                                  <div class="inbox-circle-img3_half inbox-circle-img" 
+                                  style="width:50px;margin-top: 25px;">      
+                                 <% else %>
+                                  <div class="inbox-circle-img<%= i %> inbox-circle-img" >    
+                                <% end %>
+                                
+                                  <div class="img-content<%=i%>" >
+                                  <%if i != 3 %>
+                                    <%= image_tag cnv_user.display_image_profile, width:30, height:25 %>
+                                  <% else %>
+                                    <%= image_tag cnv_user.display_image_profile, width:50, height:25 %>
+                                  <% end %>
+                                  </div>      
+                                </div>
+
+                            <% end %>
+                        </div>
+                      </div>
+                    <%elsif multiple_users.size >= 4 %>
+                      <div class="avatar pull-left">
+                         <div class="kk-inbox-img">
+                           <% i = 0 %>
+                           <%if i < 4 %> 
+                            <% multiple_users.each do |id, v| %>
+                              <% cnv_user = Account.find_by(id: id) %>
+                               
+                                  <div class="inbox-circle-img<%= i= i+ 1  %> inbox-circle-img" style="<%= (i == 4) ? 'margin-top:24px;' : '' %>"  >
+                                 
+                                  <div class ="img-content<%=i%>">
+                                    <%= image_tag cnv_user.display_image_profile, width:30, height:25 %>
+                                  </div>      
+                                </div>
+
+                            <% end %>
+                            <% end %>
+                        </div>
+                      </div> 
+                       <% else %>
+                        <div class="avatar pull-left <%= other_users.online_status == false ? 'avatar-offline' : '' %> ">
+                        <%= image_tag other_users.display_image, width:50, height: 50, class: "img-circle" %>
+                        </div>
+                      <% end %>
+                    
+                      <div class="content ">
+                        <span class="datestamp"><i class="kk-clock"></i><%= relative_time(latest_message.created_at)%></span>
+                        <span class="users">
+                          <h2>
+                             <%if multiple_users.size >= 2 %>
+                              <%= "Multiple Receivers( #{multiple_users.size} )" %>
+                            <% else %>
+                              <%= other_users.try(:display_name) %>
+                            <% end %>
+                          </h2>
+                        </span>
+                        <p><%= image_tag "/assets/reply_hover.png" if latest_message.account_id == current_user.account.id %>
+                          <%= truncate(latest_message.message, length: 70, separator: ' ') %>
+                        </p>
+                         <%if latest_message.message_images.present? %>
+                        <% latest_message.message_images.each do |attach| %>
+                          <ul>
+                           <li class="img" style="list-style-type: none;">
+                            <%extension = attach.attachment.file.extension.downcase %>
+                            <%if %w{jpg png jpg gif bmp}.include?(extension)%>
+                              <%= image_tag attach.attachment_url(:profile) , width:50, height: 50 , class: "a_image"%>
+                            <%else%>
+                              <%=link_to attach.attachment.file.filename, download_attachment_message_path(attach.id), method: :post  %>
+                            <% end %>
+                            
+                            </li>
+                          </ul>
+                        <% end %>
+                      <% end %>
+                      </div>
+                    </div>
+                    </li>
+                  </a>
+                <% end %>
+              <% else %>
+                 <div class="panel panel-mail">
+                    <div class="panel-heading">
+                      No message available
+                    </div><!-- /input-group -->
+                  </div>
+              <% end %>
+            </ul>
+              <!-- END entry -->
+              <!-- entry -->
+          </div>
+       
+  
+          <div class="col-lg-8 tabular-content" id="message_detail">
+            <%if @messages.size == 0 %>
+              <div class="panel-body ">
+                <div class="messagecontent" style="overflow: hidden; width: auto; height: 460px;">
+            <!-- entry -->
+                  <div class="ticket mail-body">
+                    No coversation
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            
+          </div>
+        </div>
+      </div>
+</section>
+ 
+<% if @latest_message.size>0 %>
+  <script type="text/javascript">
+    $(function() {
+      <% if !params[:id].present? %>
+        $.getScript("<%= archive_detail_message_path(@latest_messages.first.conversation_id) %>")
+        $(".ticket").removeClass("ticket-active")
+        $("#conversation<%=@latest_messages.first.conversation_id%>").addClass("ticket-active")
+      <% else %>
+        $.getScript("<%= archive_detail_message_path(params[:id]) %>")
+        $(".ticket").removeClass("ticket-active")
+        $("#conversation<%=params[:id]%>").addClass("ticket-active")
+      <% end %>
+
+    })   
+
+  </script>
+<% end %>
+      <script>
+  jQuery(document).ready(function($) {
+      $('#messagelist').slimScroll({
+          height: '500px' 
+      });
+  });
+</script>

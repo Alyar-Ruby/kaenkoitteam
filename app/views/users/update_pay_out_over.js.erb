@@ -1,0 +1,9 @@
+<%if @user.errors.present? %>
+	$("#pay_out_over_text").html("<%= @user.errors.full_messages.join(",") %>").show();
+<% else %>
+	$("#pay_out_over_text").html("<%= number_with_precision(@user.pay_out_over, precision: 2 || 0) %><strong>&nbsp;&nbsp;<%= @user.account.kaenko_currency.try(:title) %></strong> (or equivalent)").show();
+	$("#pay_out_over").html("<%= number_with_precision(@user.pay_out_over, precision: 2 || 0) %>").show();
+<% end %>
+$("#edit_pay_out_over").hide();
+$("#change_pay_out_over").show();
+

@@ -1,0 +1,135 @@
+<div class="row-fluid">
+  
+  <h3 style="display:none;" class="header smaller lighter blue"></h3>
+  <div class="table-header">
+    Exchanges
+  </div>
+	
+  <table id="table_report" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <!--
+        <th class="center">
+          <label>
+            <input type="checkbox" />
+            <span class="lbl"></span>
+          </label>
+        </th>
+        -->
+        <th class="hidden-phone">
+          From
+        </th>
+        <th>To</th>
+        <th>Total Fee</th>
+        <th>Our Fee</th>
+        <th>FX Fee</th>
+        <th>Provider</th>
+        <th>Limit p/d</th>
+        <th>Group</th>
+        <th>Type</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @feesexchanges.each do |feesexchange| %>
+        <tr>
+        <!--
+          <td class="center">
+            <label>
+              <input type="checkbox" />
+              <span class="lbl"></span>
+            </label>
+          </td>
+         -->
+
+         
+          <td><%=	feesexchange.kaenko_currency_from.unit%></td>
+          <td><%= feesexchange.kaenko_currency_to.unit %></td>
+          <td><%= feesexchange.fee_percent %> % + <%= feesexchange.fee_value %></td>
+          <td><%= feesexchange.our_fee %></td>
+          <td><%= feesexchange.fx_fee %></td>
+          <td><%= feesexchange.provider %></td>
+          <td><%= feesexchange.limit_pd.present? ? feesexchange.limit_pd : "At this moment there is no limit."  %></td>
+          <td><%= feesexchange.exchange_group %></td>
+          <td><%= feesexchange.account_type %> </td>
+          
+          
+         
+          <td class="td-actions">
+            <div class="inline position-relative">
+              <button data-toggle="dropdown" class="btn btn-minier btn-primary dropdown-toggle">
+                <i class="icon-cog icon-only bigger-110"></i>
+              </button>
+
+              <ul class="dropdown-menu dropdown-icon-only dropdown-light pull-right dropdown-caret dropdown-close">
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-success" href="<%= edit_fees_exchange_path(feesexchange) %>" data-original-title="Edit">
+                    <span class="green">
+                      <i class="icon-edit"></i>
+                    </span>
+                  </a>
+                </li>
+
+              
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-error" href="<%=fees_exchange_path(feesexchange) %>" data-original-title="Delete" data-method = "delete" data-confirm = "Are you sure?">
+                    <span class="red">
+                      <i class="icon-trash"></i>
+                    </span>
+                  </a>
+                </li> 
+              </ul>
+            </div>
+          </td> 
+        </tr>
+
+      <% end %>
+      
+    </tbody>
+  </table> 
+  <div class = "pull-right" style="padding-top:10px;">
+  	<%= link_to "New", new_fees_exchange_path, :class => 'btn btn-info' %>
+  </div>
+</div>
+
+<% content_for :stylem do %>
+		<link rel="stylesheet" href="/assets/admins/datepicker.css" />
+<% end %>
+<% content_for :script do %>
+  <script src="/assets/admins/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.bootstrap.js"></script>
+  <script src="/assets/admins/date-time/bootstrap-datepicker.min.js"></script>
+  <script>
+  	$(function() {
+  		$(".date-picker").datepicker();
+  	})
+  </script>
+<% end %>
+
+<% content_for :inlinescript do %>
+  <script type="text/javascript">
+    $(function() {
+      var oTable1 = $('#table_report').dataTable( {
+    
+      "aoColumns": [
+          { "bSortable": false },
+          null, null, null, null, null, null, null,
+        { "bSortable": false },
+       
+      ] } );
+      $('table th input:checkbox').on('click' , function(){
+        var that = this;
+        $(this).closest('table').find('tr &gt; td:first-child input:checkbox')
+        .each(function(){
+          this.checked = that.checked;
+          $(this).closest('tr').toggleClass('selected');
+        });
+          
+      });
+    
+      $('[data-rel=tooltip]').tooltip();
+    })
+  </script>
+<% end %>

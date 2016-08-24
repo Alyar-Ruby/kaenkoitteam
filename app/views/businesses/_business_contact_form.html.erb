@@ -1,0 +1,46 @@
+<a href="javascript:void(0);" class="close-slide"  id="close-contact-change-panel"><i class="fa fa-times"></i></a>
+<ul>
+  <li><h5>Edit Contact</h5></li>    
+    <li>
+      <%= form_for(@business, url: update_contact_business_path(@business), remote: true, :html => { :method => :put, id: "adding-card-form" }) do |f| %>  
+        <div id = "business_contact_msg">
+        </div>
+        <div>
+          <span>
+            <label>Website:</label>
+            <p>
+              <%= f.text_field :organization_url, step: 4, max: 30, size: 30, placeholder: "eg. http://yoursite.com" %>
+            </p>
+          </span>
+          <span>
+            <label>Email:</label>
+            <p>
+              <%= f.text_field :email  , placeholder: "Your Email Address"%>
+            </p>
+          </span>
+        </div>
+        <div>
+          <span>
+            <label>Phone Number</label>
+            <p>
+              <%= f.text_field :phone  , placeholder: "eg. +1 2334 1122 332" %>
+            </p>
+          </span>
+          <span>
+              <a href="javascript:void(0);" id="update-address-btn" class="btn btn-success addcard-btn" ><i class="fa fa-repeat"></i>Update Contact</a>
+          </span>
+        </div>
+      <% end %>
+  </li>
+</ul>
+<%= javascript_tag do %>
+  $(function() {
+    $("#close-contact-change-panel").click(function(){
+      $("#contact-change-panel").addClass("in-out");
+    });
+    $("#update-address-btn").click(function() {
+      $("#adding-card-form").submit();
+    });
+  });
+<% end %>
+

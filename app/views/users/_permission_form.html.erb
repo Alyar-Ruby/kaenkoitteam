@@ -1,0 +1,96 @@
+ <%= simple_form_for(@user, :url => update_permission_user_path(@user), remote: true, :html=>{:name => "permisssion_form", :id=>"permission_form", method: :get}) do |f| %>
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">Permission</h4>
+      </div>
+      <div class="modal-body">
+        <div class="container-fluid">
+        <div class="row">
+          <div class="alert alert-warning" style="display:none;" id="user_error_message">
+          </div>
+        
+          <h2><i class="fa fa-check-square"> &nbsp;</i>Roles and Capabilities</h2>  <br>
+          <div class="row">
+            <div class="col-sm-6">
+             <%Role.all.each do | role | %>
+              <label>
+                <%if @user.roles.include?(role) %>
+                  <input type="checkbox" checked="checked" value="<%= role.id %>" name = "role_ids[]">  <%= role.title %>  
+                <% else %>
+                <input type="checkbox" value="<%= role.id %>" name = "role_ids[]">  <%= role.title %>
+                <% end %>
+
+              </label><br>
+              <% end %>
+             </div>
+
+            <div class="col-sm-6">
+              <% Capability.all.each do |cap| %>
+              <label>
+                <input type="checkbox" value = "<%= cap.id %>" id="chk<%=cap.id%>" name = "cap_ids[]"  > <%= cap.title %>
+              </label>
+              <label>  
+                <div class="input-group">
+                  <span class="input-group-addon">$</span>
+
+                  <input type="text" class="form-control input-sm" id = "txt<%=cap.id%>" placeholder="Daily limit" name="daily_limit<%=cap.id %>">
+
+                  <span class="input-group-addon">USD</span>
+                 </div>
+
+              </label><br>
+              <% end %>
+              
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+  <div class="modal-footer">
+
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+    <button type="submit" class="btn btn-primary">Proceed</button>
+
+  </div>
+  
+
+</div>
+
+</div>
+<% end %>
+<script>
+  $(function() {
+    $( "#user_date_of_birth" ).datepicker({
+      defaultDate: "+1D",
+      maxDate:'-18Y',
+      dateFormat: 'yy-m-d',
+      changeMonth: true,
+      changeYear: true,
+      showMonthAfterYear: true,
+      yearRange: "-100:+1"
+    });
+
+  });
+  $(function(){
+      document.new_user_form.daily_limit1.disabled = true;
+      document.new_user_form.daily_limit2.disabled = true;
+      document.new_user_form.daily_limit3.disabled = true;
+      document.new_user_form.daily_limit4.disabled = true;
+      document.new_user_form.daily_limit5.disabled = true;
+      $('#user_form :checkbox').change(function() {
+        if($(this).is(":checked") == true){
+          $("#txt"+this.value).removeAttr("disabled")
+        }
+        else{
+          $("#txt"+this.value).attr("disabled",true)
+        }
+      
+      });
+  });
+
+
+</script>

@@ -1,0 +1,8 @@
+$("#ajax-container").html("<%= escape_javascript(render 'compose') %>");
+$(".ajax-loading").hide()
+$(function(){
+   history.pushState(null, "", "<%= new_message_path %>")
+  $(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

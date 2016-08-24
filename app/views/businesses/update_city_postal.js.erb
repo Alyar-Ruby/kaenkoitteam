@@ -1,0 +1,8 @@
+<%if !@error.present? %>
+	$("#city_postal_text").html("<%= @business.city %>(<%= @business.postal_code%>)").show()
+<% else %>
+	$("#city_postal_text").html("<%= @error %>").show()
+<% end %>
+ $("#city_postal_text").show();
+ $("#change_city_postal").show();
+ $("#city_postal").hide();

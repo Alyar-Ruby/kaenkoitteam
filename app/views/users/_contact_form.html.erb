@@ -1,0 +1,82 @@
+ <%= simple_form_for(@user, :url => update_contact_user_path(@user), remote: true, :html => { :method => :put }) do |f| %>
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">Update Contact</h4>
+      </div>
+      <div class="modal-body">
+        <p style="display:none;" class="alert alert-warning" id="contact_error"></p>
+        <p style="display:none;" class="alert alert-success"></p>
+        <div class="container-fluid">
+        <div class="row">
+          <div class="alert alert-warning" style="display:none;" id="user_error_message">
+          </div>
+          <h2>Contact Details</h2>
+
+        <div class="row">
+         
+            <div class="col-sm-6">
+              <p>
+                <b>Job Title:*</b> 
+                <%= f.input :job_title, :placeholder=>"Jon Title", label: false, input_html: {class: "form-control input-sm"}  %>
+              </p>
+              <p>
+                <b>First name:*</b> 
+                <%= f.input :first_name, :placeholder=>"First Name", 
+                label: false, input_html: {class: "form-control input-sm"}   %>
+              </p>
+              
+              <p>
+                <b>Last name:*</b> 
+                <%= f.input :last_name, :placeholder=>"Last Name", label: false, input_html: {class: "form-control input-sm"}   %>
+              </p>
+              <p>
+                <b>Email Address:*</b> 
+                <%= f.input :email, :placeholder=>"Email", label: false, input_html: {class: "form-control input-sm"}   %>
+              </p>
+              
+            </div>
+            <div class="col-sm-6">
+              <p>
+                <b>Nationality:*</b> 
+                <%= f.input :nationality, :as=>"select", label: false, :collection=>@kaenko_countries, :prompt=>"Choose country" , input_html: {class: "form-control input-sm"} %>
+                
+              </p>
+              
+              <p>
+                <b>Date Of Birth:*</b> 
+                <%= f.input :date_of_birth, :as=>"string", label: false,  
+                :placeholder=>"Date Of Birth" ,
+                 input_html: {class: "form-control input-sm" }%>
+              </p>
+              <p>
+                <b>Gender:*</b> 
+                <%= f.input :gender, :as=>"select", label: false, :collection=>[["Male","male"],["Female","female"]], :prompt=>"Gender" ,  
+                input_html: {class: "form-control input-sm" } %>
+              </p>
+              <p><b>Phone Number:</b> 
+                <%= f.input :phone, :placeholder=>"Phone", label: false, input_html: {class: "form-control input-sm"}  %>
+              </p>
+            </div>
+         
+        </div>
+        
+      </div>
+  
+</div>
+</div>
+
+  <div class="modal-footer">
+
+    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+
+  </div>
+  
+
+</div>
+
+</div>
+<% end %>

@@ -1,0 +1,5 @@
+<%if @allowed == true %>
+	$.getScript("<%= edit_secret_user_path(@user) %>")
+<% else %>
+	$("#pin_error_message").html("Sorry!! You have entered wrong pin.Please try again").show();
+<% end %>

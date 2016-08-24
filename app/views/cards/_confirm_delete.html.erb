@@ -1,0 +1,35 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Delete Card</h4>
+      <div class="alert alert-warning" id="error_msg" style="display:none;"></div>
+    </div>
+    <%=form_for(:confirm, :url=>@card, :method=>"delete", remote: true ) do %>
+      <div class="modal-body">
+          <div class="form-group">
+            <div class="span3 offset1">Are you sure you want to delete card : <%= @card.name %></div>
+          </div>
+          <br>
+          <div class="form-group">
+            <div class="span3 offset1">Enter digits of your security pin.</div>
+          </div>
+          <br>
+          <div class="row-fluid">
+            
+          <% @sp_positions.each do |sp| %>
+            <div style="float:left;margin:0px 10px;text-align:center;">
+              <%=sp+1%><br>
+              <input type="text" name="sp_<%=sp%>" id="sp_<%=sp%>" value="" size="1" class="form-control">
+            </div>
+          <% end %>
+          </div>
+          <div style="clear:both;"></div>
+          <div class="row-fluid">
+            <div class="span3 offset1">&nbsp;</div>
+            <div class="span8"><input type="submit" name="submit" value="Submit" class="btn btn-primary"></div>
+          </div>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,0 +1,129 @@
+<div class="row-fluid">
+  <h3 style="display:none;" class="header smaller lighter blue">jQuery dataTables</h3>
+  <div class="table-header">
+    Results for "Premium Requests"
+  </div>
+
+  <table id="table_report" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <th class="center">
+          <label>
+            <input type="checkbox" />
+            <span class="lbl"></span>
+          </label>
+        </th>
+        <th>Email</th>
+        <th>Name</th>
+        <th class="hidden-480">Account Type</th>
+
+        <th class="hidden-phone">
+          <i class="icon-time hidden-phone"></i>
+          Request Sent
+        </th>
+        <th class="hidden-480">Account Status</th>
+        
+        <th class="hidden-480">Request Status</th>
+
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @premium_requests.each do |premium_request| %>
+        <tr>
+          <td class="center">
+            <label>
+              <input type="checkbox" />
+              <span class="lbl"></span>
+            </label>
+          </td>
+
+          <td>
+            <%=link_to premium_request.user.email, premium_request_path(premium_request)%>
+          </td>
+          <td><%=premium_request.user.name%></td>
+          <td class="hidden-480"><%=premium_request.account.roleable_type%></td>
+          <td class="hidden-phone"><%=premium_request.created_at%></td>
+
+          <td class="hidden-480">
+            <%=(premium_request.account.approved) ? '<span class="label label-success">Existing</span>'.html_safe : '<span class="label label-warning">New</span>'.html_safe %>
+          </td>
+
+          <td>
+            <%=(premium_request.status == "pending") ? '<span class="label label-warning">Pending</span>'.html_safe : (premium_request.status == "rejected") ? '<span class="label label-important">Rejected</span>'.html_safe : '<span class="label label-success">Approved</span>'.html_safe %>
+          </td>
+
+          <td class="td-actions">
+            <div class="inline position-relative">
+              <button data-toggle="dropdown" class="btn btn-minier btn-primary dropdown-toggle">
+                <i class="icon-cog icon-only bigger-110"></i>
+              </button>
+
+              <ul class="dropdown-menu dropdown-icon-only dropdown-light pull-right dropdown-caret dropdown-close">
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-success" href="#" data-original-title="View">
+                    <span class="green">
+                      <i class="icon-user"></i>
+                    </span>
+                  </a>
+                </li>
+                <%if premium_request.status == "pending" %>
+                  <li>
+                    <%=link_to '<i class="icon-ok bigger-110"></i>'.html_safe , approve_premium_request_path(premium_request),  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window'} %> 
+                  </li>
+                  <li>
+                     <%=link_to '<i class="icon-remove bigger-110"></i>'.html_safe, reject_premium_request_path(premium_request),  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window'} %>
+                  </li>
+                <% end %>
+
+                <li>
+                  <a data-placement="left" title="" data-rel="tooltip" class="tooltip-error" href="#" data-original-title="Delete">
+                    <span class="red">
+                      <i class="icon-trash"></i>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+
+      <% end %>
+      
+    </tbody>
+  </table>
+</div>
+
+
+<% content_for :script do %>
+  <script src="/assets/admins/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.bootstrap.js"></script>
+<% end %>
+
+<% content_for :inlinescript do %>
+  <script type="text/javascript">
+    $(function() {
+      var oTable1 = $('#table_report').dataTable( {
+      "aoColumns": [
+          { "bSortable": false },
+          null, null,null, null, null, null,
+        { "bSortable": false }
+      ] } );
+      
+      
+      $('table th input:checkbox').on('click' , function(){
+        var that = this;
+        $(this).closest('table').find('tr &gt; td:first-child input:checkbox')
+        .each(function(){
+          this.checked = that.checked;
+          $(this).closest('tr').toggleClass('selected');
+        });
+          
+      });
+    
+      $('[data-rel=tooltip]').tooltip();
+    })
+  </script>
+<% end %>

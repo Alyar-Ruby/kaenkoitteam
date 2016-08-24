@@ -1,0 +1,7 @@
+<%if @error.present? %>
+	$("#error_msg").html("<%= @error %>").show();
+<% else %>
+	$("#bank-list").html("<%= escape_javascript(render 'banks') %>");
+	$('#modal-window').modal('toggle');
+<% end %>
+$(".ajax-loading").hide();

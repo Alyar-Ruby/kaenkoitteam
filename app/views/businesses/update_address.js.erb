@@ -1,0 +1,9 @@
+<%if @business.errors.any? %>
+	$("#business_address_msg").html("<%= @business.errors.full_messages.join(",") %>")
+<% else %>
+	$("#business_address_msg").html("Address Updated.")
+	$("#busi-prof-1").html("<%= j(render :partial => 'business_address',
+	 locals: {:business_account => @business}) %>")
+<% end %>
+
+

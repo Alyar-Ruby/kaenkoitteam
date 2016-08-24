@@ -1,0 +1,90 @@
+<!--Add card -->
+ <%=form_tag  process_new_card_account_add_funds_path(current_user.account) , id: "adding-card-form", remote: true  do %>
+    <a href="javascript:void(0);" class="close-slide"  id="close-add-card-panel"><i class="fa fa-times"></i></a>
+    <div  class="tabular-cardpick col-lg-6 col">
+        <ul>
+            <li class="no-hover">
+                <h5>Debit / Credit Card Payment (Single)</h5>
+            </li>
+            <li>
+               
+                 <div>
+                    <span>
+                      <label>Card Holder Name</label>
+                      <p>
+                        <input id="holder-name" type="text" placeholder="Full Name" name = "card[name]" />
+                      </p>
+                      </span>
+                      <span>
+                      <label>Card Number</label>
+                      <p>
+                        <input id="cc-number" name = "card[card_number]" type="text" step="4" max="16" size="16" placeholder="xxxx xxxx xxxx xxxx" value="" />
+                      </p>
+                      </span>
+                      </div>
+                      <div>
+                      <span>
+                      <label>Exp. Date</label>
+                      <p>
+                        <input id="exp-date" name = "card[expiry_date]" type="text" max="5" size="5" placeholder="MM/YY" />
+                      </p>
+                          </span>
+                      <span>
+                          <label>CVV/CVC</label>
+                          <a class="info-badge-cvc" href="#"><i class="fa fa-info-circle"></i></a>
+                      <p>
+                          <input id="cvc-number" name= "card[cvv]" type="text" max="3" size="3" placeholder="CVC" />
+                      </p>
+                  </span>
+                        
+                </div>
+               
+            </li>
+        </ul>
+    </div>
+    <div  class="tabular-cardpick col-lg-6 col">
+        <ul>
+            <li class="no-hover">
+                <h5>I want to receive:</h5>
+                <div>
+                    <span style="display:inline-block;">
+                        
+                        <p>
+                            <input id="amount-field" name="amount" type="text" placeholder="$ 0.00 USD" size="21">   
+                        </p>
+                    </span>
+                    <span>
+                        <p>
+                          <%= select_tag :'kaenko_currency_id',
+                            options_for_select(KaenkoCurrency.select("id, unit").collect{|c|[c.unit, c.id]}), id: "currency_list" %>
+                        </p>        
+                    </span>
+                    
+                </div>
+                <h5>Total Debit: <b>$567.88 USD</b></h5>
+            </li>
+            <li class="no-hover">
+                <div>
+                    <span>
+                        <input type="checkbox" class="radio">
+                    </span>
+                    <span>
+                        I accept that i read Kaenko Limited <a href="#">Terms &amp; Conditions</a>
+                    </span>
+                </div>
+            </li>
+            
+        </ul>
+    </div>
+    <!-- <a href="javascript:void(0);" id="add-funds-complete" class="btn btn-primary right-bottom">Confirm Order</a> -->
+    <%=submit_tag :'Confirm Order', id: "add-funds-complete" , class: "btn btn-primary right-bottom" %>
+<% end %>
+<!-- add card end -->
+
+
+
+<script>
+  $("#close-add-card-panel").click(function(){
+    $("#add-card-panel").addClass("in-out");
+  }) 
+</script>

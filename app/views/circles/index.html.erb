@@ -1,0 +1,31 @@
+<div class ="row-fluid">
+	<div class="span12">
+		<table class="table table-striped">
+			<tr>
+				<th>Name</th>
+				<th>Action</th>
+			</tr>
+			<%if @circles.size > 0 %>
+				<%@circles.each do |circle| %>
+					<tr>
+						<td><%= circle.name %></td>
+						<td>
+							<%= link_to "show", circle %> |
+							<%= link_to "Edit", edit_circle_path(circle) %> |
+							<%= link_to "Destroy", circle, :confirm => 'Are you sure?', :method => :delete %> |
+							<%= link_to "Send Email", new_message_path(:cid=>circle.id), class: "btn btn-mini",  :remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window' %> 
+						</td>
+					</tr>
+				<% end %>
+			<% else %>
+				No circle available.
+			<% end %>
+		</table>
+		<div class="pull-right">
+			<%= link_to "New Circle" , new_circle_path %>
+		</div>
+	</div>
+	
+</div>
+
+<div id="modal-new-window" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>

@@ -1,0 +1,114 @@
+
+<div class="panel-body table-responsive">
+    <table class="table table-hover">
+        <thead class="">
+          <tr>
+            <td style="padding-left:5px;">
+              Date
+            </td>
+            <td>
+              Type
+            </td>
+            <td>
+              Name/Email
+            </td>
+          
+            <td>
+              Status
+            </td>
+              <td>
+              Control
+              </td>
+            <td>
+              Gross Amount
+            </td>
+              <td>
+              Net Amount
+            </td>
+            
+          </tr>
+        </thead>
+        <tbody>
+          <%if @transactions.size > 0 %>
+            <% @transactions.each do |transaction| %>
+            <tr>
+              <td style="padding-left:5px;">
+                <%= relative_time(transaction.created_at) %>
+              </td>
+              <td>
+
+                <%= transaction.type %>
+              </td>
+              <td>
+                <%= transaction.email %>
+              </td>
+              <td>
+               <span class="<%=trans_status(transaction.status)%> "><%= transaction.status %> </span>
+                
+              </td>
+                <td>
+                <span id="cancel<%= transaction.type %><%= transaction.id %>">
+                  <% if transaction.type == "request_payment" %>
+                    <%if (transaction.status.casecmp("pending") == 0) %> 
+                      <%= (link_to "Cancel", cancel_request_request_payment_path(transaction.id) , class: "btn btn-danger", remote: true)  %>
+                    <%elsif (transaction.status.casecmp("cancelled") == 0) %>
+                      <%=  (link_to "activate", "javascript:void(0)" , class: "btn btn-success")  %>
+                    <%else %>
+                      N/A
+                    <% end %>
+
+                  <% elsif transaction.type == "invoice" %>
+                    <%if (transaction.status.casecmp("pending") == 0) %>
+                      <%= link_to "Cancel", cancel_request_invoice_path(transaction.id)  , class: "btn btn-danger",  remote: true  %>
+                    <%elsif (transaction.status.casecmp("cancelled") == 0) %>
+                      <%= link_to "activate", "javascript:void(0)" , class: "btn btn-success"  %>
+                    <% else %>
+                      <span>N/A</span>
+                    <% end %>
+                  <% end %>
+                </span>
+                </td>
+              <td>
+                <%= number_with_precision(transaction.amount, :precision => 2 || 0) %> <%= KaenkoCurrency.find_by_id(transaction.kaenko_currency_id).try(:unit) %> <a href="#"></a>
+              </td>
+                <td style="padding-top:20px;">
+                  <% if transaction.type == "request_payment" %>
+                    <%if (transaction.status.casecmp("pending") == 0) or (transaction.status.casecmp("cancelled") == 0)%> 
+                     <span>N/A</span>
+                    <% else %>
+                    <span><%= number_with_precision(transaction.amount, :precision => 2 || 0) %> <%= KaenkoCurrency.find_by_id(transaction.kaenko_currency_id).try(:unit) %></span>
+                  <% end %>
+                  <%elsif transaction.type == "invoice"  %>
+                      <%if (transaction.status.casecmp("pending") == 0) or (transaction.status.casecmp("cancelled") == 0)%> 
+                     <span>N/A</span>
+                    <% else %>
+                    <span><%= number_with_precision(transaction.amount, :precision => 2 || 0) %> <%= KaenkoCurrency.find_by_id(transaction.kaenko_currency_id).try(:unit) %></span>
+                    <% end %>
+                  <% end %>
+                    
+                  <a><i class="kk-info-plus active pull-right"></i></a>
+                </td>
+            </tr>
+            <% end %>
+          <% else %>
+            <tr>
+              <td colspan="6">No transactions available.</td>
+            </tr>
+          <% end %>
+        </tbody>
+
+    </table>
+</div>
+
+<div class="panel-footer">
+    <ul class="pagination pagination-sm">
+      <%#= paginate @transactions , :remote => true %>
+      <!-- <li class="disabled"><a href="#">&laquo;</a></li>
+      <li class="active"><a href="#">1</a></li>
+      <li><a href="#">2</a></li>
+      <li><a href="#">3</a></li>
+      <li><a href="#">4</a></li>
+      <li><a href="#">5</a></li>
+      <li><a href="#">&raquo;</a></li> -->
+    </ul>
+</div>

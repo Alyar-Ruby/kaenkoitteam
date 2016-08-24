@@ -1,0 +1,11 @@
+<%if @user_referral.errors.present? %>
+	$('#modal-window').modal('toggle');
+	$(".alert-warning").html("<%= @user_referral.errors.full_messages.join("") %>")
+  $(".alert-warning").show()
+<% else %>
+	$('#modal-window').modal('toggle');
+	$(".alert-warning").hide();
+	$("#total-referral").html("<%= @referrals.size %>")
+	$("#referral-list").html("<%= escape_javascript(render 'referrals_list') %>");
+<% end %>
+$(".ajax-loading").hide()

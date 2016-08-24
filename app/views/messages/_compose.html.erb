@@ -1,0 +1,177 @@
+<script> 
+	(function ($) {
+	  jQuery.expr[':'].Contains = function(a,i,m){
+		  return (a.textContent || a.innerText || "").toUpperCase().indexOf(m[3].toUpperCase())>=0;
+	  };
+	 
+	  function listFilter(header, list) {
+		var form = $("<form>").attr({"class":"filterform","action":"#"}),
+			input = $("<input>").attr({"class":"filterinput livechat-input-search","type":"text","placeholder":"Search author..."});
+		$(form).append(input).appendTo(header);
+	 
+		$(input)
+		  .change( function () {
+			var filter = $(this).val();
+			if(filter) {
+			  $(list).find("span:not(:Contains(" + filter + "))").parent().parent().parent().parent().hide();
+			  $(list).find("span:Contains(" + filter + ")").parent().parent().parent().parent().show();
+			} else {
+			  $(list).find("li").show();
+			}
+			return false;
+		  })
+		.keyup( function () {
+			$(this).change();
+		});
+	  }
+	
+	  $(function () {
+		listFilter($("#searchauthor"), $("#messagelist"));
+	  });
+	}(jQuery));
+</script> 
+<section class="mail main-container container-fluid">
+
+
+    <div class="row row-50-top">
+    
+    <!-- new compose karl -->   
+        
+          <div class="col-lg-9">
+          <div class="panel panel-default">
+              <div class="panel-heading panel-heading-mail">
+                  <div class="col-lg-4 nav-links-mail">
+                      <span class="nav-mail active">
+                        <%=link_to "Inbox" , messages_path, remote: true %>
+                        <%if @unread_messages.size > 0 %>
+                            <span class="badge pull-right"><%= @unread_messages.size%></span>
+                        <% end %>
+                      </span>
+                      <span class="nav-mail"><%= link_to "Unread", unread_list_messages_path, remote: true %></span>
+                      <span class="nav-mail"><%= link_to 'Archive', show_archive_messages_path, remote: true %></span>
+                  </div>
+                  <div class="col-lg-8 header-who-mail">
+                      <span class="mail-header">
+                     Compose Message
+                      </span>
+                      
+                  </div>
+              </div>
+              <div class="panel-body panel-overview">
+                  <div class="well-mail col-lg-4">
+                      
+                          <%= render 'inbox_list' %>
+                      
+                  </div>
+                  <div class="col-lg-8 tabular-content">
+                      
+                      <ul style="margin-bottom:0;">
+                      <li class="message-send">  
+                          
+                    <%= form_tag messages_path, remote: true, id: "message_form" do  %>
+                    <div class="input-group top-control">
+                        <span class="ttccfwd">
+                      To:
+                      </span>
+                    <%= text_field_tag :recipients, "", class: "form-control", placeholder: "Start typing here..." %>
+                  </div><!-- /input-group -->
+             
+            
+            
+              <!-- entry -->
+              
+                <textarea class="form-control" name="body" rows="6" placeholder="Type your message here..." id="msg_body" style="height:400px; "></textarea>     
+              
+              <!-- END entry -->                                  
+           
+          
+              <div class="input-group bottom-control"> 
+                
+        <button class="btn btn-default-border" type="button" id="any_attachment"><i class="kk-attach"></i>Attach File</button>
+        <button class="btn btn-default-border" type="button" id="attach_image"><i class="kk-money-send"></i>Send Money</button>
+                <input type="checkbox" id="press_enter"> Press Enter to send
+                <input class="btn-send btn btn-primary btn-sm"  type="submit" value="Send message">
+              </div>
+               
+          <% end %>
+            </li> 
+            </ul>
+                      
+                      
+                  </div>
+              </div>
+          </div>
+      </div>    
+        
+    <!-- end -->
+        
+        <!-- COMPOSE MESSAGE OLD -->
+    <div class="col-lg-12" style="display:none;">
+      <div class="row">
+      <%= render 'inbox_list' %> 
+      <article class="mail mail-box col-sm-12 col-md-12 col-lg-8">
+        <div class="panel panel-mail" id="message_detail">
+          <%= form_tag messages_path, remote: true, id: "message_form" do  %>
+            <div class="panel-heading">
+              <div class="alert alert-warning" id="message_error" style="display:none;">
+              </div>
+              <h2><i class="kk-chat-active larger"></i> Compose Message</h2>
+              
+              <div class="input-group no-shadow pull-left" style="border-bottom:solid 1px #efefef;">
+                <%= text_field_tag :recipients, "", class: "form-control" %>
+                
+              </div><!-- /input-group -->
+              <div class="clearfix"></div>
+            </div> 
+            <div class="panel-body "> 
+              <!-- entry -->
+              <div class="ticket mail-body compose-body" style="background:#f1f4f4;">
+                <textarea class="form-control" name="body" rows="6" placeholder="Type your message here..." id="msg_body" style="height:auto; "></textarea>     
+              </div>
+              <!-- END entry -->                                  
+            </div> 
+            <div class="panel-footer" style="background-color:transparent;">
+              <div class="form-group pull-right"> 
+                <input type="checkbox" id="press_enter"> Press Enter to send
+                <button class="btn btn-default-border" type="button"><i class="kk-trash"></i></button>
+                <button class="btn btn-default-border" type="button"><i class="kk-files"></i></button>
+                <button class="btn-send btn btn-primary btn-sm"  type="submit">Send Message</button>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <div class="clearfix"></div>
+    </article> 
+    </div>
+  </div>
+</div>
+</section>
+<%= javascript_tag do %>
+  $(function() {
+    $("#recipients").tokenInput("/messages/to_user.json", {
+      propertyToSearch : "name",
+      crossDomain: false,
+      prePopulate: $("#recipients").data("load"),
+      theme: "facebook",
+      preventDuplicates: false,
+      tokenValue: "id",
+      url: "image_url",
+
+      resultsFormatter: function(item) {
+        var string = item[this.propertyToSearch];
+        var website = (item.website != 'NULL') ? "<a href=http://"+ item.website+" target='blank'>"+item.website+"</a>" : ""
+        return "<li>" + "<img src='" + item.image_url + "' title='" + item.name + "' height='25px' width='25px' class = 'img-circle' />" + "<strong><span style='padding-left:8px' class='blue-hl'>" +string+"</span></strong>" + "<div style='padding-left:30px;line-height:0px;'><span style='display-inline:block;'><i class='fa fa-map-marker' style='font-size: 11px;color: #A5A5A5 !important;line-height :13px !important;'></i>"+" "+item.city+" , "+item.country+"</span></div><div style='padding-left:30px'>"+ website +"</div>"+"</li>";
+      },
+      
+   });
+  });
+<% end %>
+<%=javascript_tag do %>
+  $(function() {
+    $('#msg_body').keydown(function(event) {
+      if (event.keyCode == 13 && $("#press_enter").is(":checked") == true) {
+          $("#message_form").submit();
+      }
+    })
+  })
+<% end %>

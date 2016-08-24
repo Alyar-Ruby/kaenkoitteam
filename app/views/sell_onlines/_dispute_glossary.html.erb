@@ -1,0 +1,82 @@
+<article class="card card-table col-lg-9">
+  <div class="panel panel-default">
+    <div class="panel-heading recent-heading">
+      <span class="label label-info">Displaying <b>3/43</b></span>
+        <i class="kk-bulb light"></i>Disputes Glossary
+        <a class="pull-right" style="margin:-3px;margin-right: 10px;">
+          <form>
+              <input type="search" placeholder="">
+          </form>
+        </a>
+        <span class="display-amount">
+          Display: <a href="#">[20]</a><a href="#">[60]</a><a href="#">[80]</a>
+        </span>
+    </div>
+    <div class="panel-body table-responsive">
+      <table class="table table-hover">
+          <thead class="">
+            <tr>
+              <td>
+                Opened
+              </td>
+              <td>
+                Must reply before:
+              </td>
+              <td>
+                Transaction ID
+              </td>
+              <td>
+                Reason
+              </td>
+              <td>
+                Amount
+              </td>
+              <td>
+                Resolved ?
+              </td>
+              
+            </tr>
+          </thead>
+          <tbody>
+          <%if @disputes.size > 0 %>
+            <% @disputes.each do |dispute| %>
+              <tr>
+                <td>
+                  <%= relative_time(dispute.created_at) %>
+                </td>
+                <td>
+                  <%= dispute.must_reply_before.strftime("%d %b") %>
+                </td>
+                <td>
+                  #<%=dispute.transaction.transaction_id %>
+                </td>
+                <td>
+                  <%= dispute.reason %>
+                </td>
+                <td>
+                  <%= number_with_precision(dispute.amount, precision: 2 || 0) %> <%= dispute.kaenko_currency.unit %>
+                </td>
+                <td>
+                  <%= (dispute.is_resolved == false)? "No <a href='#'>[ Check ]</a>".html_safe : "Yes" %>
+                </td>
+                
+              </tr>
+              <% end %>
+            <% end %>
+               
+        </tbody>
+      </table>
+    </div>
+    <div class="panel-footer">
+        <ul class="pagination">
+            <li><a href="#">&laquo;</a></li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li><a href="#">&raquo;</a></li>
+        </ul>
+    </div>
+  </div>
+</article>

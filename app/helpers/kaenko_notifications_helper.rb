@@ -1,0 +1,2 @@
+module KaenkoNotificationsHelper
+end

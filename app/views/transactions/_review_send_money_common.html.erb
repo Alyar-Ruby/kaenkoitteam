@@ -1,0 +1,55 @@
+<h2>Review your payment and send</h2>
+<div class="row-fluid">Please check the following information before continuing.</div><br>
+<div class="alert alert-warning" style="display:none;" id="error_msg"></div>
+<div class="row_fluid">
+  <div class="span5 offset1"><b>Description</b></div>
+  <div class="span5"><b>Amount</b></div>
+</div>
+<div class="row_fluid">
+  <div class="span12">
+    <hr style="width:100%">
+  </div>
+</div>
+<div class="row_fluid">
+  <div class="span5 offset1">Payment To<br><%=@transaction_to_email%></div>
+  <div class="span5"><%=@transfer_amount%> <%=@transfer_currency_unit%> <%=link_to("Change", send_money_transactions_path())%></div>
+</div>
+<div class="row_fluid">
+  <div class="span11 offset1" style="margin-top:20px;"><b>Payment Method</b></div>
+</div>
+<% @payment_methods.each do |payment_method| %>
+<div class="row_fluid">
+  <div class="span11 offset1"><%=payment_method["balance_used"]%> <%=payment_method["balance_currency"]%> <% if payment_method["transfer_currency"] != payment_method["balance_currency"] %>
+  (<%=payment_method["transfer_amount"]%> <%=payment_method["transfer_currency"]%>)
+  <% end %></div>
+</div>
+<% end %>
+<%if @transaction_type.present? and @transaction_type == "multiple" %>
+  <%= form_tag(circle_transaction_transactions_path, :method=>"post", remote: true) do  %>
+    <div class="row-fluid">
+      <div class="span4 offset1">
+        <% @kaenko_users.each do |user| %>
+          <div><%= hidden_field_tag :"transaction_to[]", user.email  %></div>
+        <% end %>
+        <div><%= hidden_field_tag(:kaenko_currency, @transaction.kaenko_currency.unit) %></div>
+        <div><%= hidden_field_tag(:amount, @transfer_amount) %></div>
+        <div><br><%=submit_tag "Send" %><%#=link_to "Cancel", dashboard_overview_path, :style=>"float:right"%></div>
+      </div>
+    </div>
+  <% end %>
+  
+<% else %>
+  <%=form_tag(transactions_path, :method=>"post", remote: true) do  %>
+
+    <div class="row-fluid">
+      <div class="span4 offset1">
+        <div><%= hidden_field_tag(:transaction_to, @transaction.transaction_to) %></div>
+        <div><%= hidden_field_tag(:kaenko_currency, @transaction.kaenko_currency.unit) %></div>
+        <div><%= hidden_field_tag(:amount, @transaction.amount) %></div>
+        <div><br><%=submit_tag "Send" %><%#=link_to "Cancel", dashboard_overview_path, :style=>"float:right"%></div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+

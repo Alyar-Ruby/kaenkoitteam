@@ -1,0 +1,8 @@
+$("#ajax-container").html("<%= j(render 'sell_online_product') %>")
+$(".ajax-loading").hide()
+$(function() {
+	history.pushState(null, "", "<%= sell_online_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

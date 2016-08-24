@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<title><%= content_for?(:title) ? yield(:title) : "Kaenko Admin" %></title>
+
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<!--basic styles-->
+
+		<link href="/assets/admins/bootstrap.min.css" rel="stylesheet" />
+		<link href="/assets/admins/bootstrap-responsive.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="/assets/admins/font-awesome.min.css" />
+
+		<!--[if IE 7]>
+		  <link rel="stylesheet" href="/assets/admins/font-awesome-ie7.min.css" />
+		<![endif]-->
+
+		<!--page specific plugin styles-->
+
+		<!--fonts-->
+
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
+
+		<!--ace styles-->
+
+		<link rel="stylesheet" href="/assets/admins/ace.min.css" />
+		<link rel="stylesheet" href="/assets/admins/ace-responsive.min.css" />
+		<link rel="stylesheet" href="/assets/admins/ace-skins.min.css" />
+		<link rel="stylesheet" href="/assets/admins/grid.css" />
+
+		<!--[if lte IE 8]>
+		  <link rel="stylesheet" href="/assets/admins/ace-ie.min.css" />
+		<![endif]-->
+		<%= javascript_include_tag "admins/application" %>
+		<script src="/assets/admins/ace-elements.min.js"></script>
+		<script src="/assets/admins/ace.min.js"></script>
+		<!--inline styles if any-->
+		 <%= csrf_meta_tags %>
+
+	</head>
+
+	<body>
+		<div class="navbar navbar-inverse">
+			<div class="navbar-inner">
+				<div class="container-fluid">
+          <%=render :partial=>"admins/common/header" %>
+        </div><!--/.container-fluid-->
+			</div><!--/.navbar-inner-->
+		</div>
+
+		<div class="container-fluid" id="main-container">
+			<a id="menu-toggler" href="#">
+				<span></span>
+			</a>
+      
+      <%=render :partial=>"admins/common/sidebar" %>
+
+			<div id="main-content" class="clearfix">
+				
+        <%=render :partial=>"admins/common/breadcrumb" %>
+        
+        <div id="page-content" class="clearfix">
+					<%=render :partial=>"admins/common/page_header" %>
+          <% if flash[:alert].present? %>
+          <div class="alert alert-error">
+            <button data-dismiss="alert" class="close" type="button">
+              <i class="icon-remove"></i>
+            </button>
+            <%= flash[:alert] %>
+            <br>
+          </div>
+          <% end %>
+          <% if flash[:notice].present? %>
+          <div class="alert alert-notice">
+            <button data-dismiss="alert" class="close" type="button">
+              <i class="icon-remove"></i>
+            </button>
+            <%= flash[:notice] %>
+            <br>
+          </div>
+          <% end %>
+          <!--/.page-header-->
+
+					<div class="row-fluid">
+						<!--PAGE CONTENT BEGINS HERE-->
+            <%=yield %>
+						<!--PAGE CONTENT ENDS HERE-->
+					</div><!--/row-->
+				</div><!--/#page-content-->
+
+				<div id="ace-settings-container">
+					<div class="btn btn-app btn-mini btn-warning" id="ace-settings-btn">
+						<i class="icon-cog"></i>
+					</div>
+
+					<div id="ace-settings-box">
+						<div>
+							<div class="pull-left">
+								<select id="skin-colorpicker" class="hidden">
+									<option data-class="default" value="#438EB9">#438EB9</option>
+									<option data-class="skin-1" value="#222A2D">#222A2D</option>
+									<option data-class="skin-2" value="#C6487E">#C6487E</option>
+									<option data-class="skin-3" value="#D0D0D0">#D0D0D0</option>
+								</select>
+							</div>
+							<span>&nbsp; Choose Skin</span>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace-checkbox-2" id="ace-settings-header" />
+							<label class="lbl" for="ace-settings-header"> Fixed Header</label>
+						</div>
+
+						<div>
+							<input type="checkbox" class="ace-checkbox-2" id="ace-settings-sidebar" />
+							<label class="lbl" for="ace-settings-sidebar"> Fixed Sidebar</label>
+						</div>
+					</div>
+				</div><!--/#ace-settings-container-->
+			</div><!--/#main-content-->
+		</div><!--/.fluid-container#main-container-->
+
+		<a href="#" id="btn-scroll-up" class="btn btn-small btn-inverse">
+			<i class="icon-double-angle-up icon-only bigger-110"></i>
+		</a>
+
+		<!--basic scripts-->
+        
+    
+    <%= yield :script %>
+		
+
+		<!--ace scripts-->
+
+		
+
+		<!--inline scripts related to this page-->
+    <%= yield :inlinescript %>
+  
+    <div id="modal-window" class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
+    
+	</body>
+</html>

@@ -1,0 +1,31 @@
+<h2>Verification</h2>
+
+<%= simple_form_for(@user, :url=>verified_path, :html => { :method => :post }) do |f| %>
+
+  <div class="row-fluid">
+    <div class="span6 offset2">
+      <% if current_user.account.roleable_type == "Business" %>
+        <div style="margin-top:10px;">Verify My Business Account: (when you are verified, your profile has the verified status which improve Trust & Confidence in your Social Profile and improve your Account Limits)
+        </div>
+        <div style="margin-top:10px;">
+          <ul>
+            <li>Verification of the Organization (Legal Structure, Registered Address and Industry)</li>
+            <li>Verification of the ID of the Account Admin and Organization Link</li>
+            <li>Verification of the address of the Account Admin</li>
+          </ul>
+        </div>
+      <% else %>
+        <div style="margin-top:10px;">Verify My ID & Address: (when you are verified, your profile has the verified status which improve Trust & Confidence in your Social Profile and improve your Account Limits)
+        </div>
+      <% end %>
+      <% if @user.account.verified %>
+        <div class="alert alert-success">Thank You! You are now verified!</div>
+      <% else %>
+        <div>
+          <br><%= f.submit "Do it now!", :class=>"green_button" %><%=link_to "Do it later", dashboard_overview_path, :style=>"float:right;", :class=>"red_button"%>
+        </div>
+      <% end %>
+  </div>
+  
+<% end %> 
+

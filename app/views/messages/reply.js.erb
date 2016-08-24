@@ -1,0 +1,23 @@
+<%= remotipart_response do %>
+  $("#conversation_text<%=@conversation.id%>").html("<%= truncate(@reply_message.gsub(%r{</?[^>]+?>}, ''), length: 32, separator: ' ') %>");
+  $(".discussion").append('<%= j( render :partial => "current_user_reply" , 
+            locals: {:conv_msg => @conversation_message}) %>')
+  <% @cu.each do |user| %>
+    <% if user.account_id != current_user.account.id %>
+      <% publish_to "/messages/private/#{user.account_id}" do %>
+        if ($( ".mail-body" ).length) {
+          $(".discussion").append('<%= j( render :partial => "user_reply_text" , 
+            locals: {:conv_msg => @conversation_message}) %>')
+          $.getScript("<%= message_path(@conversation.id) %>")
+          $('#messagecontent').scrollTop($('#messagecontent')[0].scrollHeight);
+        }
+      <% end %>
+    <% end %>
+  <% end %>
+  $("#conversation<%=@conversation.id%>").addClass("ticket-active")
+  $('#messagecontent').scrollTop($('#messagecontent')[0].scrollHeight);
+  $("#msg_body").focus();
+  $(".ajax-loading").hide();
+<% end %>
+
+

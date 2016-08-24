@@ -1,0 +1,7 @@
+<%if @error.present? %>
+	$("#error_msg").html("<%= @error %>").show();
+<% else %>
+	$("#card-list").html("<%= escape_javascript(render 'cards') %>");
+	$('#modal-window').modal('toggle');
+<% end %>
+$(".ajax-loading").hide();

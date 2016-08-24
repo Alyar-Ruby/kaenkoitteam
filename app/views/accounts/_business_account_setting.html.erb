@@ -1,0 +1,2855 @@
+
+<!-- AREA TITLE/NAV-->
+<script>
+  $(function(){
+    $("#mobile-number").intlTelInput();  
+  })
+  
+</script>
+<script>
+var prev_elm_url="";
+var field_name = ""
+  $(function() {
+    $(".edit-field").click(function() {
+      elem = $(this)
+      prev_elm_url = $(this).prev().data('url');
+      field_name = $(this).prev().attr('id')
+      field_value = $(this).prev().html();
+      $(this).prev().html('<input type="text" value='+field_value+'><a  onclick="update_field(this)">Update</a><a class="cancel-field" onclick=cancel_field(this)>Cancel</a>')
+      $(this).addClass("slided-in");
+    })
+    
+  })
+
+  function update_field(obj) {
+    data_params = field_name+"="+$(obj).prev().val()
+    $.ajax({
+      url: prev_elm_url,
+      data: data_params,
+      method: "put",
+      success: function(data) {
+        value = $(obj).prev().val();    
+        $(obj).parent().parent().find(".edit-field").show();
+        $(obj).parent().html(value); 
+      },
+      error: function(data) {
+        $(obj).parent().parent().find(".edit-field").show();
+        $(obj).parent().html("Unable to update")    
+      }
+
+    })
+    
+  }
+  function cancel_field(obj, value) {
+    value = $(obj).prev().prev().val();
+    $(obj).parent().parent().find(".edit-field").show();
+    $(obj).parent().html(value)
+  }
+</script>
+
+
+<%admin = @account.users.admin_user.first %>
+<%business_account = @account.roleable %>
+<section class="settings container-fluid tab-pane fade in active" id="dashboard">
+  <div class="alert alert-success" style="display:none;" id="user_added_message">
+  </div>
+  <h2></h2>
+  <!-- AREA SUB NAV -->
+</section>
+<!-- DATA AREA TITLE -->
+<section class="settings main-container container-fluid">
+  
+  <div class="row">
+      <!-- OLD BUSINESS PROFILE hidden via display:none -->
+  <article class="col-lg-5 pull-right" style="display:none;">
+    <div class="panel panel-default">
+      <div class="panel-heading ">
+        <div class="dropdown">
+          My Business Profile <%= current_user.business_name %>
+        </div>
+      </div>
+      <div class="panel-body panel-lego">
+        <div class="wrap">
+        <div class="profver">
+        <div class="onethird profverimg" id = "business_image">
+        	<%= image_tag business_account.image.present? ? business_account.image_url(:profile) : '/assets/av2.png', :style=>"width:30px;" %>
+        </div>
+        <%= file_field_tag :business_pic, style: 'display: none;', accept: "image/*" %>
+        <div class="twothirdless pull-right" id="business_status">
+          <%if !business_account.business_document.present? %>
+            <h4 style="font-weight:800">Verify Account</h4>
+            <p>We have detected that your account haven’t been verified yet. To access all advantages of your Kaenko Business account please verify your account now.</p>
+            <%=link_to "Verify Account", edit_business_document_business_path(business_account), class: "btn btn-success pull-right", remote: true, 'data-target'=>"#modal-window" ,'data-toggle'=>"modal"%>
+          <% else %>
+            Your account is verified.
+          <% end %>
+        </div>
+        </div>
+        
+          <ul>
+            <li><strong>Business Name:</strong> <%= business_account.organization_name %></li>
+            <li><strong>Business Form:</strong> <%= business_account.legal_form %></li>
+            <li><strong>Categories:</strong> 
+             <span id="business_category_text"><%= business_account.category.name %></span>
+            <%if admin.id == current_user.id %>
+              <%= link_to edit_business_detail_business_path(business_account), class: "btn btn-default btn-edit btn-small" , "data-toggle" => "modal" , "data-target" => "#modal-window" , remote: true do %>
+              <i class="fa fa-pencil"></i>
+              <% end %>
+            <% end %>
+            </li>
+            <li><strong>Email:</strong> 
+              <span id="business_email_text"><%= business_account.email %></span> 
+              <%if admin.id == current_user.id %>
+                <span id="edit_business_email" style="display:none;">
+                  <%= text_field_tag :"business[email]", business_account.email, style: "line-height:normal;width:200px;" %>
+                  <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_business_email">Update</a>
+                  <a href="javascript:void(0);" class="" id="cancel_business_email">Cancel </a>
+                </span>
+                <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_business_email"><i class="fa fa-pencil"></i></a>
+              <% end %>
+              
+            </li>
+            <li><strong>Phone:</strong> 
+              <span id="business_phone_text"><%= business_account.phone %></span> 
+              
+              <%if admin.id == current_user.id %>
+                <% phone = business_account.phone.present? ? business_account.phone.split(" ") : [] %>
+                <span id="edit_business_phone" style="display:none;">
+                   <%=text_field_tag :"business[phone]", business_account.phone, id: "mobile-number" , type:"tel" , placeholder: "+1 (702) 123-4567" , style: "line-height:normal;width:200px;" %>
+                   <%#= select_tag :'phone_code',
+                    options_for_select(PHONECOD.map{|k, v| ["#{k} +#{v}", "+#{v}"]}, phone[0]), include_blank: false, id: "code_list", 
+                      style: "width:60px;"
+                  %>
+
+                  <%#= text_field_tag :"business[phone]", phone[1], style: "line-height:normal;width:140px;" %>
+                  <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_business_phone">Update</a>
+                  <a href="javascript:void(0);" class="" id="cancel_business_phone">Cancel </a>
+                </span>
+                <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_business_phone"><i class="fa fa-pencil"></i></a>
+              <% end %>
+            </li>
+            <li><strong>Website:</strong> <span id="business_website_text"> <%= business_account.business_websites.where("is_primary=?", true).first.try(:website_url)%></span>
+            <%if admin.id == current_user.id %>
+              <a href="javascript:void(0)" id="change_business_website" class="btn btn-default btn-edit btn-small"><i class="fa fa-pencil" ></i></a>
+              <%= select_tag :'business_website[website_url]',
+                    options_for_select(business_account.business_websites.collect{|bw| [bw.website_url, bw.id]}), include_blank: false, id: "business_website_list", 
+                      style: "display:none;width:100px;"
+                %>
+              <%= link_to "Add More" , new_business_website_path, class: "btn btn-default btn-small", "data-toggle" => "modal" , "data-target" => "#modal-window" , remote: true  %>
+              </li>
+            <% end %>
+            <li><strong>Country:</strong>
+              <span id="business_country_text">
+                <%= country_name(business_account.country) %> 
+              </span>
+              <%if admin.id == current_user.id %>
+               <%= select_tag :'business[country]',
+                  options_for_select(kaenko_countries), :include_blank => false, id: "business_country_list", 
+                    style: "display:none;width:100px;"
+                %>
+                <a href="javascript:void(0);" class="btn btn-sm btn-default"  id="cancel_business_country" style="display:none;">Cancel</a>
+                <a href="javascript:void(0);" 
+                class="btn btn-default btn-edit btn-small" id="change_business_country"><i class="fa fa-pencil"></i>
+                </a>
+              <% end %>
+            </li>
+            <li><strong>District / Region:</strong>
+              <span id="business_region_text"><%= business_account.region %></span> 
+              <%if admin.id == current_user.id %>
+                <span id="edit_business_region" style="display:none;">
+                  <%= text_field_tag :"business[region]", business_account.region, style: "line-height:normal;width:160px;" %>
+                  <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_business_region">Update</a>
+                  <a href="javascript:void(0);" class="" id="cancel_business_region">Cancel </a>
+                </span>
+              <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_business_region"><i class="fa fa-pencil"></i></a>
+              <% end %>
+            </li>
+            <li><strong>City & Postal:</strong> 
+            <span id="city_postal_text"><%= business_account.city %>(<%= business_account.postal_code%>)</span>
+            <%if admin.id == current_user.id %>
+              <span id="city_postal" style="display:none;">
+                City:<%= text_field_tag :"business[city]" , business_account.city, style: "line-height:normal;width:50px;" %>
+                Postal:<%= text_field_tag :"business[postal_code]" , business_account.postal_code , style: "line-height:normal;width:50px;"%>
+                
+                <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_city_postal">Update</a>
+                <a href="javascript:void(0);" class="" id="cancel_city_postal">Cancel </a>
+                
+              </span>
+                <a href="javascript:void(0);" class="btn btn-default btn-edit btn-small" id="change_city_postal"><i class="fa fa-pencil"></i></a>
+              <% end %>
+            </li>
+            <li><strong>Address:</strong>
+              <span id="business_address_text"><%= business_account.address %></span> 
+              <%if admin.id == current_user.id %>
+                <span id="edit_business_address" style="display:none;">
+                  <%= text_field_tag :"business[address]", business_account.address, style: "line-height:normal;width:200px;" %>
+                  <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_business_address">Update</a>
+                  <a href="javascript:void(0);" class="" id="cancel_business_address">Cancel </a>
+                </span>
+                <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_business_address"><i class="fa fa-pencil"></i></a>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>      
+    </article>
+      
+      <!-- new -->
+    <article class="col-lg-9">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+        <div class="dropdown">
+            Account Overview
+        </div>
+        </div>
+        <div class="panel-body panel-overview">
+            <div class="well-settings col-lg-4">
+                <ul class="well-settings-list" role="tablist">
+                    <li class="active" id="busi-prof-tab"><a href="#busi-prof" role="tab" data-toggle="tab">My Business Profile</a></li>
+                    <li id="acc-detail-tab"><a href="#acc-detal" role="tab" data-toggle="tab">Account Details</a></li>
+                    <li id="pay-sett-tab"><a href="#pay-sett" role="tab" data-toggle="tab">Payment Settings</a></li>
+                    <li id="priv-sett-tab"><a href="#priv-sett" role="tab" data-toggle="tab">Privacy Settings</a></li>
+                    <li><a href="#mail-notif" role="tab" data-toggle="tab">Email Notifications</a></li>
+                    <li><a href="#curr-sett" role="tab" data-toggle="tab">Currency Settings</a></li>
+                </ul>
+            </div>
+            <div class="tabular-content extraheight col-lg-8">
+                <div class="tab-content">
+                    <!-- Account Details Tab -->
+                    <div class="tab-pane fade in" id="acc-detal">
+                        <ul>
+                            <!-- Account Holder -->
+                            <li><strong>Account Holder:</strong>
+                                <span class="pd50"><%= (business_account.legal_form == "Sole Proprietor") ? admin.name.try(:capitalize) : business_account.organization_name.try(:capitalize) %></span>
+                            </li>
+                            <!-- Account ID -->
+                            <li><strong> Account ID:</strong><span class="pd50"> <%=current_user.account.account_number %></span></li>
+                            <!-- Account Status -->
+                            <li><strong> Account Status:</strong> 
+                <%if current_user.account.verified? %>
+                    <span class="pd50">Verified</span>  
+                  <% else %>
+                  <span id="account_status" class="pd50">
+                    Not Verified
+                    <%= link_to "Verify", edit_status_account_path(@account), class: "", remote: true, :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+                <% end %>
+                                <a href="javascript:void(0);" id="edit-verify-panel-btn" class="btn btn-success verify-btn"><i class="fa fa-check"></i>Verify Now</a>
+                               
+                                </li>
+                            <!-- Default Timezone -->    
+                            <li><strong>Default Time Zone:</strong> 
+            <span id="time_zone_text" class="pd50"><%= @account.time_zone %></span> 
+            <%if admin.id == current_user.id %>
+                <span class="slide-edit slided-in" id="edit_time_zone_list">
+                <a href="javascript:void(0);" class="slide-edit-btn" id="change_time_zone"><i class="fa fa-pencil"></i></a>
+               <%= select_tag :'account[time_zone]',
+                  options_for_select(timezones(),@account.time_zone), include_blank: false, id: "time_zone_list"
+              %>
+              <a href="javascript:void(0);" class="cancel"  id="cancel_time_zone"><i class="fa fa-times"></i></a>
+              
+            </span>
+            <% end %></li>
+                            <!-- Default Language -->
+                            <li><strong>Default Language:</strong> 
+              <span id="language_text" class="pd50"><%= current_user.language %></span> 
+                <span class="slide-edit slided-in" id="edit_language_list">
+                <a href="javascript:void(0);" class="slide-edit-btn" id="change_language"><i class="fa fa-pencil"></i></a>
+                <%= select_tag :'user[language]',
+                    options_for_select(LANGUAGE.each{|l| [l[0], l[1]]}, current_user.language), include_blank: false, id: "language_list", :class => 'GB-cc pd40'
+                  %>
+                <a href="javascript:void(0);" class="cancel"  id="cancel_language"><i class="fa fa-times"></i></a>
+                
+                </span></li>
+                        </ul>
+                        <!-- Verify Slide panel -->
+                        <div id="verify-change-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-verify-change-panel"><i class="fa fa-times"></i></a>
+                            <ul>
+                                <li style="white-space: normal;">
+                                    <h5>Verify your Account</h5>
+                                    <p>By verifying your account you unlocking endless possibilities and premium options. It also allow you to boost up your monthly limit for sending and receiveing money as well as withdrawing funds to your account</p>
+                                </li>
+    
+                                <li>
+                                    <span style="display: inline-block;vertical-align: top;">
+                                        <strong>Recommended Method:</strong>
+                                    </span>
+                                    <span style="display: inline-block;vertical-align: middle;">Camera and biometric match<br>
+                                        <span class="pd50">Delay: Instant</span>
+                                    </span>
+                                    <a href="javascript:void(0);" id="verify-biometric-btn" class="btn btn-success verify-btn"><i class="fa fa-check"></i>Verify Now</a>
+                                </li>
+                                <li>
+                                    <span style="display: inline-block;vertical-align: top;">
+                                        <strong>Alternative Method:</strong>
+                                    </span>
+                                    <span style="display: inline-block;vertical-align: middle;">Document Upload<br><span class="pd50">Delay: 3-5 Business Days</span>
+                                    </span>
+                                    <a href="javascript:void(0);" id="verify-alternative-btn" class="btn btn-success verify-btn"><i class="fa fa-check"></i>Proceed</a>
+                                </li>
+    
+                            </ul>
+                        </div>
+                        <!-- Verify Status Slide panel -->
+                        <div id="verify-alternative-change-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-verify-alternative-change-panel"><i class="fa fa-times"></i></a>
+                        <ul>
+                            <li>
+                                <span><i class="fa fa-check-circle fa-3x text-success"></i></span>
+                                <span style="display: inline-block;"><b>Account holder:</b><br>Upload any valid document (i.e. M&amp;A, Company Registration Certificate, etc.)
+                                    <p class="status-text">Approved 12:34AM GTM+3 - 17 August 2014</p>
+                                </span>
+                            </li>
+                            <li>
+                                <span><i class="fa fa-exclamation-triangle fa-3x text-warning" style="color: #FFAA00;"></i></span>
+                                <span style="display: inline-block;">
+                                    <b>Business Address:</b><br>
+                                    Upload any bill, or bank statement with current address
+                                    <p class="status-text">Pending, expected response: 72hours</p>  
+                                </span>
+                            </li>
+                            <li>
+                                <div style="display: block;">
+                                <span style=""><i class="fa fa-question-circle fa-3x" style="color: #efefef;"></i></span>
+                                <span style="display: inline-block;vertical-align: super;">
+                                    <b>Directors &amp; Shareholders:</b><br>
+                                        Upload any valid document (i.e. company secretary certificate with current directors)
+                                </span>
+                                </div>
+                                <div style="display: block;padding-left: 30px;"><a href="javascript:void(0);" id="upload-documents" class="btn btn-warning addcard-btn"><i class="fa fa-cloud-upload"></i> Upload Documents</a>
+  
+                                </div>
+                            </li>
+                            <li>
+                                <span><i class="fa fa-check-circle fa-3x text-success"></i>	</span>
+                                <span style="display: inline-block;vertical-align: middle;"><b>Admin Identification Document</b><br>
+                                        Upload valid Goverment issued Identification Document.
+                                <p class="status-text">Approved 12:34AM GTM+3 - 17 August 2014</p>
+                                </span></li>
+                            <li>
+                                <span><i class="fa fa-exclamation-circle fa-3x" style="color: #FF1919;"></i></span>
+                                <span style="display: inline-block;">
+                                  <b>Admin Address</b><br>
+                                      Upload any bill, or bank statement with current address.
+                                  <p class="status-text">Rejected, contact our support team.</p>
+                                </span>
+                            </li>
+                            </ul>
+                        
+                        </div>
+                        
+                    </div>
+                    <!-- end -->
+                    <!-- My Business Profile Tab -->
+                    <div class="tab-pane fade in active" id="busi-prof">
+                    
+                        <ul id="accordion-busi-prof">
+                            <li>
+                                <a href="javascript:void(0);" id="busi-picture-edit-panel" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Edit Description">
+                                  <i class="fa fa-pencil"></i>
+                                </a>
+                                <!-- TEMPoRARY -->
+                                 <span style="padding-right:25px;display:inline-block;">
+                                <a href="javascript:void(0);" class="change-photo-action">
+                                <%= image_tag business_account.image.present? ? business_account.image_url(:profile) : '/assets/av2.png', :style=>"width:70px;" %>
+                                </a>
+                                </span>
+                                <span class="pd50" style="padding: 0;line-height: 13px;display: inline-block;width: 60%;position: relative;top: 18px;" >
+                                    <b style="color: #5a5a5a;">Business Description:</b><br><span id="business_desc_text"><%= business_account.description %></span>
+                                </span>
+                                <%if admin.id == current_user.id %>
+                                  <span class="slide-edit slided-in" id="edit_business_desc">
+                                    <a href="javascript:void(0)" class="slide-edit-btn" id="change_business_desc"><i class="fa fa-pencil"></i></a>
+                                    <%= text_area_tag :"business[description]", business_account.description, style: "line-height:normal;width:300px;height:100px;" %>
+                                    <a href="javascript:void(0);" class="update" id="update_business_desc"><i class="fa fa-repeat"></i></a>
+                                    <a href="javascript:void(0);" class="cancel" id="cancel_business_desc"><i class="fa fa-times"></i></a>
+                                  </span>
+                                <% end %>
+
+                            </li>
+                            <!-- Business name -->
+                            <li><strong>Business Name:</strong> 
+                                <span id="business_name_text" class="pd50"><%= business_account.organization_name %></span> 
+                                    <%if admin.id == current_user.id %>
+                                    <span class="slide-edit slided-in" id="edit_business_name">
+                                      <a href="javascript:void(0)" class="slide-edit-btn" id="change_business_name"><i class="fa fa-pencil"></i></a>
+                                      <%= text_field_tag :"business[name]", business_account.organization_name, style: "line-height:normal;width:200px;" %>
+                                      <a href="javascript:void(0);" class="update" id="update_business_name"><i class="fa fa-repeat"></i></a>
+                                      <a href="javascript:void(0);" class="cancel" id="cancel_business_name"><i class="fa fa-times"></i></a>
+                                    </span>
+                                    <% end %>
+                            </li>
+                         
+                            <li><strong>Business Form:</strong><span class="pd50"><%= business_account.legal_form %></li></span>
+                            <li><strong>Business Category:</strong><span id="business_category_text" class="pd50"><%= business_account.category.name %></span>
+                                    <span class="slide-edit slided-in" id="edit_category">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="change_category"><i class="fa fa-pencil"></i></a>
+                                            <select>
+                                                <option>Arts, new media, and publishing</option>
+                                                <option>Baby</option>
+                                                <option>Beauty and fragrances</option>
+                                                <option>Books and magazines</option>
+                                                <option>Business to business</option>
+                                                <option>Clothing, accessories, and shoes</option>
+                                                <option>Computers, accessories, and services</option>
+                                                <option>Education</option>
+                                                <option>Electronics and telecom</option>
+                                                <option>Entertainment and media</option>
+                                                <option>Financial services and products</option>
+                                                <option>Food retail and service</option>
+                                                <option>Gifts and flowers</option>
+                                                <option>Government</option>
+                                                <option>Health and personal care</option>
+                                                <option>Home and garden</option>
+                                                <option>Nonprofit</option>
+                                                <option>Pets and animals</option>
+                                                <option>Religion and spirituality (for profit)</option>
+                                                <option>Retail (not elsewhere classified)</option>
+                                                <option>Services - other</option>
+                                                <option>Sports and outdoors</option>
+                                                <option>Toys and hobbies</option>
+                                                <option>Travel</option>
+                                                <option>Vehicle sales</option>
+                                                <option>Vehicle service and accessories </option>
+                                            </select>
+                                            
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_category"><i class="fa fa-times"></i></a>
+                                    </span>
+                            </li>
+                            <!-- Business Address -->
+                            <li>
+                                <div>
+                                  <span>
+                                     Business Address
+                                  </span>
+                                  <a data-toggle="collapse" data-parent="#accordion-busi-prof" href="#busi-prof-1" class="collapsed i-toggler">
+                                      <i class="fa fa-chevron-down"></i>
+                                  </a>
+                                  <a href="<%= edit_address_business_path(business_account) %>" data-remote = "true" id="address-edit-panel" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Edit Address">
+                                      <i class="fa fa-cog"></i>
+                                  </a>
+                              </div>
+                              <div id="busi-prof-1" class="collapse collapse-detail">
+                                <%= render :partial => '/businesses/business_address' , locals: {business_account: business_account } %>
+                              </div>
+                            </li>
+                            <!-- Contact Details -->
+                            <li>
+                              <div>
+                                <span>
+                                   Contact Details
+                                </span>
+                                <a data-toggle="collapse" data-parent="#accordion-busi-prof" href="#busi-prof-2" class="collapsed i-toggler">
+                                  <i class="fa fa-chevron-down"></i>
+                                </a>
+                                <a href="<%= edit_business_contact_business_path(business_account) %>" data-remote = "true" id="edit-contact-change-panel" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Edit Contact">
+                                  <i class="fa fa-cog"></i>
+                                </a>
+                              </div>
+                                <div id="busi-prof-2" class="collapse collapse-detail">
+                                 <%= render :partial => "/businesses/business_contact" , locals: {business_account: business_account } %>
+                                </div>
+                            </li>
+                        </ul>
+                    <!-- Edit Address Slide panel -->
+                    <div id="address-change-panel" class="slided-slide card-slide in-out">
+                        
+                    </div>
+                     <!-- Edit Contact Slide panel -->
+                    <div id="contact-change-panel" class="slided-slide card-slide in-out">
+                          
+                    </div>
+                        
+                    </div>
+                    <!-- Payment Settings Tab -->
+                    <div class="tab-pane fade" id="pay-sett">
+                        <!-- Verify Card  Slide panel -->
+                        <div id="card-manager-verify" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-card-manager-verify"><i class="fa fa-times"></i></a>
+                        </div>
+                        
+                        <!-- Manage Cards Slide panel -->
+                        <div id="card-manager" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-card-manager"><i class="fa fa-times"></i></a>
+                            <!-- Populate Cards -->
+                            <ul id="card-accordion">
+                                <li>
+                                <div id="h-btn-header">
+                                    <span>
+                                    <h4>My Cards</h4>
+                                    </span>
+                                    <span>
+                                        <a href="javascript:void(0);" id="updatecard-btn" class="btn btn-primary addcard-btn" ><i class="fa fa-repeat"></i>Update</a>
+                                    </span>
+                                    <span>
+                                    <a href="javascript:void(0);" id="addcard-btn" class="btn btn-success addcard-btn" ><i class="fa fa-plus"></i>Add Card</a>
+                                    </span>
+                                </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <a data-toggle="collapse" data-parent="#card-accordion" href="#card-1" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="delete-card-1" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Delete Card">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                        <span id="disp-def-card" class="card-disp">
+                                            <input type="radio" name="cardDefault" id="card-id-1" value="option1" checked><img src="/assets/ico/mastercard_24.png">MasterCard x-4882 (Primary)
+                                        </span>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-card-confirm-1">
+                                        <span class="confirm-text">Confirm Deletion of <img src="/assets/ico/mastercard_24.png"> MasterCard x-4482</span>
+                                        <a href="javascript:void(0);" id="verify-card-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-card-1-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+
+                                    </div>
+                                    <div id="card-1" class="collapse collapse-detail">
+                                        <span><strong>Account Holder:</strong> Karol Malota</span>
+                                        <span><strong>Card Type:</strong> <img src="/assets/ico/mastercard_24.png"> MasterCard</span>
+                                        <span><strong>Card Ending:</strong> x-4482</span>
+                                        <span><strong>Expiry Date:</strong> 07/15</span>
+                                        <span><strong>Status:</strong> Verified</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <a data-toggle="collapse" data-parent="#card-accordion" href="#card-2" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="delete-card-2" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Delete Card">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                        <span id="disp-def-card" class="card-disp">
+                                            <input type="radio" name="cardDefault" id="card-id-2" value="option2">
+                                            <img src="/assets/ico/visa_24.png">Visa Debit x-9112
+                                        </span>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-card-confirm-2">
+                                        <span class="confirm-text">Confirm Deletion of <img src="/assets/ico/visa_24.png"> Visa Debit x-9112</span>
+                                        <a href="javascript:void(0);" id="verify-card-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-card-2-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+                                        
+                                    </div>
+                                    <div id="card-2" class="collapse collapse-detail">
+                                        <span><strong>Account Holder:</strong> Karol Malota</span>
+                                        <span><strong>Card Type:</strong> <img src="/assets/ico/visa_24.png"> Visa Debit x-9112</span>
+                                        <span><strong>Card Ending:</strong> x-9112</span>
+                                        <span><strong>Expiry Date:</strong> 03/15</span>
+                                        <span><strong>Status:</strong> Verified</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <a data-toggle="collapse" data-parent="#card-accordion" href="#card-3" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="delete-card-3" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Delete Card">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                        <span id="disp-def-card" class="card-disp">
+                                            <input type="radio" name="cardDefault" id="card-id-3" value="option3" disabled><img src="/assets/ico/american_express_24.png">American Express x-1121
+                                        </span>
+                                        
+                                        <a href="javascript:void(0);" id="verify-card-btn" class="btn btn-success verify-btn"><i class="fa fa-check"></i>Verify Now</a>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-card-confirm-3">
+                                        <span class="confirm-text">Confirm Deletion of <img src="/assets/ico/american_express_24.png"> American Express x-1121</span>
+                                        <a href="javascript:void(0);" id="verify-card-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-card-3-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+                                        
+                                    </div>
+                                    <div id="card-3" class="collapse collapse-detail">
+                                        <span><strong>Account Holder:</strong> Karol Malota</span>
+                                        <span><strong>Card Type:</strong> <img src="/assets/ico/american_express_24.png"> American Express x-1121</span>
+                                        <span><strong>Card Ending:</strong> x-1121</span>
+                                        <span><strong>Expiry Date:</strong> 01/16</span>
+                                        <span><strong>Status:</strong> Not Verified</span>
+                                    </div>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        <!-- Add Card Slide panel -->
+                        <div id="card-manager-add" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-card-manager-add"><i class="fa fa-times"></i></a>
+                        <ul>
+                                <li><h5>Add Debit/Credit Card</h5></li>    
+                                <li>
+                                    <form id="adding-card-form">
+                                        <div>
+                                        <span>
+                                        <label>Card Holder Name</label>
+                                        <p>
+                                        <input id="holder-name" type="text" placeholder="Full Name">
+                                        </p>
+                                        </span>
+                                        <span>
+                                        <label>Card Number</label>
+                                        <p>
+                                        <input id="cc-number" type="text" step="4" max="16" size="16" placeholder="xxxx xxxx xxxx xxxx" value="4323 5543 2221 9987">
+                                        </p>
+                                        </span>
+                                        </div>
+                                        <div>
+                                        <span>
+                                        <label>Exp. Date</label>
+                                        <p>
+                                        <input id="exp-number" type="text" max="5" size="5" placeholder="MM/YY">
+                                        </p>
+                                            </span>
+                                        <span>
+                                            <label>CVV/CVC</label>
+                                            <a class="info-badge-cvc" href="#"><i class="fa fa-info-circle"></i></a>
+                                        <p>
+                                            <input id="cvc-number" type="text" max="3" size="3" placeholder="CVC">
+                                        </p>
+                                            </span>
+                                            <span>
+                                            <a href="javascript:void(0);" id="addcard-btn" class="btn btn-success addcard-btn" ><i class="fa fa-plus"></i>Add Card</a>
+                                            </span>
+                                            </div>
+                                    </form>
+                                </li>
+                                
+                            </ul>    
+                        </div>
+                        <div id="bank-manager" class="slided-slide bank-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-bank-manager"><i class="fa fa-times"></i></a>
+                            <ul id="bank-accordion">
+                                <li>
+                                <div id="h-btn-header">
+                                    <span>
+                                    <h4>My Banks</h4>
+                                    </span>
+                                    <span>
+                                        <a href="javascript:void(0);" id="updatebank-btn" class="btn btn-primary addcard-btn" ><i class="fa fa-repeat"></i>Update</a>
+                                    </span>
+                                    <span>
+                                    <a href="javascript:void(0);" id="addbank-btn" class="btn btn-success addcard-btn" ><i class="fa fa-plus"></i>Add Bank</a>
+                                    </span>
+                                </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <span id="disp-def-bank" class="bank-disp">
+                                            <input type="radio" name="bankDefault" id="card-id-1" value="option1" checked> Deutsche Bank Sociedad Anonima Espanola x-4122
+                                        </span>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-bank-confirm-1">
+                                        <span class="confirm-text">Confirm Deletion of Deutsche Bank SA  x-4122</span>
+                                        <a href="javascript:void(0);" id="verify-bank-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-bank-1-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+                                        <a data-toggle="collapse" data-parent="#bank-accordion" href="#bank-1" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="delete-bank-1" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Delete Bank">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                    </div>
+                                    <div id="bank-1" class="collapse collapse-detail">
+                                        <span><strong>Account Holder:</strong> Karol Malota</span>
+                                        <span><strong>Bank Name:</strong> Deutsche Bank Sociedad Anonima (Primary)</span>
+                                        <span><strong>Account Ending:</strong> x-1332</span>
+                                        <span><strong>SWIFT/BIC:</strong> DEUTESSB</span>
+                                        <span><strong>Account Currency:</strong> Euro (EUR)</span>
+                                        <span><strong>Country:</strong> Spain</span>
+                                        <span><strong>Status:</strong> Verified</span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <span id="disp-def-bank" class="bank-disp">
+                                            <input type="radio" name="bankDefault" id="bank-id-2" value="option2">
+                                            Allied Irish Banks ROI x-4848
+                                        </span>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-bank-confirm-2">
+                                        <span class="confirm-text">Confirm Deletion of Allied Irish Banks ROI x-4848</span>
+                                        <a href="javascript:void(0);" id="verify-bank-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-bank-2-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+                                        <a data-toggle="collapse" data-parent="#bank-accordion" href="#bank-2" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="delete-bank-2" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Delete Bank">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                    </div>
+                                    <div id="bank-2" class="collapse collapse-detail">
+                                        <span><strong>Account Holder:</strong> Karol Malota</span>
+                                        <span><strong>Bank Name:</strong> Allied Irish Banks ROI</span>
+                                        <span><strong>Account Ending:</strong> x-4848</span>
+                                        <span><strong>SWIFT/BIC:</strong> IEAIBXXS</span>
+                                        <span><strong>Account Currency:</strong> Euro (EUR)</span>
+                                        <span><strong>Country:</strong> Republic Of Ireland</span>
+                                        <span><strong>Status:</strong> Verified</span>
+                                    </div>
+                                </li>
+                        
+                                
+                            </ul>
+                            
+                        </div>
+                        <div id="bank-manager-add" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-bank-manager-add"><i class="fa fa-times"></i></a>
+                            <ul>
+                                <li><h5>Add Bank Account</h5></li>    
+                                <li>
+                                    <form id="adding-card-form">
+                                        <div>
+                                        <span>
+                                        <label>Account Holder Name</label>
+                                            <p>
+                                                <input id="holder-name" type="text" placeholder="First Name" size="36">   
+                                            </p>
+                                        </span>
+                                        </div>
+                                        <div>
+                                        <span>
+                                        <label>BIC/SWIFT</label>
+                                            <a class="info-badge-cvc" href="#"><i class="fa fa-info-circle"></i></a>
+                                        <p>
+                                        <input id="bic-swift" type="text" placeholder="BIC/SWIF">
+                                        </p>
+                                        </span>
+                                        <span>
+                                        <label>IBAN</label>
+                                            <a class="info-badge-cvc" href="#"><i class="fa fa-info-circle"></i></a>
+                                        <p>
+                                        <input id="iban-number" type="text" step="4" max="30" size="30" placeholder="IBAN Number">
+                                        </p>
+                                        </span>
+                                        </div>
+                                        <div>
+                                        <span>
+                                        <label>Bank Country</label>
+                                            <a class="info-badge-cvc" href="#"><i class="fa fa-info-circle"></i></a>
+                                        <p>
+                                            <select id="country-select-cc" class="ES-cc pd40">
+                                                <option class="ES-cc">Spain</option>
+                                                <option class="DE-cc">Germany</option>
+                                                <option class="ZA-cc">Zimbabwe</option>
+                                                <option class="GB-cc">United Kingdom</option>
+                                            </select>
+                                        </p>
+                                            </span>
+                                            <span>
+                                            <a href="javascript:void(0);" id="addcard-btn" class="btn btn-success addcard-btn" ><i class="fa fa-plus"></i>Add & Verify Bank</a>
+                                            </span>
+                                            </div>
+                                    </form>
+                                </li>
+                                
+                            </ul>    
+                        </div>
+                        
+                            <!-- Accordion Section -->
+                        <ul id="accordion">
+                            <!-- Card Section -->
+                            <li>
+                                <div>
+                                    <strong>Primary Debit/Credit Card:</strong>
+                                    <span id="disp-def-card" class="card-disp">
+                                        <img src="/assets/ico/mastercard_24.png">MasterCard x-4882
+                                    </span>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#card-settings" class="collapsed i-toggler">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" id="show-card-manager" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Manage Cards">
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                </div>
+                                <div id="card-settings" class="collapse collapse-detail in">
+                                    <span><strong>Account Holder:</strong> Karol Malota</span>
+                                    <span><strong>Card Type:</strong> <img src="/assets/ico/mastercard_24.png"> MasterCard</span>
+                                    <span><strong>Card Ending:</strong> x-4482</span>
+                                    <span><strong>Expiry Date:</strong> 07/15</span>
+                                    <span><strong>Status:</strong> Verified</span>
+                                </div>
+                            </li>
+                            <!-- end -->
+                            <!-- Bank Section -->
+                            <li>
+                                <div>
+                                    <strong>Default Bank Account:</strong>
+                                    <span id="disp-def-bank" class="bank-disp">
+                                        Deutsche Bank SA Espanola x-1332
+                                    </span>
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#bank-settings" class="collapsed i-toggler">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </a>
+                                    <a href="javascript:void(0);"  id="show-bank-manager" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Manage Banks">
+                                        <i class="fa fa-cog"></i>
+                                    </a>
+                                </div>
+                                <div id="bank-settings" class="collapse collapse-detail">
+                                    <span><strong>Account Holder:</strong> Karol Malota</span>
+                                    <span><strong>Bank Name:</strong> Deutsche Bank Sociedad Anonima Espaniola</span>
+                                    <span><strong>Account Ending:</strong> x-1332</span>
+                                    <span><strong>SWIFT/BIC:</strong> DEUTESSB</span>
+                                    <span><strong>Account Currency:</strong> Euro (EUR)</span>
+                                    <span><strong>Country:</strong> Spain</span>
+                                    <span><strong>Status:</strong> Verified</span>
+                                </div>
+                            </li>
+                            <!-- end -->
+                        </ul>    
+                    </div>
+                    <!-- end -->
+                    <!-- Privacy Settings Tab -->
+                    <div class="tab-pane fade" id="priv-sett">
+                    <ul>
+                            <li><h4>Who can</h4></li>
+                            <li>
+                                <strong>Search Me:</strong> <span class="pd50">Connections</span>
+                                <span class="slide-edit slided-in" id="edit_search_me">
+                                <a href="javascript:void(0)" class="slide-edit-btn" id="change_search_me"><i class="fa fa-pencil"></i></a>
+                                    <select>
+				                    <option>Connections &amp; Clients</option>
+                                    <option>Connections, Clients &amp; Network</option>
+				                    
+				                    <option>Everyone</option>
+				                </select>
+                                    <a href="javascript:void(0);" class="update" id="update_search_me"><i class="fa fa-repeat"></i></a>
+                                    <a href="javascript:void(0);" class="cancel" id="cancel_search_me"><i class="fa fa-times"></i></a>
+                                </span>
+                               
+                            </li>
+                            <li>
+                                <strong>See my Connections:</strong> <span class="pd50">Everyone</span>
+                                <span class="slide-edit slided-in" id="edit_see_connections">
+                                <a href="javascript:void(0)" class="slide-edit-btn" id="change_see_connections"><i class="fa fa-pencil"></i></a>
+                                    <select>
+				                     <option>Connections &amp; Clients</option>
+                                    <option>Connections, Clients &amp; Network</option>
+				                    
+				                    <option>Everyone</option>
+				                </select>
+                                    <a href="javascript:void(0);" class="update" id="update_see_connections"><i class="fa fa-repeat"></i></a>
+                                    <a href="javascript:void(0);" class="cancel" id="cancel_see_connections"><i class="fa fa-times"></i></a>
+                                </span>
+                            </li>
+                            <li>
+                                <strong>Add a Post:</strong> <span class="pd50">Connections &amp; Clients</span>
+                                <span class="slide-edit slided-in" id="edit_add_post">
+                                <a href="javascript:void(0)" class="slide-edit-btn" id="change_add_post"><i class="fa fa-pencil"></i></a>
+                                    <select>
+				                     <option>Connections &amp; Clients</option>
+                                    <option>Connections, Clients &amp; Network</option>
+				                    
+				                    <option>Everyone</option>
+				                </select>
+                                    <a href="javascript:void(0);" class="update" id="update_add_post"><i class="fa fa-repeat"></i></a>
+                                    <a href="javascript:void(0);" class="cancel" id="cancel_add_post"><i class="fa fa-times"></i></a>
+                                </span>
+                            </li>
+                            <li>
+                                <strong>Write a comment:</strong> <span class="pd50">Connections &amp; Clients</span>
+                                <span class="slide-edit slided-in" id="edit_write_comment">
+                                <a href="javascript:void(0)" class="slide-edit-btn" id="change_write_comment"><i class="fa fa-pencil"></i></a>
+                                    <select>
+				                     <option>Connections &amp; Clients</option>
+                                    <option>Connections, Clients &amp; Network</option>
+				                    >
+				                    <option>Everyone</option>
+				                </select>
+                                    <a href="javascript:void(0);" class="update" id="update_write_comment"><i class="fa fa-repeat"></i></a>
+                                    <a href="javascript:void(0);" class="cancel" id="cancel_write_comment"><i class="fa fa-times"></i></a>
+                                </span>
+                            </li>
+                            <li>
+                                <strong>See my Phone:</strong> <span class="pd50">Connections &amp; Network</span>
+                                <span class="slide-edit slided-in" id="edit_see_phone">
+                                <a href="javascript:void(0)" class="slide-edit-btn" id="change_see_phone"><i class="fa fa-pencil"></i></a>
+                                    <select>
+				                     <option>Connections &amp; Clients</option>
+                                    <option>Connections, Clients &amp; Network</option>
+				                    
+				                    <option>Everyone</option>
+				                </select>
+                                    <a href="javascript:void(0);" class="update" id="update_see_phone"><i class="fa fa-repeat"></i></a>
+                                    <a href="javascript:void(0);" class="cancel" id="cancel_see_phone"><i class="fa fa-times"></i></a>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- end -->
+                    <!-- Mail Notification Tab -->
+                    <div class="tab-pane fade" id="mail-notif">
+                        <ul>
+                            <li>
+                                <strong>I want to receive <b>Kaenko Newsletter</b></strong>
+                                <div class="switch">
+                                    <input id="cmn-toggle-9" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="cmn-toggle-9"></label>
+                                </div>
+
+                            </li>
+                            <li>
+                                Notify me to <b>karl@malotastudio.com</b> when:
+                                    <span class="slide-edit slided-in" id="change_notif_email">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="edit_notif_email"><i class="fa fa-pencil"></i></a>
+                                            <select id="edit_notif_email_list">
+                                                <option>karl@malotastudio.com</option>
+                                                <option>business@malotastudio.com</option>
+                                            </select>
+                                            
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_notif_email"><i class="fa fa-times"></i></a>
+                                    </span>
+                            </li>
+                            <li>
+                                <strong>Money sent out of the Account</strong>
+                                <div class="switch">
+                                    <input id="cmn-toggle-8" class="cmn-toggle cmn-toggle-round" type="checkbox" checked disabled>
+                                    <label for="cmn-toggle-8"></label>
+                                </div>
+                            </li>
+                            <li>
+                                <strong>Refund Request/Reply</strong>
+                                <div class="switch">
+                                    <input id="cmn-toggle-1" class="cmn-toggle cmn-toggle-round" type="checkbox" checked disabled>
+                                    <label for="cmn-toggle-1"></label>
+                                </div>
+                            
+                            </li>
+                            <li>
+                                <strong>Money received</strong>
+                                <div class="switch">
+                                    <input id="cmn-toggle-2" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
+                                    <label for="cmn-toggle-2"></label>
+                                </div>
+
+                            </li>
+                            <li>
+                                <strong>New connection or Request</strong>
+                                <div class="switch">
+                                    <input id="cmn-toggle-7" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="cmn-toggle-7"></label>
+                                </div>
+
+                            </li>
+                            <li>
+                                <strong>New Messages</strong>
+                                <div class="switch">
+                                    <input id="cmn-toggle-4" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="cmn-toggle-4"></label>
+                                </div>
+
+                            </li>
+                            <li>
+                                <strong>New posts or comments on Profile</strong>
+                                <div class="switch">
+                                    <input id="cmn-toggle-5" class="cmn-toggle cmn-toggle-round" type="checkbox" checked>
+                                    <label for="cmn-toggle-5"></label>
+                                </div>
+
+                            </li>
+                            <li>
+                                <strong>Me or sub-users log into the Account</strong>
+                                <div class="switch">
+                                    <input id="cmn-toggle-6" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="cmn-toggle-6"></label>
+                                </div>
+
+                            </li>
+                            
+                        </ul>
+                    </div>
+                    <!-- end -->
+                    <!-- Currency Settings Tab -->
+                    <div class="tab-pane fade" id="curr-sett">
+                        <ul id="currencies">
+                                <li>
+                                <div id="h-btn-header">
+                                    <span>
+                                    <h4>My Currencies</h4>
+                                    </span>
+                                    <span>
+                                        <a href="javascript:void(0);" id="upd-curr" class="btn btn-primary addcard-btn" ><i class="fa fa-repeat"></i>Update</a>
+                                    </span>
+                                    <span>
+                                    <a href="javascript:void(0);" id="add-currency-btn" class="btn btn-success addcard-btn" ><i class="fa fa-plus"></i>Add Currency</a>
+                                    </span>
+                                </div>
+                                </li>
+                                <li class="no-hover"><strong>Total Balance:</strong><%= number_with_precision(primary_currency_balance(@account), precision: 2 || 0) %> (<%= @account.kaenko_currency.try(:unit) %> )  (Equivalent)</li>
+                                <li>
+                                    <div>
+                                        <span id="disp-def-curr" class="curr-disp">
+                                            <input type="radio" name="currDefault" id="curr-id-1" value="option1" checked><img src="/assets/flag/EU.png"> European Union <b>EUR 10,002.21</b> (Primary)
+                                        </span>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-curr-confirm-1">
+                                        <span class="confirm-text">Confirm Deletion of Currency (EUR - 10,002.21)</span>
+                                        <a href="javascript:void(0);" id="verify-curr-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-curr-1-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+                                        <a href="javascript:void(0);" id="delete-curr-1" class="collapsed i-cogger" style="display:none" data-toggle="tooltip" data-placement="bottom" title="Delete Currency">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <a href="javascript:void(0);" id="delete-curr-2" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Delete Currency">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                        <span id="disp-curr" class="curr-disp">
+                                            <input type="radio" name="currDefault" id="curr-id-2" value="option1"><img src="/assets/flag/HK.png"> Hong Kong Dollar <b>HKD 45,430.32</b>
+                                        </span>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-curr-confirm-2">
+                                        <span class="confirm-text"><b>HKD 45,430.32</b> will be exchanged to <b>EUR 3,323.09</b></span>
+                                        <a href="javascript:void(0);" id="verify-curr-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-curr-2-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+                                        
+                                    </div>
+                                </li>
+                            <li>
+                                    <div>
+                                        <a href="javascript:void(0);" id="delete-curr-3" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Delete Currency">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                        <span id="disp-curr" class="curr-disp">
+                                            <input type="radio" name="currDefault" id="curr-id-3" value="option1"><img src="/assets/flag/PL.png"> Polish Zloty <b>PLN 4,503.00</b>
+                                        </span>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-curr-confirm-3">
+                                        <span class="confirm-text"><b>PLN 4,503.00</b> will be exchanged to <b>EUR 1,010.01</b></span>
+                                        <a href="javascript:void(0);" id="verify-curr-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-curr-3-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+                                        
+                                    </div>
+                                </li>
+                            <li>
+                                    <div>
+                                        <a href="javascript:void(0);" id="delete-curr-4" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Delete Currency">
+                                            <i class="fa fa-times red"></i>
+                                        </a>
+                                        <span id="disp-curr" class="curr-disp">
+                                            <input type="radio" name="currDefault" id="curr-id-4" value="option1"><img src="/assets/flag/BR.png"> Brazillian Real <b>BRL 987.91</b>
+                                        </span>
+                                        <!-- Confirm Deletion Slided span -->
+                                        <span class="delete-confirm in-out" id="delete-curr-confirm-4">
+                                        <span class="confirm-text"><b>BRL 987.91</b> will be exchanged to <b>EUR 121.21</b></span>
+                                        <a href="javascript:void(0);" id="verify-curr-btn" class="uibutton special verify-btn"><i class="fa fa-check"></i></a>
+                                        <a href="javascript:void(0);" id="delete-curr-4-no" class="uibutton confirm verify-btn" style="margin-left:5px;"><i class="fa fa-times"></i></a>
+                                        </span>
+                                        
+                                    </div>
+                                </li>
+                        
+                                
+                            </ul>
+                        <!-- Add New Currency Slide panel -->
+                        <div id="add-currency-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-add-currency-panel"><i class="fa fa-times"></i></a>
+                        <ul>
+                                <li><h5>Add New Currency</h5></li>    
+                                <li>
+                                    <form id="adding-card-form">
+                                        <div>
+                                        <span>
+                                        <label>Choose currency you wish to add:</label>
+                                        <p>
+                                            <select id="currency-flag" class="EU-cc pd40" style="width:250px;">
+                                                <option>European Union (EUR)</option>
+                                                <option>US Dollar (USD)</option>
+                                                <option>Canada Dollar (CAD)</option>
+                                                <option>Polish Zloty (PLN)</option>
+                                                <option>Brazillian Real (BRL)</option>
+                                            </select>
+                                        </p>
+                                        </span>
+                                        
+                                        </div>
+                                        <div>
+                                        <span>
+                                        <input type="checkbox"><label>I want this to become my primary currency.</label>
+                                        </span>
+                                        <span>
+                                            <a href="javascript:void(0);" id="update-address-btn" class="btn btn-success addcard-btn" ><i class="fa fa-plus"></i>Add Currency</a>
+                                        </span>
+                                            </div>
+                                            
+                                            
+                                            
+                                    </form>
+                                </li>
+                                
+                            </ul>    
+                        </div>
+                    </div>
+                    <!-- end -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- OLD PANEL OVERVIEW - HIDDEN via display:none -->
+    <div class="panel panel-default" style="display:none;">
+      <div class="panel-heading ">
+          <div class="dropdown">
+            Account Overview
+          </div>
+      </div>
+      <div class="panel-body panel-lego">
+        <div class="wrap">
+          <ul>
+            <li>
+              <div class="threequarters" style="width:65.5%">
+                <strong>Account Holder:</strong>
+                 <%= (business_account.legal_form == "Sole Proprietor") ? admin.name.try(:capitalize) : business_account.organization_name.try(:capitalize) %> 
+               </div>
+               <div class="onefourth"><strong> Account ID:</strong> <%=current_user.account.account_number %>
+              </div>
+            </li>
+            <li>
+              <div class="threequarters" style="width:65%">
+                <strong>Business Name:</strong> 
+                <span id="business_name_text"><%= business_account.organization_name %></span> 
+                <%if admin.id == current_user.id %>
+                  <span id="edit_business_name" style="display:none;">
+                    <%= text_field_tag :"business[name]", business_account.organization_name, style: "line-height:normal;width:200px;" %>
+                    <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_business_name">Update</a>
+                    <a href="javascript:void(0);" class="" id="cancel_business_name">Cancel </a>
+                  </span>
+                  <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_business_name"><i class="fa fa-pencil"></i></a
+                <% end %>
+                </a>
+              </div>
+              <div class="onefourth" style="width:34%">
+                <strong> Account Status:</strong> 
+                <%if current_user.account.verified? %>
+                    Verified  
+                  <% else %>
+                  <span id="account_status">
+                    Not Verified
+                    <%= link_to "Verify", edit_status_account_path(@account), class: "", remote: true, :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+                <% end %>
+              </div>
+            </li>
+            <% if admin.id == current_user.id %>
+              <li>
+				        <div class="halfhalf" style="width:65%;">
+                  <strong>Privacy Settings:</strong>
+                  <%= link_to "Change", privacy_settings_account_path(@account), class:"btn btn-default btn-small", remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"   %>
+  			        </div>
+      				  <div class="halfhalf" style="width:34%;">
+          				  <strong>Email Notifications:</strong>
+          				  <%= link_to "Change" , email_notification_account_path(@account), class:"btn btn-default btn-small", remote: true, 'data-target' => "#modal-window" , 'data-toggle' => "modal" %>
+      				  </div>
+  			     </li>
+            <% end %>
+            
+            <li><strong>Default Timezone:</strong> 
+            <span id="time_zone_text"><%= @account.time_zone %></span> 
+            <%if admin.id == current_user.id %>
+               <%= select_tag :'account[time_zone]',
+                  options_for_select(timezones(),@account.time_zone), :prompt=>" Select Time Zone", id: "time_zone_list", 
+                    style: "display:none;"
+              %>
+              <a href="javascript:void(0);" class="btn btn-sm btn-default"  id="cancel_time_zone" style="display:none;">Cancel</a>
+              <a href="javascript:void(0);" class="btn btn-default btn-edit btn-small" id="change_time_zone"><i class="fa fa-pencil"></i></a>
+            <% end %>
+            </li>
+            <li><strong>Default Language:</strong> <span >
+              <span id="language_text"><%= current_user.language %></span> 
+            
+                <%= select_tag :'user[language]',
+                    options_for_select(LANGUAGE.each{|l| [l[0], l[1]]}, current_user.language), include_blank: false, id: "language_list", 
+                      style: "display:none;"
+                  %>
+                <a href="javascript:void(0);" class="btn btn-sm btn-default"  id="cancel_language" style="display:none;">Cancel</a>
+                <a href="javascript:void(0);" class="btn btn-default btn-edit btn-small" id="change_language"><i class="fa fa-pencil"></i></a>
+                </span>
+              
+            </li>
+            <li><strong>Primary Currency:</strong><span>
+              <span id="currency_text"><%= @account.kaenko_currency.try(:title) %> (<%= @account.kaenko_currency.try(:unit) %>)</span>
+              <%if admin.id == current_user.id %>
+                 <span id="primary_currency_list">
+                      <%= select_tag :'account[kaenko_currency_id]',
+                          options_for_select(KaenkoCurrency.select("id, title").collect{|c|[c.title, c.id]},@account.kaenko_currency_id), include_blank: false, id: "currency_list", 
+                            style: "display:none;"
+                      %>
+                  </span>
+                      <a href="javascript:void(0);" class="btn btn-sm btn-default"  id="cancel_currency" style="display:none;">Cancel</a>
+                  
+                
+                <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_currency"><i class="fa fa-pencil"></i></a>
+                </span> 
+                  
+                  <%=link_to "Accept more" , new_account_currency_path, remote: true, class: "btn btn-default btn-small", 'data-target' => "#modal-window", 'data-toggle' => "modal" %>
+                  <%=link_to "View All" , show_currency_account_currencies_path , class:"btn btn-default btn-small" , remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"%>
+                <% end %>
+              </li>
+
+          </ul>
+        </div>
+      </div>
+    </div><!-- end OLD PANEL -->
+    </article><!-- END col-lg-7 -->
+
+    <article class="col-lg-9">
+        <div class="panel panel-defualt">
+            <div class="panel-heading">
+                <div class="dropdown">
+                    User Managment
+                </div>
+            </div>
+            <div class="panel-body panel-overview">
+                <div class="well-managment col-lg-4">
+                    <ul class="well-settings-list" role="tablist">
+                        <li class="active">
+                            <a href="#admin-detal" role="tab" data-toggle="tab">
+                                <img src="/uploads/user/image/1/profile_profile.jpg">
+                            
+                            <span id="span-admin-li">
+                                <span id="span-user-name"><b>Karl Malota (me)</b></span>
+                                <span id="span-user-title">Director of Operations</span>
+                                <span id="span-user-range">Administrator</span>
+                            </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#subuser-1-detal" role="tab" data-toggle="tab">
+                                <img src="/uploads/user/image/13/profile_me.png">
+                           
+                            <span id="span-admin-li">
+                                <span id="span-user-name"><b>Melanie Martins</b></span>
+                                <span id="span-user-title">Hiring Manager</span>
+                                <span id="span-user-range">Subuser</span>
+                            </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#adduser-detal" role="tab" data-toggle="tab">
+                                <h4 style="color:#009ad9;"><i class="fa fa-plus" style="color:#009ad9;"></i> Create New User</h4>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="tabular-content extra-height col-lg-8">
+                    <div class="tab-content">
+                        <!-- Admin Mangament Tab -->
+                        <div class="tab-pane fade in active" id="admin-detal">
+                            <ul>
+                                <li>
+                                    
+                                    <!-- TEMPoRARY -->
+                                     <span style="padding-right:25px;display:inline-block;">
+                                        <a href="javascript:void(0);" class="change-photo-action">
+                                        <img class="profil-sm" src="/uploads/user/image/1/profile_profile.jpg">
+                                        </a>
+                                    </span>
+                                    <span class="pd50" style="padding: 0;line-height: 13px;display: inline-block;width:80%;position: relative;top: 18px;">
+                                        <b style="color: #5a5a5a;">Admin Description:</b><br> As an Admin, you are the only one able to add and redeem funds into the Business Account, and the only one able to add, edit and remove Subusers. You can control your subusers and manage their capabilities
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong>Title:</strong><span class="pd50">Director of Operations</span>
+                                    <span class="slide-edit slided-in" id="edit_admin_title">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="change_admin_title"><i class="fa fa-pencil"></i></a>
+                                            <select>
+                                                <option>Founder</option>
+                                                <option>Owner</option>
+                                                <option>Partner</option>
+                                                <option>CEO</option>
+                                                <option>COO</option>
+                                                <option>President</option>
+                                                <option>Director of Operations</option>
+                                                <option>Managing Director</option>
+                                            </select>
+                                            <a href="javascript:void(0);" class="update" id="update_admin_title"><i class="fa fa-repeat"></i></a>
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_admin_title"><i class="fa fa-times"></i></a>
+                                    </span>
+                                </li>
+                                <li><strong>Gender:</strong><span class="pd50">Male</span></li>
+                                <li><strong>Birth:</strong><span class="pd50">05 July 1981, Poland</span></li>
+                                <li>
+                                    <strong>Email:</strong><span class="pd50">user1@test.com</span>
+                                    <span class="slide-edit slided-in" id="edit_admin_email">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="change_admin_email"><i class="fa fa-pencil"></i></a>
+                                            <input type="text" placeholder="Email address" value="karl@malotastudio.com">
+                                            <a href="javascript:void(0);" class="update" id="update_admin_email"><i class="fa fa-repeat"></i></a>
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_admin_email"><i class="fa fa-times"></i></a>
+                                    </span>
+                                </li>
+                                <li>
+                                    
+                                    <div>
+                                        <span>
+                                           Associated Address
+                                        </span>
+                                        <a data-toggle="collapse" data-parent="#accordion-admin-prof" href="#admin-addr-1" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="admin-address-edit-panel" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Edit Address">
+                                            <i class="fa fa-cog"></i>
+                                        </a>
+                                    </div>
+                                    <div id="admin-addr-1" class="collapse collapse-detail">
+                                        <span><strong>Address:</strong> Av. Joan Miro 19, 1B</span>
+                                        <span><strong>City &amp; Postal:</strong> Torremolinos, 29620</span>
+                                        <span><strong>Region:</strong> Andalusia </span>
+                                        <span><strong>Country:</strong> Spain, ES</span>
+                                        
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>Security Settings</span> <span class="pd50">(PIN, Secret Question, Change Password)</span>
+                                    <a href="javascript:void(0);" id="admin-security-edit-panel" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Edit Security">
+                                            <i class="fa fa-cog"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- Edit Subuser Address Slide panel -->
+                    <div id="admin-address-change-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="admin-close-address-change-panel"><i class="fa fa-times"></i></a>
+                        <ul>
+                                <li><h5>Edit Address</h5></li>    
+                                <li>
+                                    <form id="adding-card-form">
+                                        <div>
+                                        <span>
+                                        <label>Address:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" step="4" max="30" size="30" value="Av. Joan Miro 19, 1B">
+                                        </p>
+                                        </span>
+                                        <span>
+                                        <label>City:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" value="Torremolinos">
+                                        </p>
+                                        </span>
+                                        </div>
+                                        <div>
+                                            <span>
+                                            <label>ZIP/Postal:</label>
+                                            
+                                            <p>
+                                            <input id="exp-number" type="text" max="6" size="6" value="29620" placeholder="ZIP / Postal Code">
+                                            </p>
+                                            </span>
+                                            <span>
+                                        <label>Region:</label>
+                                        <p>
+                                        <input id="exp-number" type="text" value="Andalusia" placeholder="Region / District">
+                                        </p>
+                                            </span>
+                                        
+                                            <span>
+                                            <label>Country:</label>
+                                            <p>
+                                            <select id="country-select-cc" class="ES-cc pd40">
+                                                <option class="ES-cc">Spain</option>
+                                                <option class="DE-cc">Germany</option>
+                                                <option class="ZA-cc">Zimbabwe</option>
+                                                <option class="GB-cc">United Kingdom</option>
+                                            </select>
+                                            </p>
+                                            </span>
+                                            </div>
+                                            <div>
+                                            <span>
+                                            <a href="javascript:void(0);" id="admin-update-address-btn" class="btn btn-success addcard-btn" ><i class="fa fa-repeat"></i>Update Address</a>
+                                            </span>
+                                            </div>
+                                    </form>
+                                </li>
+                                
+                            </ul>    
+                        </div>
+                        <!-- Edit Admin Security Slide panel -->
+                        <div id="admin-security-change-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="admin-close-security-change-panel"><i class="fa fa-times"></i></a>
+                            <div class="success-action">
+                                        <span><i class="fa fa-key fa-5x text-success"></i></span>
+                                        <span><h4>Authorization Required</h4>
+                                        
+                                        <p><input type="password" placeholder="Your 4 digit PIN" style="
+    padding: 11px;  outline: none;  border-radius: 3px;  border: 1px solid #e4e4e4;  font-family: &quot;Lato&quot;;  font-size: 11px;
+"></p><p><a href="javascript:void(0);" id="admin-security-auth-edit-panel" class="btn btn-success addcard-btn">Authorize Me</a></p>
+                                        </span>
+                                </div>
+                        </div>
+                        <!-- Edit Admin Security (after authorization) Slide panel -->
+                        <div id="admin-security-auth-change-panel" class="slided-slide card-slide in-out">
+                        <a href="javascript:void(0);" class="close-slide"  id="admin-close-security-auth-change-panel"><i class="fa fa-times"></i></a>    
+                            <ul>
+                                <li>
+                                    
+                                        <h4>Security Settings</h4>
+                                        
+                                    
+                                </li>
+                                <li>
+                                    <strong class="wi210">Secret Question:</strong>What is your favourite movie?
+                                    <span class="slide-edit slided-in" id="edit_admin_SQ">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="change_admin_SQ"><i class="fa fa-pencil"></i></a>
+                                            <select>
+                                                <option>What is the name of your favorite movie?</option>
+                                                <option>What is the name of your first pet?</option>
+                                                <option>What is the name of your favorite town/city?</option>
+                                                <option>What is the name of your first love?</option>
+                                                <option>What is the color of your first car? </option>
+                                                <option>What was your maternal grandfather’s first name?</option>
+                                                <option>In what city or town did you meet your spouse/partner?</option>
+                                            </select>
+                                            <a href="javascript:void(0);" class="update" id="update_admin_SQ"><i class="fa fa-repeat"></i></a>
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_admin_SQ"><i class="fa fa-times"></i></a>
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Secret Answer:</strong>Titanic
+                                    <span class="slide-edit slided-in" id="edit_admin_SA">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="change_admin_SA"><i class="fa fa-pencil"></i></a>
+                                            <input type="text" placeholder="Secret Answer" value="Titanic">
+                                            <a href="javascript:void(0);" class="update" id="update_admin_SA"><i class="fa fa-repeat"></i></a>
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_admin_SA"><i class="fa fa-times"></i></a>
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong class="wi210">PIN:</strong>****
+                                    <span class="slide-edit slided-in" id="edit_admin_PIN">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="change_admin_PIN"><i class="fa fa-pencil"></i></a>
+                                            <input type="password" placeholder="PIN" value="1234">
+                                            <a href="javascript:void(0);" class="update" id="update_admin_PIN"><i class="fa fa-repeat"></i></a>
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_admin_PIN"><i class="fa fa-times"></i></a>
+                                    </span>
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" id="admin-pass-edit-panel" class="collapsed i-cogger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit Password">
+                                            <i class="fa fa-cog"></i>
+                                    </a>
+                                    <strong class="wi210">Password:</strong>**********
+                                </li>
+                                <li>
+                                    <strong class="wi210">Ask my PIN for Pay-Outs over:</strong><input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="9999" data-slider-step="10" data-slider-value="310"/>
+                                </li>
+                            </ul>
+                            
+                        </div>
+                         <!-- Edit Admin Pass Slide panel -->
+                        <div id="admin-pass-change-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="close-admin-pass-change-panel"><i class="fa fa-times"></i></a>
+                            <ul>
+                                <li><h5>New Password</h5></li>    
+                                <li>
+                                    <form id="adding-card-form">
+                                        <div>
+                                        <span>
+                                        <label>Old Password</label>
+                                        <p>
+                                        <input id="old-pass" type="password" placeholder="Old Password">
+                                        </p>
+                                        </span>
+                                        
+                                        </div>
+                                        <div>
+                                        <span>
+                                        <label>New Password</label>
+                                        <p>
+                                        <input id="account-holder" type="password" placeholder="New Password">
+                                        </p>
+                                            </span>
+                                        <span>
+                                            <label>Confirm New Password</label>
+                                            
+                                        <p>
+                                            <input id="account-holder" type="password" placeholder="Confirm New Password">
+                                        </p>
+                                            </span>
+                                            <span>
+                                            <a href="javascript:void(0);" id="addcard-btn" class="btn btn-success addcard-btn"><i class="fa fa-repeat"></i>Update</a>
+                                            </span>
+                                            </div>
+                                    </form>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                        </div>
+                        <!-- Subuser Mangament Tab  (to be populated) -->
+                        <div class="tab-pane fade" id="subuser-1-detal">
+                            <ul>
+                                <li>
+                                    
+                                    <!-- TEMPoRARY -->
+                                    <span style="padding-right:25px;display:inline-block;">
+                                        <a href="javascript:void(0);" class="change-photo-action">
+                                        <img class="profil-sm" src="/uploads/user/image/13/profile_me.png">
+                                        </a>
+                                    </span>
+                                    <span class="pd50" style="padding: 0;line-height: 13px;display: inline-block;width: 80%;position: relative;top: 18px;">
+                                        <b style="color: #5a5a5a;">Subuser Description:</b><br>As a Subuser, you have limited capabilities and you cannot add or redeem funds, your role is defined by the Admin and he/she is the only one that can edit your permissions, delete or suspend your access to the Account.
+                                    </span>
+                                </li>
+                                <li>
+                                    <strong>Title:</strong><span class="pd50">Hiring Manager</span>
+                                    <span class="slide-edit slided-in" id="edit_subuserID1_title">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="change_subuserID1_title"><i class="fa fa-pencil"></i></a>
+                                            <select>
+                                                <option>Senior Manager</option>
+                                                <option>Social Manager</option>
+                                                <option>Marketing Officer</option>
+                                                <option>Account Manager</option>
+                                                <option>Customer Support</option>
+                                                <option>Staff</option>
+                                            </select>
+                                            <a href="javascript:void(0);" class="update" id="update_subuserID1_title"><i class="fa fa-repeat"></i></a>
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_subuserID1_title"><i class="fa fa-times"></i></a>
+                                    </span>
+                                </li>
+                                <li><strong>Gender:</strong><span class="pd50">Female</span></li>
+                                <li><strong>Birth:</strong><span class="pd50">31 December 1992, France</span></li>
+                                <li>
+                                    <strong>Email:</strong><span class="pd50">melanie@kaenko.com</span>
+                                    <span class="slide-edit slided-in" id="edit_subuserID1_email">
+                                            <a href="javascript:void(0)" class="slide-edit-btn" id="change_subuserID1_email"><i class="fa fa-pencil"></i></a>
+                                            <input type="text" placeholder="Email address" value="melanie@kaenko.com">
+                                            <a href="javascript:void(0);" class="update" id="update_subuserID1_email"><i class="fa fa-repeat"></i></a>
+                                            <a href="javascript:void(0);" class="cancel" id="cancel_subuserID1_email"><i class="fa fa-times"></i></a>
+                                    </span>
+                                </li>
+                                <li>
+                                    <div>
+                                        <span>
+                                           Associated Address
+                                        </span>
+                                        <a data-toggle="collapse" data-parent="#accordion-admin-prof" href="#subuserID1-addr-1" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" id="subuserID1-address-edit-panel" class="collapsed i-cogger" data-toggle="tooltip" data-placement="bottom" title="Edit Address">
+                                            <i class="fa fa-cog"></i>
+                                        </a>
+                                    </div>
+                                    <div id="subuserID1-addr-1" class="collapse collapse-detail">
+                                        <span><strong>Address:</strong> Pl. Xau Bella 321, 45A</span>
+                                        <span><strong>City &amp; Postal:</strong> Lisbon, TX1234</span>
+                                        <span><strong>Region:</strong> Lisboa </span>
+                                        <span><strong>Country:</strong> Portugal, PT</span>
+                                        
+                                    </div>
+                                </li>
+                                <li>
+                                    <span>User Permissions</span> <span class="pd50">(Admin Only)</span>
+                                    <a href="javascript:void(0);" id="subuserID1-perm-edit-panel" class="collapsed i-cogger" data-toggle="tooltip" data-placement="top" title="Edit Permissions">
+                                            <i class="fa fa-cog"></i>
+                                    </a>
+                                   
+                                </li>
+                                <li>
+                                    <a href="javascript:void(0);" id="deleteuser-btn" class="btn btn-danger addcard-btn"><i class="fa fa-ban"></i>Delete User</a>
+                                    <a href="javascript:void(0);" id="suspenduser-btn" class="btn btn-warning addcard-btn"><i class="fa fa-exclamation"></i>Suspend User</a>
+                                </li>
+                            </ul>
+                            <!-- Edit Subuser Address Slide panel -->
+                    <div id="subuserID1-address-change-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="subuserID1-close-address-change-panel"><i class="fa fa-times"></i></a>
+                        <ul>
+                                <li><h5>Edit Address</h5></li>    
+                                <li>
+                                    <form id="adding-card-form">
+                                        <div>
+                                        <span>
+                                        <label>Address:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" step="4" max="30" size="30" value="Pl. Xau Bella 321, 45A">
+                                        </p>
+                                        </span>
+                                        <span>
+                                        <label>City:</label>
+                                        <p>
+                                        <input id="holder-name" type="text" value="Lisbon">
+                                        </p>
+                                        </span>
+                                        </div>
+                                        <div>
+                                            <span>
+                                            <label>ZIP/Postal:</label>
+                                            
+                                            <p>
+                                            <input id="exp-number" type="text" max="6" size="6" value="TX1234" placeholder="ZIP / Postal Code">
+                                            </p>
+                                            </span>
+                                            <span>
+                                        <label>Region:</label>
+                                        <p>
+                                        <input id="exp-number" type="text" value="Lisboa" placeholder="Region / District">
+                                        </p>
+                                            </span>
+                                        
+                                            <span>
+                                            <label>Country:</label>
+                                            <p>
+                                            <select id="country-select-cc" class="PT-cc pd40">
+                                                <option class="PT-cc">Portugal</option>
+                                                <option class="DE-cc">Germany</option>
+                                                <option class="ZA-cc">Zimbabwe</option>
+                                                <option class="GB-cc">United Kingdom</option>
+                                            </select>
+                                            </p>
+                                            </span>
+                                            </div>
+                                            <div>
+                                            <span>
+                                            <a href="javascript:void(0);" id="subuserID1-update-address-btn" class="btn btn-success addcard-btn" ><i class="fa fa-repeat"></i>Update Address</a>
+                                            </span>
+                                            </div>
+                                    </form>
+                                </li>
+                                
+                            </ul>    
+                        </div>
+                        <!-- Edit Subuser Permissions Slide panel -->
+                        <div id="subuserID1-prem-change-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide"  id="subuserID1-close-perm-change-panel"><i class="fa fa-times"></i></a>
+                            <ul>
+                                <li>
+                                    <strong class="wi210">Access to the Inbox &amp; Live Chat</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-1" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-1"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <a data-toggle="collapse" data-parent="#accordion-sub-perm" href="#payment-perm-subuserID1" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        Payments
+                                        
+                                        
+                                    </div>
+                                    <div id="payment-perm-subuserID1" class="collapse collapse-detail">
+                                        <ul>
+                                <li>
+                                    <strong class="wi210">Invoice Clients</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-2" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-2"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Refund Clients</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-4" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-4"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Send Money – Max. per day:</strong><input id="ex8" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="9999" data-slider-step="10" data-slider-value="5000"/>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Do Purchases online – Max. per day:</strong><input id="ex9" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="9999" data-slider-step="10" data-slider-value="2710"/>
+                                </li>
+   
+                                        </ul>
+                                    </div>
+                                </li>
+                                
+                                <li>
+                                    <div>
+                                        <a data-toggle="collapse" data-parent="#accordion-sub-perm" href="#social-perm-subuserID1" class="collapsed i-toggler">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        Social
+                                        
+                                        
+                                    </div>
+                                    <div id="social-perm-subuserID1" class="collapse collapse-detail">
+                                        <ul>
+                                            <li>
+                                    <strong class="wi210">Accept connections</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-3" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-3"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Send Connection Requests</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-4" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-4"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Write Posts</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-5" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-5"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Write Posts in other Social Pages</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-7" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-7"></label>
+                                    </div>
+                                </li>
+                                 <li>
+                                    <strong class="wi210">Comment Posts</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-6" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-6"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Comment Posts in other Social Pages</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-8" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-8"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Leave message on social pages</strong>
+                                    <div class="switch">
+                                        <input id="perm-toggle-9" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="perm-toggle-9"></label>
+                                    </div>
+                                </li>
+                                        </ul>                                       
+                                    </div>
+                                </li>
+                                
+                                
+                                <li>
+                                    <span class="disclaimer-title">Disclaimer note:</span>
+                                    <span class="disclaimer-long">Payments and Social Activities are done only under your Business Profile (Business Name and Image), subusers are not identified on the other side, except when sending messages and live chat. You will be able to monitor and participate if needed. It’s your responsibility to handle any consequence and/or damage caused by a subuser in any control you delegate.</span>
+                                </li>
+                            </ul>
+                        </div>
+                        </div>
+                        <!-- Add User Mangament Tab -->
+                        <div class="tab-pane fade" id="adduser-detal">
+                           <ul>
+                                <li><h5>Create New User</h5>
+<p>If you are a business owner you can create new user here. Process is divided into two steps. In first one you will be asked to introduce personal details of person you would like to add. Another step is to create user permissions and allowance limits.</p></li>    
+                                <li>
+                                    <form id="adding-card-form">
+                                        <div>
+                                        <span>
+                                        <label>First Name</label>
+                                        <p>
+                                        <input id="holder-name" type="text" placeholder="First Name" size="21">
+                                        </p>
+                                        </span>
+                                        <span>
+                                        <label>Last Name</label>
+                                        <p>
+                                        <input id="holder-name" type="text" step="4" max="16" size="21" placeholder="Last Name" value="">
+                                        </p>
+                                        </span>
+                                        </div>
+                                        <div>
+  <span>
+                                        <label>Job Title</label>
+                                        <p>
+                                        <select>
+                                                <option>Senior Manager</option>
+                                                <option>Social Manager</option>
+                                                <option>Marketing Officer</option>
+                                                <option>Account Manager</option>
+                                                <option>Customer Support</option>
+                                                <option>Staff</option>
+                                            </select>
+                                        </p>
+                                        </span>
+ <span>
+                                        <label>Email Address</label>
+                                        <p>
+                                        <input id="holder-name" type="text" step="4" max="16" size="30" placeholder="eg. user@yourcompany.com" value="">
+                                        </p>
+                                        </span> 
+</div>
+<div>
+                                        <span>
+                                        <label>One time Access Code</label><a class="info-badge-cvc" href="#" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="When user will receive confirmation email, in registration process he will be asked to introduce One-Time code. This code should be unique and you shall be responsible for passing it over to user."><i class="fa fa-info-circle"></i></a>
+                                        <p>
+                                        <input id="holder-name" type="text" max="5" size="19" placeholder="Enter your code here">
+                                        </p>
+                                            </span>
+                                        
+                                            <span>
+                                            <a href="javascript:void(0);" id="add-user-step2-btn" class="uibutton special addcard-btn">Proceed to step 2</a>
+                                            </span>
+                                            </div>
+                                    </form>
+                                </li>
+                                
+                            </ul>
+                         <!-- Add user step 2 Slide panel -->
+                    <div id="add-user-step2-panel" class="slided-slide card-slide in-out">
+                            <a href="javascript:void(0);" class="close-slide" id="close-add-user-step2-panel"><i class="fa fa-times"></i></a>
+                                <ul>
+                                    <li><h5>Permissions &amp; Allowances</h5>
+                                        <p style="white-space: initial;">Here you can adjust permissions for user you about to create. Section is divide between "Payments" and "Social". For example you can set daily limit of purchases made by user or allow / disallow user to post on social page.</p></li><li>
+                                        <strong class="wi210">Access to the Inbox &amp; Live Chat</strong>
+                                        <div class="switch">
+                                            <input id="add-perm-toggle-1" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                            <label for="add-perm-toggle-1"></label>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <a data-toggle="collapse" data-parent="#accordion-sub-perm" href="#add-payment-perm-subuserID1" class="i-toggler collapsed">
+                                                <i class="fa fa-chevron-down"></i>
+                                            </a>
+                                            Payments                                        
+                                        </div>
+                                        <div id="add-payment-perm-subuserID1" class="collapse collapse-detail">
+                                            <ul>
+                                                <li>
+                                                    <strong class="wi210">Invoice Clients</strong>
+                                                        <div class="switch">
+                                        <input id="add-perm-toggle-2" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-2"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                                    <strong class="wi210">Refund Clients</strong>
+                                                        <div class="switch">
+                                        <input id="add-perm-toggle-6" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-6"></label>
+                                    </div>
+                                </li>
+                               <li>
+                                    <strong class="wi210">Send Money – Max. per day:</strong><input id="ex0" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="9999" data-slider-step="10" data-slider-value="5000"/>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Do Purchases online – Max. per day:</strong><input id="ex01" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="9999" data-slider-step="10" data-slider-value="2710"/>
+                                </li>
+   
+                                        </ul>
+                                    </div>
+                                </li>
+                                
+                                <li>
+                                    <div>
+                                        <a data-toggle="collapse" data-parent="#accordion-sub-perm" href="#add-social-perm-subuserID1" class="i-toggler collapsed">
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                        Social
+                                        
+                                        
+                                    </div>
+                                    <div id="add-social-perm-subuserID1" class="collapse-detail collapse">
+                                        <ul>
+                                            <li>
+                                    <strong class="wi210">Accept connections</strong>
+                                    <div class="switch">
+                                        <input id="add-perm-toggle-3" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-3"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Send Connection Requests</strong>
+                                    <div class="switch">
+                                        <input id="add-perm-toggle-4" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-4"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Write Posts</strong>
+                                    <div class="switch">
+                                        <input id="add-perm-toggle-5" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-5"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Write Posts in other Social Pages</strong>
+                                    <div class="switch">
+                                        <input id="add-perm-toggle-7" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-7"></label>
+                                    </div>
+                                </li>
+                                 <li>
+                                    <strong class="wi210">Comment Posts</strong>
+                                    <div class="switch">
+                                        <input id="add-perm-toggle-6" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-6"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Comment Posts in other Social Pages</strong>
+                                    <div class="switch">
+                                        <input id="add-perm-toggle-8" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-8"></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <strong class="wi210">Leave message on social pages</strong>
+                                    <div class="switch">
+                                        <input id="add-perm-toggle-9" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                        <label for="add-perm-toggle-9"></label>
+                                    </div>
+                                </li>
+                                        </ul>                                       
+                                    </div>
+                                </li>
+                                
+                                
+                                <li>
+                                    <span class="disclaimer-title">Disclaimer note:</span>
+                                    <span class="disclaimer-long">Payments and Social Activities are done only under your Business Profile (Business Name and Image), subusers are not identified on the other side, except when sending messages and live chat. You will be able to monitor and participate if needed. It’s your responsibility to handle any consequence and/or damage caused by a subuser in any control you delegate.</span>
+                                </li>
+                                <li>
+                                <a href="javascript:void(0);" id="add-user-step3-btn" class="btn btn-success addcard-btn">All done! Create this user!</a>
+                                </li>
+  
+                            </ul>
+                            </div>
+                            <!-- end -->
+                            <!-- Add user step 2 Slide panel -->
+                            <div id="add-user-step3-panel" class="slided-slide card-slide in-out">
+                                <div class="success-action">
+                                        <span><i class="fa fa-check-circle fa-5x text-success"></i></span>
+                                        <span><h4>User successfuly created!</h4>
+                                        <p>In few minutes you will receive confirmation email</p>
+                                        <p><p><a href="javascript:void(0);" id="close-add-user-step3-panel" class="uibutton special addcard-btn">Return to Menu</a></p></p>
+                                        </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <!-- OLD USER MANAGMENT -->
+    <article class="col-lg-7" style="display:none;">
+      <div class="panel panel-default">
+        <div class="panel-heading ">
+            <div class="dropdown">
+              User Managment
+            </div>
+        </div>
+        <div class="panel-body panel-lego">
+          <div class="wrap">
+
+            <div class="profver" id="admin-overview" style="display:<%= (admin.id == current_user.id) ? "block;" : "none;" %>">
+              <div class="twothird">
+                <div class="onethird user_image">
+
+                <%= image_tag admin.image.present? ? admin.image_url(:profile) : '/assets/av2.png', :style=>"width:125px;" %>
+                </div>
+                <%= file_field_tag :user_pic, style: 'display: none;', accept: "image/*" %>
+                <div class="twothirdless pull-right">
+                  <h4 style="font-weight:800">Admin (me)</h4>
+                    <%= admin.name%><br>
+                    <span style="font-size:12px"><%= "#{admin.job_title.try(:titleize)} at #{business_account.organization_name.try(:titleize)}" %></span>
+                </div>
+              </div>
+              <div class="onethird">
+                
+                <br>
+                <%= link_to "View / Edit" , "javascript:void(0);" , class:"btn btn-primary" , style:"display:block;margin-bottom:9px;width:16em;" , id: "admin-view-edit" %> 
+
+                <%#= link_to "Edit Security", ask_security_pin_user_path(current_user), class: "btn btn-default" ,style: "display:block; border: 1px solid #e3e8e8!important;" , remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal" %>
+              </div>
+              
+             </div>
+
+        <!-- ======================= admin detail ============================== -->
+          <div class="profver" style="display:<%= (admin.id == current_user.id) ? "none;" : "block;" %>" id= "admin-detail">
+            <div class="twothird">
+              <div class="onethird user_image">
+
+              <%= image_tag admin.image.present? ? admin.image_url(:profile) : '/assets/av2.png', :style=>"width:125px;" %>
+              </div>
+              <%#= file_field_tag :user_pic, style: 'display: none;', accept: "image/*" %>
+              <div class="twothirdless pull-right">
+                <h4 style="font-weight:800">Admin <%=if admin. id == current_user.id then "(me)" end %></h4>
+                  <%= admin.name%><br>
+                  <span style="font-size:12px"><%= "#{admin.job_title.try(:titleize)} at #{business_account.organization_name.try(:titleize)}" %></span>
+              </div>
+            </div>
+            <%if admin. id == current_user.id %>
+            <div class="onethird">
+                <%= link_to "Hide" , "javascript:void(0);" , class:"btn btn-primary" , 
+                style:"display:block" , id: "hide" %> 
+                <%= link_to "View/Edit" , "javascript:void(0);" , class:"btn btn-primary" , style:"display:none;margin-bottom:9px;width:16em;" , id: "unhide" %> 
+              <br>
+
+              <%= link_to "Edit Security", ask_security_pin_user_path(current_user), class: "btn btn-default" ,style: "display:block; border: 1px solid #e3e8e8!important;" , remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal" %>
+            </div>
+            <div class="halfhalf">
+            
+              <p class="hide-content">
+               <strong>Gender:</strong> 
+               <span id="user_gender_text"> <%= admin.gender %></span>
+               
+                <!--<span id="edit_user_gender">
+                <%#= select_tag :'user[gender]',
+                  options_for_select([["Male", "male"], ["Female", "female"]]), :prompt=>" Select gender", id: "user_gender", 
+                    style: "display:none;width:100px;"
+                %>
+                <a href="javascript:void(0);" class="btn btn-sm btn-default"  id="cancel_user_gender" style="display:none;">Cancel</a>
+                <a href="javascript:void(0);" 
+                class="btn btn-default btn-edit btn-small" id="change_user_gender"><i class="fa fa-pencil"></i>
+                </a>
+                </span> -->
+              
+              </p>
+              <p class="hide-content">
+                <strong>Birth:</strong>
+                <span id="user_user_dob_text"><%= admin.date_of_birth.strftime("%d-%b-%Y")if admin.date_of_birth.present? %><%= ", #{country_name(admin.nationality)}" if admin.nationality.present?%></span>
+                <span id="edit_user_dob" style="display:none;">
+                  <span id="date-container">
+                    <%= text_field_tag :"user[date_of_birth]", admin.date_of_birth, style: "line-height:normal;width:200px;" , 
+                    class: "form-control"%>
+                  </span>
+                
+                    <span id="error_msg"></span><br>
+                    <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_dob">Update</a>
+                    <a href="javascript:void(0);" class="" id="cancel_user_dob">Cancel </a>
+                  </span>
+
+                  <a href="javascript:void(0);" class="btn btn-default btn-edit btn-small" id="change_user_dob"><i class="fa fa-pencil"></i></a> 
+            
+              </p>
+              <p><strong>Email:</strong> 
+              <span id="user_email_text"><%= admin.email  %></span> 
+                  <span id="edit_user_email" style="display:none;">
+                    <%= text_field_tag :"user[email]", admin.email, style: "line-height:normal;width:200px;" %>
+                    <span id="error_msg"></span><br>
+                    <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_email">Update</a>
+                    <a href="javascript:void(0);" class="" id="cancel_user_email">Cancel </a>
+                  </span>
+
+                  <a href="javascript:void(0);" class="btn btn-default btn-edit btn-small" id="change_user_email"><i class="fa fa-pencil"></i></a>
+              </p>
+            </div>
+            <div class="halfhalf">
+            <p class="hide-content">
+              <strong>Country:</strong>
+              <span id="user_country_text">
+                <%= country_name(admin.country) %> 
+              </span>
+               <%= select_tag :'user[country]',
+                  options_for_select(kaenko_countries), include_blank: false, id: "user_country_list", 
+                    style: "display:none;width:100px;"
+                %>
+                <a href="javascript:void(0);" class="btn btn-sm btn-default"  id="cancel_user_country" style="display:none;">Cancel</a>
+                <a href="javascript:void(0);" 
+                class="btn btn-default btn-edit btn-small" id="change_user_country"><i class="fa fa-pencil"></i>
+                </a>
+            </p>
+            <p>
+              <strong>Address:</strong> 
+                <span id="user_address_text"><%= admin.address %></span> 
+                <span id="edit_user_address" style="display:none;">
+                  <%= text_field_tag :"user[address]", admin.address, style: "line-height:normal;width:200px;" %>
+                  <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_address">Update</a>
+                  <a href="javascript:void(0);" class="" id="cancel_user_address">Cancel </a>
+                </span>
+                <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_user_address"><i class="fa fa-pencil"></i></a>
+            </p>
+            <p>
+              <strong>City & ZIP:</strong> <span id="user_city_postal_text"><%=  "#{admin.city} (#{admin.postal_code})"%></span>
+                <span id="user_city_postal" style="display:none;">
+                City:<%= text_field_tag :"user[city]" , current_user.city, style: "line-height:normal;width:50px;" %>
+                Postal:<%= text_field_tag :"user[postal_code]" , current_user.postal_code , style: "line-height:normal;width:50px;"%>
+                
+                <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_city_postal">Update</a>
+                <a href="javascript:void(0);" class="" id="cancel_user_city_postal">Cancel </a>
+                
+              </span>
+                <a href="javascript:void(0);" class="btn btn-default btn-edit btn-small" id="change_user_city_postal"><i class="fa fa-pencil"></i></a>
+            </p>
+            </div>
+              
+        </div>
+        <!-- =======================================================================-->
+          <div id="subuser_list">
+            <%= render "subuser_list" %>
+          </div>
+        <% end %>
+        
+        </div>
+        <%if admin.id != current_user.id %>
+          <div class="profver profver-user-collapsed" id="personal_subuser_info">
+            <div class="twothird">
+              <div class="onethird" id="subuser_image">
+                <%= image_tag (current_user.image.present? ? current_user.image_url(:profile) : '/assets/av2.png'), width: "125px" , height: "auto" %>
+              </div>
+              <%= file_field_tag :subuser_pic, style: 'display: none;', accept: "image/*" %>
+              <div class="twothirdless pull-right">
+                <h4 style="font-weight:800">Sub user (me)</h4>
+                <%= current_user.name %><br>
+                <span style="font-size:12px"><%= "#{current_user.job_title} at #{business_account.organization_name}"%></span>
+              </div>
+            </div>
+            <div class="onethird">
+              <%=link_to "View / Edit" , edit_personal_subuser_user_path(current_user) , class:"btn btn-primary" , style:"display:block", remote: true %>
+            </div>
+          </div>
+          <div id="personal_subuser_detail">
+          </div>
+        <% end %>
+      </div>
+    </div>      
+    </article>  
+  </div><!-- END row -->
+</section>
+<script>
+
+$("#ex8").slider({
+	tooltip: 'always',
+    formater: function(value) {
+		return '€ ' + value;
+	} 
+});
+$("#ex9").slider({
+	tooltip: 'always',
+    formater: function(value) {
+		return '€ ' + value;
+	} 
+});
+$("#ex0").slider({
+	tooltip: 'always',
+    formater: function(value) {
+		return '€ ' + value;
+	} 
+});
+$("#ex01").slider({
+	tooltip: 'always',
+    formater: function(value) {
+		return '€ ' + value;
+	} 
+});  
+$("#ex1").slider({
+	tooltip: 'always',
+    formater: function(value) {
+		return '€ ' + value;
+	} 
+});      
+
+    
+
+$("#verify-alternative-btn").click(function(){
+$("#verify-alternative-change-panel").removeClass("in-out");
+})
+$("#close-verify-alternative-change-panel").click(function(){
+$("#verify-alternative-change-panel").addClass("in-out");
+}) 
+    
+    
+$("#edit-verify-status-panel-btn").click(function(){
+$("#verify-status-change-panel").removeClass("in-out");
+})
+$("#close-verify-status-change-panel").click(function(){
+$("#verify-status-change-panel").addClass("in-out");
+}) 
+       
+    
+$("#edit-verify-panel-btn").click(function(){
+$("#verify-change-panel").removeClass("in-out");
+})
+$("#close-verify-change-panel").click(function(){
+$("#verify-change-panel").addClass("in-out");
+}) 
+    
+    
+    
+$("#admin-pass-edit-panel").click(function(){
+$("#admin-pass-change-panel").removeClass("in-out");
+})
+$("#close-admin-pass-change-panel").click(function(){
+$("#admin-pass-change-panel").addClass("in-out");
+})    
+    
+$("#change_admin_SQ").click(function(){
+$("#edit_admin_SQ").removeClass("slided-in");
+})
+$("#cancel_admin_SQ").click(function(){
+$("#edit_admin_SQ").addClass("slided-in");
+})
+
+$("#change_admin_SA").click(function(){
+$("#edit_admin_SA").removeClass("slided-in");
+})
+$("#cancel_admin_SA").click(function(){
+$("#edit_admin_SA").addClass("slided-in");
+})
+
+$("#change_admin_PIN").click(function(){
+$("#edit_admin_PIN").removeClass("slided-in");
+})
+$("#cancel_admin_PIN").click(function(){
+$("#edit_admin_PIN").addClass("slided-in");
+})
+    
+$("#admin-security-auth-edit-panel").click(function(){
+$("#admin-security-auth-change-panel").removeClass("in-out");
+})
+$("#admin-close-security-auth-change-panel").click(function(){
+$("#admin-security-auth-change-panel").addClass("in-out");
+})
+
+$("#add-user-step3-btn").click(function(){
+$("#add-user-step3-panel").removeClass("in-out");
+})
+$("#close-add-user-step3-panel").click(function(){
+$("#add-user-step3-panel").addClass("in-out");
+})    
+    
+$("#add-user-step2-btn").click(function(){
+$("#add-user-step2-panel").removeClass("in-out");
+})
+$("#close-add-user-step2-panel").click(function(){
+$("#add-user-step2-panel").addClass("in-out");
+})
+    
+$("#subuserID1-perm-edit-panel").click(function(){
+$("#subuserID1-prem-change-panel").removeClass("in-out");
+})
+$("#subuserID1-close-perm-change-panel").click(function(){
+$("#subuserID1-prem-change-panel").addClass("in-out");
+})
+
+
+$("#admin-security-edit-panel").click(function(){
+$("#admin-security-change-panel").removeClass("in-out");
+})
+$("#admin-close-security-change-panel").click(function(){
+$("#admin-security-change-panel").addClass("in-out");
+})
+  
+    
+$("#subuserID1-address-edit-panel").click(function(){
+$("#subuserID1-address-change-panel").removeClass("in-out");
+})
+$("#subuserID1-close-address-change-panel").click(function(){
+$("#subuserID1-address-change-panel").addClass("in-out");
+})
+    
+$("#admin-address-edit-panel").click(function(){
+$("#admin-address-change-panel").removeClass("in-out");
+})
+$("#admin-close-address-change-panel").click(function(){
+$("#admin-address-change-panel").addClass("in-out");
+})
+    
+$("#change_subuserID1_title").click(function(){
+$("#edit_subuserID1_title").removeClass("slided-in");
+})
+$("#cancel_subuserID1_title").click(function(){
+$("#edit_subuserID1_title").addClass("slided-in");
+})
+
+$("#change_subuserID1_email").click(function(){
+$("#edit_subuserID1_email").removeClass("slided-in");
+})
+$("#cancel_subuserID1_email").click(function(){
+$("#edit_subuserID1_email").addClass("slided-in");
+})
+    
+$("#change_admin_title").click(function(){
+$("#edit_admin_title").removeClass("slided-in");
+})
+$("#cancel_admin_title").click(function(){
+$("#edit_admin_title").addClass("slided-in");
+})
+
+$("#change_admin_email").click(function(){
+$("#edit_admin_email").removeClass("slided-in");
+})
+$("#cancel_admin_email").click(function(){
+$("#edit_admin_email").addClass("slided-in");
+})
+    
+$("#edit_notif_email").click(function(){
+$("#change_notif_email").removeClass("slided-in");
+})
+$("#cancel_notif_email").click(function(){
+$("#change_notif_email").addClass("slided-in");
+})
+
+
+$("#add-currency-btn").click(function(){
+$("#add-currency-panel").removeClass("in-out");
+})
+$("#close-add-currency-panel").click(function(){
+$("#add-currency-panel").addClass("in-out");
+})
+
+$("#delete-curr-1").click(function(){
+$("#delete-curr-confirm-1").removeClass("in-out");
+})
+$("#delete-curr-1-no").click(function(){
+$("#delete-curr-confirm-1").addClass("in-out");
+})
+$("#delete-curr-2").click(function(){
+$("#delete-curr-confirm-2").removeClass("in-out");
+})
+$("#delete-curr-2-no").click(function(){
+$("#delete-curr-confirm-2").addClass("in-out");
+}) 
+$("#delete-curr-3").click(function(){
+$("#delete-curr-confirm-3").removeClass("in-out");
+})
+$("#delete-curr-3-no").click(function(){
+$("#delete-curr-confirm-3").addClass("in-out");
+})
+$("#delete-curr-4").click(function(){
+$("#delete-curr-confirm-4").removeClass("in-out");
+})
+$("#delete-curr-4-no").click(function(){
+$("#delete-curr-confirm-4").addClass("in-out");
+}) 
+    
+    
+    
+$("#edit-contact-change-panel").click(function(){
+$("#contact-change-panel").removeClass("in-out");
+})
+$("#close-contact-change-panel").click(function(){
+$("#contact-change-panel").addClass("in-out");
+}) 
+$("#address-edit-panel").click(function(){
+$("#address-change-panel").removeClass("in-out");
+})
+$("#close-address-change-panel").click(function(){
+$("#address-change-panel").addClass("in-out");
+})
+$("#addbank-btn").click(function(){
+$("#bank-manager-add").removeClass("in-out");
+})
+$("#close-bank-manager-add").click(function(){
+$("#bank-manager-add").addClass("in-out");
+})
+$("#delete-bank-1").click(function(){
+$("#delete-bank-confirm-1").removeClass("in-out");
+})
+$("#delete-bank-2").click(function(){
+$("#delete-bank-confirm-2").removeClass("in-out");
+})
+$("#delete-bank-1-no").click(function(){
+$("#delete-bank-confirm-1").addClass("in-out");
+})
+$("#delete-bank-2-no").click(function(){
+$("#delete-bank-confirm-2").addClass("in-out");
+})
+    
+    
+$("#addcard-btn").click(function(){
+$("#card-manager-add").removeClass("in-out");
+})
+$("#close-card-manager-add").click(function(){
+$("#card-manager-add").addClass("in-out");
+})
+$("#delete-card-1").click(function(){
+$("#delete-card-confirm-1").removeClass("in-out");
+})
+$("#delete-card-2").click(function(){
+$("#delete-card-confirm-2").removeClass("in-out");
+})
+$("#delete-card-3").click(function(){
+$("#delete-card-confirm-3").removeClass("in-out");
+})
+$("#delete-card-1-no").click(function(){
+$("#delete-card-confirm-1").addClass("in-out");
+})
+$("#delete-card-2-no").click(function(){
+$("#delete-card-confirm-2").addClass("in-out");
+})
+$("#delete-card-3-no").click(function(){
+$("#delete-card-confirm-3").addClass("in-out");
+})
+$("#close-bank-manager").click(function(){
+$("#bank-manager").addClass("in-out");
+})
+$("#show-bank-manager").click(function(){
+$("#bank-manager").removeClass("in-out");
+})
+$("#close-card-manager").click(function(){
+$("#card-manager").addClass("in-out");
+})
+$("#show-card-manager").click(function(){
+$("#card-manager").removeClass("in-out");
+})
+
+$("#change_category").click(function(){
+$("#edit_category").removeClass("slided-in");
+})
+$("#cancel_category").click(function(){
+$("#edit_category").addClass("slided-in");
+})
+
+$("#change_search_me").click(function(){
+$("#edit_search_me").removeClass("slided-in");
+})
+$("#cancel_search_me").click(function(){
+$("#edit_search_me").addClass("slided-in");
+})
+$("#change_see_connections").click(function(){
+$("#edit_see_connections").removeClass("slided-in");
+})
+$("#cancel_see_connections").click(function(){
+$("#edit_see_connections").addClass("slided-in");
+})
+$("#change_write_comment").click(function(){
+$("#edit_write_comment").removeClass("slided-in");
+})
+$("#cancel_write_comment").click(function(){
+$("#edit_write_comment").addClass("slided-in");
+})
+$("#change_add_post").click(function(){
+$("#edit_add_post").removeClass("slided-in");
+})
+$("#cancel_add_post").click(function(){
+$("#edit_add_post").addClass("slided-in");
+})
+$("#change_see_phone").click(function(){
+$("#edit_see_phone").removeClass("slided-in");
+})
+$("#cancel_see_phone").click(function(){
+$("#edit_see_phone").addClass("slided-in");
+})
+    
+$("#change_currency").click(function(){
+  $("#currency_list").show();
+  $("#change_currency").hide();
+  $("#currency_text").hide()
+  $("#cancel_currency").show();
+  $("#currency_list").change(function(){
+  if($(this).val() != "") {
+    $.ajax({
+      url: "<%= update_currency_accounts_path %>",
+      data: "account[kaenko_currency_id]="+$(this).val() ,
+      dataType: "script"
+    })
+   }
+  })
+})
+$("#cancel_currency").click(function(){
+  $("#currency_list").hide();
+  $("#change_currency").show();
+  $("#currency_text").show()
+  $("#cancel_currency").hide();
+
+})
+$("#cancel_language").click(function(){
+  $("#edit_language_list").addClass("slided-in");
+
+})
+$("#cancel_time_zone").click(function(){
+  $("#edit_time_zone_list").addClass("slided-in");
+})
+$("#change_language").click(function(){
+  $("#edit_language_list").removeClass("slided-in");
+  $("#language_list").change(function(){
+    if( $(this).val() != "") {
+       $.ajax({
+        url: "<%= update_language_users_path %>",
+        method: "put",
+        data: "user[language]="+$(this).val() ,
+        dataType: "script"
+      })
+    }
+  })
+})
+$("#cancel_language").click(function(){
+  $("#edit_language_list").addClass("slided-in");
+
+})
+$("#change_time_zone").click(function(){
+  $("#edit_time_zone_list").removeClass("slided-in");
+  $("#time_zone_list").change(function(){
+    if( $(this).val() != "") {
+      $.ajax({
+        url: "<%= update_time_zone_accounts_path %>",
+        method: "get",
+        data: "account[time_zone]="+encodeURIComponent($(this).val()) ,
+        dataType: "script"
+      })
+    }
+  })
+})
+$("#cancel_time_zone").click(function(){
+  $("#edit_time_zone_list").addClass("slided-in");
+})
+
+$("#change_city_postal").click(function(){
+  $("#city_postal").show();
+  $("#change_city_postal").hide();
+  $("#city_postal_text").hide()
+  $("#cancel_city_postal").show();
+  $("#update_city_postal").click(function(){
+    city = $("#business_city").val();
+    postal_code = $("#business_postal_code").val();
+    $.ajax({
+      url: "<%= update_city_postal_business_path(business_account) %>",
+      method: "get",
+      data: "business[city]="+city+"&business[postal_code]="+ postal_code,
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_city_postal").click(function(){
+  $("#city_postal_text").show();
+  $("#change_city_postal").show();
+  $("#city_postal").hide();
+  $(this).hide();
+
+})
+
+$("#change_business_email").click(function(){
+  $("#edit_business_email").show();
+  $("#business_email_text").hide();
+  $("#change_business_email").hide();
+  $("#update_business_email").click(function(){
+    $.ajax({
+      url: "<%= update_email_business_path(business_account) %>",
+      method: "get",
+      data: "business[email]="+$("#business_email").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_business_email").click(function(){
+  $("#business_email_text").show();
+  $("#change_business_email").show();
+  $("#edit_business_email").hide();
+
+})
+$("#change_business_phone").click(function(){
+  $("#edit_business_phone").show();
+  $("#business_phone_text").hide();
+  $("#change_business_phone").hide();
+  $("#update_business_phone").click(function(){
+    $.ajax({
+      url: "<%= update_phone_business_path(business_account) %>",
+      method: "get",
+      data: "business[phone]="+encodeURIComponent($("#mobile-number").intlTelInput().val()),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_business_phone").click(function(){
+  $("#business_phone_text").show();
+  $("#change_business_phone").show();
+  $("#edit_business_phone").hide();
+
+})
+
+$("#change_business_name").click(function(){
+  $("#edit_business_name").removeClass("slided-in");
+  $("#update_business_name").click(function(){
+    $.ajax({
+      url: "<%= update_name_business_path(business_account) %>",
+      method: "get",
+      data: "business[organization_name]="+$("#business_name").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_business_name").click(function(){
+  $("#edit_business_name").addClass("slided-in");
+
+})
+$("#change_business_desc").click(function(){
+  $("#edit_business_desc").removeClass("slided-in");
+  $("#update_business_desc").click(function(){
+    $.ajax({
+      url: "<%= update_desc_business_path(business_account) %>",
+      method: "get",
+      data: "business[description]="+$("#business_description").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_business_desc").click(function(){
+  $("#edit_business_desc").addClass("slided-in");
+})
+
+$("#change_user_email").click(function(){
+  $("#edit_user_email").show();
+  $("#user_email_text").hide();
+  $("#change_user_email").hide();
+  $("#update_user_email").click(function(){
+    $.ajax({
+      url: "<%= update_email_user_path(current_user) %>",
+      method: "get",
+      data: "user[email]="+$("#user_email").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_email").click(function(){
+  $("#user_email_text").show();
+  $("#change_user_email").show();
+  $("#edit_user_email").hide();
+
+})
+$("#change_business_website").click(function(){
+  $("#business_website_list").show();
+  $("#change_business_website").hide();
+  $("#business_website_text").hide()
+  $("#cancel_business_website").show();
+  $("#business_website_list").change(function(){
+    if ($(this).val() != "") {
+      $.ajax({
+        url: "/business_websites/"+$(this).val(),
+        method: "put",
+        dataType: "script"
+      })
+    }
+  })
+})
+$("#cancel_business_website").click(function(){
+  $("#business_website_text").show();
+  $("#change_business_website").show();
+  $("#business_website_list").hide();
+  $(this).hide();
+
+})
+$("#change_user_country").click(function(){
+  $("#user_country_list").show();
+  $("#change_user_country").hide();
+  $("#user_country_text").hide()
+  $("#cancel_user_country").show();
+  $("#user_country_list").change(function(){
+    $.ajax({
+      url: "<%= update_country_user_path(current_user) %>",
+      method: "get",
+      data: "user[country]="+$(this).val() ,
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_country").click(function(){
+  $("#user_country_text").show();
+  $("#change_user_country").show();
+  $("#user_country_list").hide();
+  $(this).hide();
+
+})
+$("#change_user_address").click(function(){
+  $("#edit_user_address").show();
+  $("#user_address_text").hide();
+  $("#change_user_address").hide();
+  $("#update_user_address").click(function(){
+    $.ajax({
+      url: "<%= update_address_user_path(current_user) %>",
+      method: "put",
+      data: "user[address]="+$("#user_address").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_address").click(function(){
+  $("#user_address_text").show();
+  $("#change_user_address").show();
+  $("#edit_user_address").hide();
+
+})
+$("#change_user_city_postal").click(function(){
+  $("#user_city_postal").show();
+  $("#change_user_city_postal").hide();
+  $("#user_city_postal_text").hide()
+  $("#cancel_user_city_postal").show();
+  $("#update_user_city_postal").click(function(){
+    city = $("#user_city").val();
+    postal_code = $("#user_postal_code").val();
+    $.ajax({
+      url: "<%= update_city_postal_user_path(current_user) %>",
+      method: "get",
+      data: "user[city]="+city+"&user[postal_code]="+ postal_code,
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_city_postal").click(function(){
+  $("#user_city_postal_text").show();
+  $("#user_postal_code").html("").val()
+  $("#change_user_city_postal").show();
+  $("#user_city_postal").hide();
+  $(this).hide();
+
+})
+
+$("#change_user_dob").click(function(){
+  $("#edit_user_dob").show();
+  $("#user_dob_text").hide();
+  $("#change_user_dob").hide();
+  $("#update_user_dob").click(function(){
+    $.ajax({
+      url: "<%= update_user_dob_user_path(admin.id) %>",
+      method: "get",
+      data: "user[date_of_birth]="+$("#user_date_of_birth").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_dob").click(function(){
+  $("#user_date_of_birth").val($("#user_user_dob_text").html())
+  $("#user_dob_text").show();
+  $("#change_user_dob").show();
+  $("#edit_user_dob").hide();
+
+})
+$("#change_user_gender").click(function(){
+  $("#user_gender_text").hide();
+  $("#user_gender").show();
+  $("#cancel_user_gender").show();
+  $("#change_user_gender").hide();
+
+  $("#user_gender").change(function(){
+    $.ajax({
+      url: "<%= update_user_gender_user_path(admin.id) %>",
+      method: "get",
+      data: "user[gender]="+$("#user_gender").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_gender").click(function(){
+  $("#user_gender_text").show();
+  $("#cancel_user_gender").hide();
+  $("#user_gender").hide();
+  $("#change_user_gender").show();
+})
+
+
+jQuery(document).ready(function($) {
+  $('.selectpicker').selectpicker();
+});
+</script>
+
+
+
+<%= javascript_tag do %>
+  $(function() {
+
+    $("#date-container input").datepicker({
+		  defaultDate: "+1D",
+		  maxDate:'-18Y',
+		  dateFormat: 'yy-m-d',
+		  changeMonth: true,
+		  changeYear: true,
+		  showMonthAfterYear: true,
+		  yearRange: "-100:+1",
+		  
+		  beforeShow: function (input, inst) {
+        setTimeout(function () {
+            inst.dpDiv.css({
+                top: 940
+                
+            });
+        }, 0);
+    }
+   });
+   <%if current_user.id == admin.id %>   
+      $(".user_image").on("click", function() {
+        $("#user_pic").click();
+      });
+      
+      //user image upload
+      $("#user_pic").change(function() {
+        //$(this).closest('form').submit();
+        var form_data = new FormData(); // Creating object of FormData class
+          file_content = $("#user_pic")[0].files[0]
+          form_data.append("user_pic", file_content);
+          $.ajax({
+            url: "<%= update_image_users_path %>",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: form_data,
+            dataType: "JSON",
+            success: function(response) {
+               $(".user_image").html("<img id='p_img' style= 'width:125px;' src='"+response.profile+"' />");
+               $("aside.nav-fixed-left").find("#circle-image").html("<img id='p_img' src='"+response.circle+"' />");
+               
+            },
+            error: function(response) {
+              $("#user_image").html($.parseJSON(response.responseText).errors);
+            }
+          });
+      });
+      
+      //business image upload
+   
+      $("#business_image").on("click", function() {
+        $("#business_pic").click();
+      });
+      $("#business_pic").change(function() {
+        //$(this).closest('form').submit();
+        var form_data = new FormData(); // Creating object of FormData class
+          file_content = $("#business_pic")[0].files[0]
+          form_data.append("business_pic", file_content);
+          $.ajax({
+            url: "<%= update_image_businesses_path %>",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: form_data,
+            dataType: "JSON",
+            success: function(response) {
+               $("#business_image").html("<img id='p_img' style= 'width:125px;' src='"+response.profile+"' />");    
+            },
+            error: function(response) {
+              $("#business_image").html($.parseJSON(response.responseText).errors);
+            }
+          });
+      });
+  <% end %>
+    $("#online_status").on("click", function() {
+      $.getScript("<%=update_online_status_users_path %>")
+    });
+    $("#hide").click(function() {
+      $("#admin-detail").hide();
+      $("#admin-overview").show();
+    })
+    $("#admin-view-edit").click(function() {
+      $("#admin-detail").show();
+      $("#admin-overview").hide();
+    })
+
+
+  
+    //single subuser image upload
+
+    $("#subuser_image").on("click", function() {
+      $("#subuser_pic").click();
+    });
+    $("#subuser_pic").change(function() {
+      var form_data = new FormData(); // Creating object of FormData class
+        file_content = $("#subuser_pic")[0].files[0]
+        form_data.append("user_image", file_content);
+        $.ajax({
+          url: "<%= upload_subuser_image_user_path(current_user) %>",
+          type: "POST",
+          processData: false,
+          contentType: false,
+          data: form_data,
+          dataType: "JSON",
+          success: function(response) {
+             $("#subuser_image").html("<img  style= 'width:125px;' src='"+response.profile+"' />");    
+             $("aside.nav-fixed-left").find("#circle-image").html("<img  src='"+response.circle+"' />");
+          },
+          error: function(response) {
+            $("#subuser_image").html($.parseJSON(response.responseText).errors);
+          }
+        });
+    });
+  
+
+  });
+
+<% end %>
+
+

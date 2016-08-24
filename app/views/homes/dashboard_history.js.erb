@@ -1,0 +1,9 @@
+$("#ajax-container").html("<%= j(render 'dashboard_history_common') %>")
+$(".ajax-loading").hide()
+$("#dashboard_history").addClass("active")
+$(function() {
+	history.pushState(null, "", "<%= dashboard_history_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

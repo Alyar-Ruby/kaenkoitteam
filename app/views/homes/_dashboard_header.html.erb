@@ -1,0 +1,9 @@
+<section class="dashboard container-fluid tab-pane fade in active">
+  
+    <!-- AREA SUB NAV -->
+    <ul class="areas-sub-nav list-inline">  
+      <li id="dashboard_overview" class="<%=params[:action] == 'dashboard_overview' ? 'active' : '' %>"  ><a href="<%= dashboard_overview_path %>" data-remote = "true"><i class="kk-look larger"></i>overview</a></li>
+      <li id="dashboard_payment" class="<%=params[:action] == 'dashboard_payment' ? 'active' : '' %>" > <a href="<%= dashboard_payment_path %>" data-remote = "true"><i class="kk-credit-card-recurring larger"></i>payments</a></li>
+      <li id="dashboard_history" class="<%=params[:action] == 'dashboard_history' ? 'active' : '' %>" > <a href="<%= dashboard_history_path %>" data-remote = "true"><i class="kk-clock larger"></i>history</a></li>
+    </ul>
+</section>

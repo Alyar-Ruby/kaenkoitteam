@@ -1,0 +1,3 @@
+<%= f.select :circle, current_user.owned_circles.map{|k| [k.name,k.id]}, 
+   {:prompt=>"Circle"} , {:class=>"selectpicker col-xs-12"}
+ %> 

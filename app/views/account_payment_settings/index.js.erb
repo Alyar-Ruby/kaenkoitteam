@@ -1,0 +1,8 @@
+$("#ajax-container").html("<%= j( render 'account_payment_setting') %>")
+$(".ajax-loading").hide();
+$(function(){
+   history.pushState(null, "", "<%= account_payment_settings_path %>")
+  $(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

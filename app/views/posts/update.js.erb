@@ -1,0 +1,7 @@
+<% if !@post.errors.present? %>
+	$("#post_title_text<%= @post.id %>").html("<%= @post.title %>").show();
+	$("#update_post<%= @post.id %>").hide();
+<% else %>
+	$("#post_title_text<%= @post.id %>").html("<%= @post.errors.full_messages.join(",") %>")
+<% end %>
+$(".ajax-loading").hide();

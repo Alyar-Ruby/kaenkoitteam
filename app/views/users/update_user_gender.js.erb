@@ -1,0 +1,10 @@
+<%if !@error.present? %>
+	$("#user_gender_text").html("<%= @user.gender %>").show()
+<% else %>
+	$("#user_gender_text").html("<%= @error %>").show()
+<% end %>
+$("#cancel_user_gender").hide();
+$("#user_gender").hide();
+$("#change_user_gender").show();
+$(".ajax-loading").hide();
+

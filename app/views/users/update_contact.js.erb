@@ -1,0 +1,8 @@
+<%if @errors.size > 0 %>
+	$("#contact_error").html("<%= @errors %>");
+	$("#contact_error").show();
+<% else %>
+	$("#contact_details").html("<%= escape_javascript(render 'contact_details') %>")
+	$('#modal-window').modal('toggle');
+<% end %>
+$(".ajax-loading").hide();

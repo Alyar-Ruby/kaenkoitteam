@@ -1,0 +1,42 @@
+
+<div class="modal-dialog">
+  <div class="modal-content">
+    <%=form_tag  accept_dispute_refund_transaction_dispute_path(@trans.id, @dispute.id), id:"dispute_form", remote: true do %>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;</h4>
+      </div>
+      
+      <div class="modal-body">
+
+     
+         <div class="container-fluid">
+          <div class="row" style="height:200px">
+            <p>
+              <strong>Issue Refund For Transaction ID:</strong> #<%= @trans.transaction_id %>
+            </p>
+            <p>
+              <strong>Payment From: </strong><%= @trans.user.name %>
+            </p>
+            <p>
+              <strong>Total Paid: </strong><%= number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %>
+            </p>
+            <p>
+              <strong>Refund Amount: <%=number_with_precision(@dispute.amount, precision:2 || 0) %> </strong> <br>
+            <p>
+            <p>
+              Note: Refunds hava a cost of 3 EUR or (equivalent) 
+            </p>
+            
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button  class= "btn btn-danger" data-dismiss="modal">Cancel </button>
+        <%= submit_tag :'Refund Now', class: "btn btn-primary", style: "height:31px;" %>
+      </div>
+     
+    </div>
+    <% end %>
+</div>
+

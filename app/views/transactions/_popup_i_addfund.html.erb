@@ -1,0 +1,46 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;</h4>
+    </div>
+    
+    <div class="modal-body">
+      <div id="error_msg_social"></div>
+       <div class="container-fluid">
+        <div class="row">
+          <p>
+            <%if @trans.present? %>
+              <strong> Transaction ID: # <%=@trans.transaction_id%>  <%= @trans.status %></strong> <br>
+              <strong>Add Funds From : </strong> <%= @trans.payment_method %><br>
+              <strong>We must  Received :</strong> <%= number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %><br>
+              <strong> Total to be Credited : </strong> <%= number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %><br>
+              <strong> Paid By: </strong>
+              <%if @trans.roleable_type == "Bank" %>
+                <p><strong>Bank Info:</strong></p>
+                <p><strong>Account Name : </strong><%= @trans.roleable.name %></p>
+                <p><strong>IBAN:</strong> <%= @trans.roleable.account_number %></p>
+                <p><strong>SWIFT/BIC* :</strong> DB34334</p>
+                <p><strong>Country: </strong><%= country_name(@trans.roleable.country) %></p>
+                <p><strong>Memo: </strong><%= @trans.transaction_id %> </p>
+
+                You must send the funds from the Verified Bank Account.
+              <% else %>
+                <p><strong>Card Info:</strong></p>
+                <p><strong>Card</strong>  : <%= @trans.roleable.card_type %></p>
+                <p><strong>Card Number:</strong> <%= @trans.roleable.card_number %></p>
+              <% end %>
+            <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+   
+  </div>
+</div>
+
+
+
+

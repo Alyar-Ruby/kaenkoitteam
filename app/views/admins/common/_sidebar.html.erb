@@ -1,0 +1,186 @@
+<div id="sidebar">
+  <ul class="nav nav-list">
+    <li class="<%=(['Overview','Orders','Disputes'].include?@active_tab) ? 'active' : ''%>">
+      <a href="#" class="dropdown-toggle">
+        <i class="icon-dashboard"></i>
+        <span>Dashboard</span>
+      </a>
+        <ul class="submenu">
+        <li class="<%=(@active_tab == 'Overview') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Overview
+          </a>
+        </li>
+        <li class="<%=(@active_tab == 'Orders') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Orders
+          </a>
+        </li>
+        <li class="<%=(@active_tab == 'Disputes') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Disputes
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="<%=(['Manage','Compliance','Report'].include?@active_tab) ? 'active' : ''%>">
+      <a href="#" class="dropdown-toggle">
+        <i class="icon-user"></i>
+        <span>Accounts</span>
+      </a>
+      <ul class="submenu">
+        <li class="<%=(@active_tab == 'Manage') ? 'active' : ''%>">
+          <a href="<%= users_path %>">
+            <i class="icon-double-angle-right"></i>
+            Manage
+          </a>
+        </li>
+        <li class="<%=(@active_tab == 'Compliance') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Compliance
+          </a>
+        </li>
+        <li class="<%=(@active_tab == 'Report') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Report
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="<%=(['ManageTransaction','ComplianceTransaction','ReportTransaction'].include?@active_tab) ? 'active' : ''%>">
+      <a href="#" class="dropdown-toggle">
+        <i class="icon-question"></i>
+        <span>Transactions</span>
+      </a>
+        <ul class="submenu">
+        <li class="<%=(@active_tab == 'ManageTransaction') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Manage
+          </a>
+        </li>
+        <li class="<%=(@active_tab == 'ComplianceTransaction') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Compliance
+          </a>
+        </li>
+        <li class="<%=(@active_tab == 'ReportTransaction') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Report
+          </a>
+        </li>
+      </ul>
+    </li>
+    <li class="<%=(@active_tab == 'Balances') ? 'active' : ''%>">
+      <a href="#">
+        <i class="icon-group"></i>
+        <span>Balances</span>
+      </a>
+    </li>
+    <li class="<%=(@active_tab == 'Earnings') ? 'active' : ''%>">
+      <a href="<%= earnings_path %>">
+        <i class="icon-briefcase"></i>
+        <span>Earnings</span>
+      </a>
+    </li>    
+    <li class="<%=(['FeesRedemptions','FeesUploads','FeesFromTo','Exchanges','OtherDebits'].include?@active_tab) ? 'active open' : ''%>">
+    	 <a href="#" class="dropdown-toggle">
+        <i class="icon-money"></i>
+        <span>Fees</span>
+      </a>
+    	 <ul class="submenu">
+					
+					 <li class="<%=(@active_tab == 'FeesUploads') ? 'active' : ''%>">
+						<a href="<%= fees_uploads_path %>">
+              <i class="icon-double-angle-right"></i>
+						  <span>Issuance E-Money</span>
+						</a>
+					</li>
+					<li class="<%=(@active_tab == 'FeesFromTo') ? 'active' : ''%>">
+						<a href="<%= fees_from_tos_path %>">
+              <i class="icon-double-angle-right"></i>
+						  <span>From/To</span>
+						</a>
+					</li>
+                    
+                    <li class="<%=(@active_tab == 'OtherDebits') ? 'active' : ''%>">
+						<a href="#">
+              <i class="icon-double-angle-right"></i>
+						  <span>Other Debits</span>
+						</a>
+					</li>
+          <li class="<%=(@active_tab == 'FeesExchanges') ? 'active' : ''%>">
+            <a href="<%= fees_exchanges_path %>">
+              <i class="icon-double-angle-right"></i>
+              <span>Exchanges</span>
+            </a>
+          </li>
+             <li class="<%=(@active_tab == 'FeesRedemptions') ? 'active' : ''%>">
+						<a href="<%= fees_redemptions_path %>">
+              <i class="icon-double-angle-right"></i>
+						  <span>Withdraws</span>
+						</a>
+					</li>
+				</ul>
+    </li>
+    <li class="<%=(@active_tab == 'Refferals') ? 'active' : ''%>">
+      <a href="<%= referrals_path %>">
+        <i class="icon-shopping-cart"></i>
+        <span>Referrals</span>
+      </a>
+    </li> 
+    <li class="<%=(@active_tab == 'Marketing') ? 'active' : ''%>">
+      <a href="#">
+        <i class="icon-exchange"></i>
+        <span>Marketing</span>
+      </a>
+    </li>
+      <li class="<%=(@active_tab == 'Bookkeping') ? 'active' : ''%>">
+      <a href="#">
+        <i class="icon-exchange"></i>
+        <span>Bookkeeping</span>
+      </a>
+    </li>      
+     <li class="<%=(['Account','Staff','Admin'].include?@active_tab) ? 'active' : ''%>">
+      <a href="#" class="dropdown-toggle">
+        <i class="icon-tasks"></i>
+        <span>Settings</span>
+      </a>
+         <ul class="submenu">
+        <li class="<%=(@active_tab == 'Account') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Account
+          </a>
+        </li>
+        <li class="<%=(@active_tab == 'Staff') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Staff
+          </a>
+        </li>
+        <li class="<%=(@active_tab == 'Admin') ? 'active' : ''%>">
+          <a href="#">
+            <i class="icon-double-angle-right"></i>
+            Admin
+          </a>
+        </li>
+      </ul>
+    </li>       
+
+
+
+  </ul><!--/.nav-list-->
+
+  <div id="sidebar-collapse">
+    <i class="icon-double-angle-left"></i>
+  </div>
+</div>

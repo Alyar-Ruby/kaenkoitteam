@@ -1,0 +1,12 @@
+$("#ajax-container").html($('<%= escape_javascript( render( :partial => "show_detail")) %>'))
+$(".ticket-active").removeClass("ticket-active")
+$("#conversation<%=@conversation.id%>").addClass("ticket-active")
+$('[rel^=popover]').popover('hide');
+$("#msg_body").focus();
+$(".ajax-loading").hide();
+$(function() {
+	history.pushState(null, "", "<%= message_path(@conversation.id) %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

@@ -1,0 +1,7 @@
+<%if @error.present? %>
+	$("#business_website_error").html("<%= @business_website.errors.full_messages.join(',') %>").show();
+<% else %>
+	$("#business_website_list").html("<%= escape_javascript( render 'website_list') %>")
+	$('#modal-window').modal('toggle');
+<% end %>
+$(".ajax-loading").hide();

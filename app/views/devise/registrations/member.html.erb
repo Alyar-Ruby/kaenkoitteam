@@ -1,0 +1,95 @@
+<h2>Sign up - Account Member</h2>
+
+<%= simple_form_for(resource, :as => resource_name, :url => member_sign_up_path) do |f| %>
+  <% if @invite_error.blank? %>
+    <% if @error == 1 %>
+    <div class="alert alert-error">Check Errors below</div>
+    <% end %>
+  <% else %>
+    <div class="alert alert-error"><%=@invite_error%></div>
+  <% end %>
+  
+  <div>
+    <%= f.input :language, :as=>"select", :collection=>["English"], :autofocus => true, :include_blank=>false %>
+  </div>
+  <h4>Your Details</h4>
+  <div class="row-fluid">
+    <div class="span4"><%= f.input :first_name, :placeholder=>"First Name" %></div>
+    <div class="span4"><%= f.input :middle_name, :placeholder=>"Middle Name" %></div>
+    <div class="span4"><%= f.input :last_name, :placeholder=>"Last Name" %></div>
+  </div>
+  
+  <div class="row-fluid">
+    <div class="span4"><%= f.input :gender, :as=>"select", :collection=>[["Male","male"],["Female","female"]], :prompt=>"Gender" %></div>
+    <div class="span4"><%= f.input :date_of_birth, :as=>"string", :placeholder=>"Date Of Birth" %></div>
+    <div class="span4"><%= f.input :nationality, :as=>"select", :collection=>@kaenko_countries, :prompt=>"Nationality" %></div>
+  </div>  
+  
+  <h4>Your Address</h4>
+  <div class="row-fluid">
+    <div class="span4">
+      <%= f.input :country, :as=>"select", :collection=>@kaenko_countries, :prompt=>"Country" %>
+      <%= f.input :postal_code, :placeholder=>"Postal Code" %>
+    </div>
+    <div class="span4">
+      <%= f.input :state, :as=>"select", :collection=>[], :include_blank=>true, :prompt=>"State/Region/District" %>
+      <%= f.input :city, :placeholder=>"City" %>
+    </div>
+    <div class="span4"><%= f.input :address, :placeholder=>"Address" %></div>
+  </div>
+  
+  <h4>Your Contact</h4>
+  <div class="row-fluid">
+    <div class="span4"><%= f.input :phone, :placeholder=>"Phone" %></div>
+    <div class="span4"><%= f.input :email, :placeholder=>"E-mail", :required=>"required" %></div>
+    <div class="span4"><%= f.input :email_confirmation, :placeholder=>"Confirm E-mail", :required=>"required" %></div>
+  </div>  
+  
+  <div class="row-fluid">
+    <div class="span4"><%= f.input :password, :placeholder=>"Password", :required=>"required" %></div>
+    <div class="span4"><%= f.input :password_confirmation, :placeholder=>"Confirm Password", :required=>"required" %></div>
+    <div class="span4"><%= f.input :username, :placeholder=>"Username", :required=>"required" %></div>
+  </div>
+  <div class="row-fluid" style="margin-top:15px;">
+    <div class="span4">
+      <p><%= show_simple_captcha %>
+      <% if @captcha_error.present? %>
+        <span class="error"><%=@captcha_error%></span>
+      <% end %></p>
+    </div>
+  </div>
+  
+  <div><%= f.submit "Sign up", :validate=>false %></div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+<script>
+
+$("#user_country").change(function() {
+  $.ajax({
+    url: '<%= list_states_url %>',
+    type: 'get',
+    data: {
+      country_2_code: $(this).val()
+    },
+    success: function(response) {
+      $("#user_state").html('');
+      $.each(response, function() {
+        $("#user_state").append("<option value='" + this[0] + "'>" + this[1] + "</option>");
+      });
+      $("#user_state").show();
+    },
+    error: function(response) {
+      window.console.log(response);
+    }
+  });
+});
+
+$(function() {
+  $( "#user_date_of_birth" ).datepicker({
+    defaultDate: "+1D",
+    maxDate:'-18Y',
+    dateFormat: 'yy-m-d'
+  });
+});
+</script>

@@ -1,0 +1,11 @@
+<%if !@error.present? %>
+	$("#user_user_dob_text").html('<%= @user.date_of_birth.strftime("%d-%b-%Y") if  @user.date_of_birth.present? %>').show()
+	$("#user_date_of_birth").val('<%= @user.date_of_birth.strftime("%d-%b-%Y") if  @user.date_of_birth.present? %>')
+	$("#edit_user_dob").hide();
+	$("#change_user_dob").show();
+<% else %>
+	$("#user_date_of_birth").val("")
+	$("#error_msg").html("<%= @error %>").show()
+<% end %>
+
+

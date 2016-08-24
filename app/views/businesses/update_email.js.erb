@@ -1,0 +1,10 @@
+<%if !@error.present? %>
+	$("#business_email_text").html("<%= @business.email %>").show()
+	$("#business_email").html("<%= @business.email %>").show()
+	$("#edit_business_email").hide();
+	$("#change_business_email").show();
+<% else %>
+	$("#business_email_text").html("<%= @error %>").show()
+<% end %>
+
+

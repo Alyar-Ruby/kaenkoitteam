@@ -1,0 +1,9 @@
+<%if !@error.present? %>
+	$("#user_about_me_text").html("<%= @user.about_me %>").show()
+	$("#edit_user_about_me").hide();
+	$("#change_user_about_me").show();
+<% else %>
+	$("#error_msg_about").html("<%= @error %>").show()
+<% end %>
+
+

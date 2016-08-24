@@ -1,0 +1,377 @@
+<!-- TAB CONTENT -->
+<%admin = @account.users.admin_user.first %>
+<div class="tab-pane fade" id="tab-two">
+ <div class="row">
+  <!-- CARD -->
+  <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading ">
+        <div class="dropdown">
+          Overview
+        </div>
+      </div>
+      <div class="panel-body" id="contact_details">
+
+        <div class="row">
+         <div class="col-sm-2">
+           <img  src="http://4.bp.blogspot.com/-Prqp-5wcgTc/UVSLCdgpsaI/AAAAAAAAGoA/LSPv26jcigA/s1600/Jaime+Lannister.jpg" alt="..." class="img-thumbnail"><br><br>
+         </div>
+         <div class="col-sm-10">
+          <%if admin.id == current_user.id %>
+            <%if !@account.account_document.present? %>
+             <div class="alert alert-warning fade in" id="account_status">
+               Your Account status is <strong>Not Verified</strong>.
+               <%=link_to "Verify now" , edit_account_document_account_path(@account), remote: true, class: "btn btn-xs btn-default", "data-target" => "#modal-window" , "data-toggle" => "modal" %>
+             </div>
+            <% else %>
+              <div class="alert alert-success fade in">
+               Your Account status is <strong>Verified</strong>
+             </div>
+            <% end %>
+            <%if @account.account_id_document.present? %>
+              <div class="alert alert-success fade in">
+                Your ID status is <stron>Verified</strong>
+              </div>
+            <% else %>
+             <div class="alert alert-warning fade in" id="account_id_status">
+              Your ID status is <strong>Not Verified</strong>.
+               <%=link_to "Verify now" , edit_account_id_document_account_path(@account), remote: true, class: "btn btn-xs btn-default", "data-target" => "#modal-window" , "data-toggle" => "modal" %>
+             </div>
+           <% end %>
+          <% end %>
+         </div>
+       </div>
+
+       <div class="row">
+        <div class="col-sm-6">
+          <p><strong>Job Title:</strong> <%= admin.job_title %></p>
+          <p><strong>Authorised as:</strong> Admin of the Account</p>
+          <p><strong>Username:</strong> <%= admin.username %></p>
+          <p><strong>Phone:</strong> <%= admin.phone %></p>
+          <p>
+            <%if admin.id == current_user.id %>
+
+            <%=link_to 'Add/Edit Contact' , edit_contact_user_path(admin), remote:true, class: "btn btn-xs btn-default", 'data-toggle' => "modal", 'data-target' => '#modal-window' %>
+            <% end %>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <p><strong>Full Name:</strong> <%= admin.name %></p>
+          <p><strong>Date Of Birth:</strong> <%= admin.date_of_birth %></p>
+          <p><strong>Gender:</b> <%= admin.gender %></strong>
+            <p><strong>Nationality:</b> <%= country_name(admin.nationality) %></strong>
+              <p><strong>Email:</strong> <a href="<%= admin.email %>"><%= admin.email %></a></p> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+    <!-- END CARD -->
+
+    <!-- CARD -->
+    <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading ">
+          <div class="dropdown">
+            Address Details
+          </div>
+        </div>
+        <div class="panel-body" id="address_details">
+        <%if admin.id == current_user.id %>
+          <% verified = admin.address_verified %>
+          <% if  verified == true %>
+          <div class="alert alert-success fade in">
+            Your Address status is <strong> Verified</strong> Thank You.
+          </div>
+          <% else %>
+          <div class="alert alert-warning fade in" id="user_address_status">
+            Your Address status is <strong> Not Verified</strong> 
+             <%= link_to "Verify now" , edit_address_document_user_path(current_user), remote: true, class: "btn btn-xs btn-default" , 'data-target' => "#modal-window", 'data-toggle' => "modal" %>
+          </div>
+          <% end %>
+        <% end %>
+          <div class="col-sm-6">
+            <p><strong>Country of Residence:</strong> <%= country_name(admin.country) %></p>
+            <p><strong>City:</strong> <%= admin.city %></p>
+            <p><strong>State/Region/District:</strong> <%= state_name(admin.country, admin.state) %></p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Address:</strong> <%= admin.address %></p>
+            <p id="address_edit_btn">
+              <%if admin.id == current_user.id %>
+                <% if verified == true %>
+                <%= link_to "Add new Address", 
+                edit_address_user_path(admin, :user_action =>"_verify") , 
+                class: "btn btn-sm btn-default", remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"  %>
+                <% else %>
+                <%= link_to "Edit", 
+                edit_address_user_path(admin, :user_action => "_edit") , 
+                class: "btn btn-sm btn-default", remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"  %>
+                <% end %>
+              <% end %>
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="row">
+    <!-- CARD -->
+    <%if admin.id == current_user.id %>
+    <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading ">
+          <div class="dropdown">
+            Security
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="col-sm-6">
+            <div class="alert alert-warning" id="password_update" style="display:none;">
+
+            </div>
+            <p><strong>Username:</strong> <%= admin.username %></p>
+            <p><strong>Password:</strong> ******** 
+             <%= link_to "Change Password", change_password_path , remote: true,class: "btn btn-sm btn-default", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+           </p>
+
+         </div>
+         <div class="col-sm-6">
+          <p><strong>Personal Identification Code (PIN):</strong> ******** 
+            <%= link_to 'Change PIN' , edit_security_pin_user_path(current_user), class: "btn btn-sm btn-default", remote: true, :'data-toggle' => "modal" , :'data-target' => "#modal-window" %></p>
+          <p>
+            <strong>Secret Question and Answer: 
+              <span id="secret_question"><%= admin.secret_question_answer %> </span>
+            </strong>
+
+            <%= link_to "Edit", edit_secret_user_path(admin) , remote: true,class: "btn btn-sm btn-default", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+          </p>
+
+        </div>
+      </div>
+      <% end %>
+    </div>
+  </article>
+  <!-- END CARD -->
+</div> 
+</div>
+<!-- END TAB CONTENT -->
+
+<!-- TAB CONTENT -->
+<% sub_user = current_user.account.users.where("account_admin = ? and id != ? and suspend = ?", false, current_user.id, false) %>
+<% sub_user.each do |su| %>
+<div class="tab-pane fade " id="<%= su.id %>">
+ <div class="row">
+  <!-- CARD -->
+  <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading ">
+        <div class="dropdown">
+          Overview
+        </div>
+      </div>
+      <div class="panel-body">
+
+        <div class="row">
+         <div class="col-sm-2">
+           <img style="width:140px;margin-left:5px;" src="http://www.gameofthronescharacters.net/wp-content/uploads/2013/02/Tyrion-Lannister1.jpg" alt="..." class="img-thumbnail">
+         </div>
+         <div class="col-sm-10">
+        <%if su.id == current_user.id %>
+            <% verified = su.address_verified %>
+            <% if  verified == true %>
+            <div class="alert alert-success fade in">
+              Your Address status is <strong> Verified</strong> Thank You.
+            </div>
+            <% else %>
+            <div class="alert alert-warning fade in">
+              Your Address status is <strong> Not Verified</strong> 
+              <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+            </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <p><strong>Job Title:</strong> <%= su.job_title %></p>
+          <p><strong>Authorised as:</strong>  Subuser of Account</p>
+          <p><strong>Username:</strong> <%= su.username %></p>
+          <p><strong>Phone:</strong> <%= su.phone %></p>
+          <p>
+            <% if su.id == current_user.id %>
+            <%=link_to 'Add/Edit Contact' , edit_contact_user_path(su),
+            remote:true, class: "btn btn-xs btn-default", 
+            'data-toggle' => "modal", 'data-target' => '#modal-window' %>
+            <% end %>
+          </p>
+        </div>
+        <div class="col-sm-6">
+          <p><strong>Full Name:</strong> <%= su.name %></p>
+          <p><strong>Date Of Birth:</strong> <%= su.date_of_birth %></p>
+          <p><strong>Gender:</b><%= su.gender %></strong>
+            <p><strong>Nationality:</b> <%= country_name(su.country) %></strong>
+              <p><strong>Email:</strong> <a href="mailto:<%=su.email%>"><%= su.email %></a></p> 
+            </div>
+          </div>
+
+
+        </div>
+      </div>
+    </article>
+    <!-- END CARD -->
+
+    <!-- CARD -->
+    <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading ">
+          <div class="dropdown">
+            Address Details
+          </div>
+        </div>
+        <div class="panel-body">
+          <% if su.id == current_user.id %>
+            <div class="alert alert-warning fade in">
+              <% if  verified == true %>
+                <div class="alert alert-success fade in">
+                  Your Address status is <strong> Verified</strong> Thank You.
+                </div>
+              <% else %>
+                <div class="alert alert-warning fade in">
+                  Your Address status is <strong> Not Verified</strong> 
+                  <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="col-sm-6">
+            <p><strong>Country of Residence:</strong> <%= country_name(su.country) %></p>
+            <p><strong>City:</strong> <%= su.city %></p>
+            <p><strong>State/Region/District:</strong> <%= state_name(su.country, su.state) %></p>
+
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Address:</strong> <%= su.address %></p>
+            <% if su.id == current_user.id %>
+              <p>
+                <% if verified == true %>
+                  <%= link_to "Add new Address", 
+                  edit_address_user_path(su, :user_action =>"_verify") , 
+                  class: "btn btn-sm btn-default", remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"  %>
+                  <% else %>
+                  <%= link_to "Edit", 
+                  edit_address_user_path(su, :user_action => "_edit") , 
+                  class: "btn btn-sm btn-default", remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"  %>
+                <% end %>
+              </p>
+             <% end %>
+
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="row">
+    <!-- CARD -->
+    <% if su.id == current_user.id %>
+    <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading ">
+          <div class="dropdown">
+            Security
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="col-sm-6">
+            <p><strong>Username:</strong> <%= su.username %></p>
+            <p><strong>Password:</strong> ******** <a href="#" class="btn btn-sm btn-default">Change Password</a></p>
+          </div>
+          <div class="col-sm-6">
+            <p><strong>Personal Identification Code (PIN):</strong> ******** <a href="#" class="btn btn-sm btn-default">Change PIN</a></p>
+            <p><strong>Secret Question and Answer: <%= su.secret_question_answer %></strong><a href="#" class="btn btn-sm btn-default">Edit</a></p>
+          </div>
+        </div>
+      </div>
+    </article>
+    <!-- END CARD -->
+    <% end %>
+  </div> 
+
+  <div class="row">
+    <!-- CARD -->
+    <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading ">
+          <div class="dropdown">
+            Roles and Capabilities
+          </div>
+        </div>
+        <div class="panel-body">
+
+          <div class="col-sm-6 ">
+            <span class="list-titles"><strong>Allowed</strong></span>
+            <ul class="list-unstyled list-success">
+              <% su.roles.each do |role| %>
+              <li><strong><i class="fa fa-check-square"></i><%= role.title %></strong>
+                <% end %>
+                <% su.user_capabilities.each do |cap| %>
+                <li><strong><i class="fa fa-check-square"></i></strong><%=cap.capability.title %> <small>($<%= number_with_precision(cap.daily_limit, precision: 2 || 0)%> USD per day)</small></li>
+                <% end %>
+              </ul>
+
+            </div>
+            <div class="col-sm-6">
+              <ul class="list-unstyled list-danger">
+                <span class="list-titles"><strong>Disallowed</strong></span>
+                <% role_ids = su.role_ids.size > 0 ? su.role_ids : 0 %>
+                <%  Role.where("id not in (?)", role_ids).each do |role| %>
+                <li><strong><i class="fa fa-minus-square"></i><%= role.title %></strong></li>
+                <% end %>
+                <% cap_ids = su.capability_ids.size > 0 ? su.capability_ids : 0 %>
+                <%  Capability.where("id not in (?)", cap_ids ).each do |cap| %>
+                <li><strong><i class="fa fa-minus-square"></i><%= cap.title %></strong></li>
+                <% end %>
+                
+              </ul>
+            </div>
+          </div>
+        </article>
+        <!-- END CARD -->
+      </div> 
+
+      <div class="row">
+        <%if admin.id == current_user.id %>
+        <!-- CARD -->
+
+        <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+          <div class="panel panel-default">
+            <div class="panel-heading ">
+              <div class="dropdown">
+                Admin Options
+              </div>
+            </div>
+            <div class="panel-body text-center">
+              <div class="col-sm-4">
+                <%= link_to "Delete Account" , user_path(su),
+                 method: :delete, remote: true, class: "btn btn-danger" , confirm: "Are you sure to delete account?" %>
+             </div>
+             <div class="col-sm-4">
+              <%= link_to "Suspend Account" , suspend_account_user_path(su),
+                 class: "btn btn-danger" , remote: true,  confirm: "Are you sure to suspend account?" %>
+            </div>
+            <div class="col-sm-4">
+              <a href="#" class="btn btn-primary">Edit Account</a>
+            </div>
+          </div>
+        </div>
+      </article>
+      <!-- END CARD -->
+      <% end %>
+    </div> 
+  </div>
+  <!-- END TAB CONTENT -->
+  <% end %>

@@ -1,0 +1,154 @@
+<section class="settings container-fluid tab-pane fade in active" id="dashboard">
+  
+  <h2>Account Settings<small> | Your Security and Payment Options </small></h2>
+  <!-- AREA SUB NAV -->
+  <ul class="areas-sub-nav list-inline">  
+    <li>
+      <%= link_to account_setting_path, remote: true do %>
+        <i class="kk-info larger"></i>
+        Account Info
+      <% end %>
+    </li>
+    <li class="active"> 
+      <%= link_to account_payment_settings_path, remote: true do %>
+      <i class="kk-credit-card larger"></i>payments
+      <% end %>
+    </li>
+  </ul>
+
+</section>
+<!-- DATA AREA TITLE -->
+<section class="settings main-container container-fluid">
+  
+  <div class="row row-50-top">
+    <div class="col-lg-12">
+      <div class="row">
+        <!-- CARD TABLE -->
+        <article class="card card-table col-lg-12">
+          <div class="panel panel-default">
+            <div class="panel-heading panel-heading-without-i">
+                My Bank Accounts<%= link_to "Add Bank", new_bank_path , remote: true,class: "btn btn-sm btn-success pull-right", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+            </div>
+            <div class="panel-body table-responsive">
+              <table class="table table-hover">
+                <thead class="">
+                      <tr>
+                          <td>
+                            Bank Name
+                          </td>
+                          <td>
+                            Currency
+                          </td>
+                          <td>
+                            Status
+                          </td>
+                          <td align="right">
+                            Actions
+                          </td>
+                      </tr>
+                  </thead>
+                  <tbody id="bank-list">
+                    <%if @banks.size > 0 %>
+                      <%@banks.each do |bank| %>
+                        <tr>
+                            <td>
+                              <%= bank.name %> 
+                              <%if bank.primary %>
+                              <span class="label label-info">Primary</span>
+                              <% end %>
+                            </td>
+                            <td>
+                              <%= bank.kaenko_currency.try(:unit) %>
+                            </td>
+                            <td>
+                              <%= bank_status(bank) %>
+                            </td>
+                             <td align="right">
+                                <%if !bank.primary %>
+                                  <%=link_to "make primary", make_primary_bank_path(bank), remote: true, 
+                                    class: "btn btn-sm btn-info" %>
+                                <% end %>
+                                <%= link_to "Delete", confirm_delete_bank_path(bank) , remote: true,class: "btn btn-sm btn-danger", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+                            </td>
+                        </tr>
+                      <% end %>
+                    <% else %>
+                      <tr>
+                        <td colspan="4">No Banks available.</td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+              </table>
+            </div>
+          </div>
+        </article>
+        <!-- END CARD TABLE -->
+      </div>
+       <div class="row">
+          <!-- CARD TABLE -->
+          <article class="card card-table col-lg-12">
+          <div class="panel panel-default">
+              <div class="panel-heading panel-heading-without-i">
+                  My Credit / Debit Cards<%= link_to "Add Card", new_card_path , remote: true,class: "btn btn-sm btn-success pull-right", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+              </div>
+              <div class="panel-body table-responsive">
+                <table class="table table-hover">
+                    <thead class="">
+                      <tr>
+                          <td>
+                            Card
+                          </td>
+                          <td>
+                            Expriry
+                          </td>
+                          <td>
+                            Status
+                          </td>
+                          <td align="right">
+                            Actions
+                          </td>
+                      </tr>
+                    </thead>
+                    <tbody id="card-list">
+                      <%if @cards.size > 0 %>
+                          <%@cards.each do |card| %>
+                          <tr <%=  Date.today > card.expiry_date ? "class=danger" : ""%>>
+                            <td>
+                              <%= card.name %>  
+                              <%if card.primary %>
+                                <span class="label label-info">Primary</span>
+                              <% end %>
+                            </td>
+                            <td>
+                              <%= card.expiry_date.strftime("%m/%Y") %>
+                            </td>
+                            <td>
+                              <%= card_status(card) %>
+                            </td>
+                             <td align="right">
+                                <%if !card.primary %>
+                                  <%=link_to "make primary", make_primary_card_path(card), remote: true, 
+                                    class: "btn btn-sm btn-info" %>
+                                <% end %>
+                                <%= link_to "Delete", confirm_delete_card_path(card) , remote: true,class: "btn btn-sm btn-danger", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+                            </td>
+                          </tr>
+                          <% end %>
+                        <% else %>
+                          <tr>
+                            <td colspan="4">No cards available.</td>
+                          </tr>
+
+                        <% end %>
+
+                     
+                    </tbody>
+                </table>
+              </div>
+            </div>
+          </article>
+        <!-- END CARD TABLE -->
+      </div>
+    </div><!-- END col-lg-12 -->       
+  </div><!-- END row -->
+</section>

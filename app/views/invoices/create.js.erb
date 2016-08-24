@@ -1,0 +1,8 @@
+<%if @invoice.persisted? %>
+	$(function() {
+	 	$.getScript("<%= invoices_path %>")
+	})
+<% else %>
+	$("#error_msg").html("<%= @invoice.errors.full_messages.join(',') %>").show();
+<% end %>
+$(".ajax-loading").hide()

@@ -1,0 +1,9 @@
+$("#ajax-container").html("<%= j(render 'referrals' ) %>")
+$(function() {
+  history.pushState(null, "", "<%= referrals_path %>")
+  $(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})
+$('[rel^=popover]').popover('hide');
+$(".ajax-loading").hide()

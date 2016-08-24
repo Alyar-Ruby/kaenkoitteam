@@ -1,0 +1,71 @@
+
+<!-- DATA AREA TITLE -->
+<section class="settings main-container container-fluid">
+    
+  <div class="row">
+    <div class="col-lg-12">
+      <!--TABS NAV -->
+      <div id="overview">
+        
+      </div>
+        <!--END TAB NAV -->
+      <div class="tab-content">
+          <!-- TAB CONTENT -->
+      <div class="tab-pane fade in active" id="tab-one">
+          <div class="row">
+              <!-- CARD -->
+            <article class="card col-sm-12 col-md-12 col-lg-12 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading panel-heading-without-i">
+                  <div class="dropdown">
+                      Account setup
+                  </div>
+                </div>
+                <div class="panel-body">
+                  
+                  <%= simple_form_for(current_user, url: update_security_path(current_user), :html => { :method => :put }) do |f| %>
+                       <div class="form-group">
+                        <div class="span3 offset1"><%= f.label :"Security Pin" %></div>
+                          <div>
+                            <%= f.input :security_pin,  :label=>false, :input_html=>{:class=>"form-control"}, placeholder: " Please enter 4 digit  pin " %>
+                          </div>
+                          <div class="span3 offset1"><%= f.label :"Security question" %></div>
+                          <div>
+                            <%= f.input :user_security_question_id, :as=>"select", label: false, :collection=>UserSecurityQuestion.all, :prompt=>"Security Question" , input_html: {class: "form-control input-sm"} %>
+                            
+                          </div>
+                          <div class="span3 offset1"><%= f.label :"Secret Answer" %></div>
+                          <div>
+                            <%= f.input :secret_question_answer, :as => :string, :label=>false, :input_html=>{:class=>"form-control"}, placeholder: "Secret question answer" %>
+                          </div>
+                          <%if current_user.account.roleable_type == "Personal" or (current_user.account.roleable_type == "Business" && current_user.account_admin == true)%>
+                            <div>
+                              <label> Select Time Zone </label>
+                              <%= select_tag :'time_zone',
+                                    options_for_select(ActiveSupport::TimeZone.all.map { |zone| [zone.name, zone.name] },current_user.account.time_zone), :prompt=>" Select Time Zone", id: "time_zone_list", :class=>"form-control"
+                                  
+                                %>   
+                            </div>
+                          <% end %>
+                        </div>
+                        <br>
+                        <div class="row-fluid">
+                          <div class="span3 offset1">&nbsp;</div>
+                          <div class="span8"><%= f.submit "Submit", :class=>"btn btn-primary" %></div>
+                        </div>
+                    <% end %>
+                  
+                  </div>
+                  <div class="col-sm-6">
+                  </div>
+                </div>
+              </div>
+            </article>
+  
+          </div>
+          <!-- END TAB CONTENT -->
+      </div>
+    </div><!-- END col-lg-12 -->       
+  </div><!-- END row -->
+</section>
+

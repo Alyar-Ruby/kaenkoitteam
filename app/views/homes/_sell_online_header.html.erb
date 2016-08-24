@@ -1,0 +1,15 @@
+<section class="dashboard container-fluid tab-pane fade in active">
+<!-- AREA SUB NAV -->
+  <ul class="areas-sub-nav list-inline">  
+    <li id="sellonline_customer" class="sellonline-header active" >
+      <a href="<%= sell_online_path %>" data-remote = "true"><i class="kk-star larger"></i>Client</a>
+    </li>
+    <li id="sellonline_seller" class="sellonline-header"> 
+      <%=link_to '<i class="kk-open larger"></i>Seller'.html_safe, seller_sell_onlines_path, remote: true %>
+    </li>
+    <li id="sellonline_tools" class="sellonline-header"> 
+      <%=link_to '<i class="kk-options larger"></i>Tools'.html_safe, tools_sell_onlines_path, remote: true %>
+      <!-- <a href="javaScript:void(0);"><i class="kk-options larger"></i>Tools</a> -->
+    </li>
+ </ul>
+</section>

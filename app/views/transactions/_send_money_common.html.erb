@@ -1,0 +1,373 @@
+<!-- AREA TITLE/NAV-->
+<section class="top-up container-fluid tab-pane fade in active" id="dashboard">
+  <h2>
+  </h2>
+</section>
+    <!-- DATA AREA TITLE -->
+<section class="send-money main-container container-fluid">
+  <div class="alert alert-warning" id="send_money_msg" style="display:none;"></div>
+  <div class="row">
+      
+      <div class="col-lg-9">
+        
+            <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div id="add-funds-panel-title" class="dropdown">
+                            <span class="text-blue">Send Money:</span> Create Order
+                        </div>
+                    </div>    
+                
+                <div class="panel-body panel-overview panel-overview-white">
+                    <div  class="tabular-content col-lg-6 col">
+                        <ul id="add-funds-left-col">
+                            <li class="no-hover">
+                                <div>
+                                        <span style="display:inline-block;">
+                                        <label>Receiver / Receivers Email:</label>
+                                            <p>
+                                                <input type="text" id="receivers" size="28" placeholder="eg. mark@domain.com...">
+                                            </p>
+                                        </span>
+                                        <span class="info-small">
+                                        
+                                        <p>
+                                            <b class="text-blue">Tip: </b>You can send payment to your whole circle. Simply type in name of the circle, system will add it automatically 
+                                        </p>
+                                    </span>
+                                </div>
+                            </li>
+                            <li class="no-hover">
+                                <div>
+                                    <span style="display:inline-block;">
+                                        <label>Amount to be sent</label>
+                                        <p>
+                                            <input id="amount-field" type="text" placeholder="$ 0.00 USD" size="15">
+                                            <select>
+                                                <option>USD</option>
+                                                <option>HKD</option>        
+                                            </select>
+                                        </p>
+                                    </span>
+                                    <span class="info-small">
+                                        
+                                        <p>
+                                            <b class="text-blue">Info: </b>You do not have GPB balance. You will be deducted from your Primary Balance.<a href="#">Fees Info</a> 
+                                        </p>
+                                    </span>
+                                    
+                                </div>    
+                            </li>
+                            <li class="no-hover xtra-space">
+                                <label>I'm sending money to:</label>
+                                <p><input type="radio"> My family or friends</p>
+                                <p><input type="radio"> Pay goods and services</p>
+                            </li>
+
+                        </ul>
+                    </div>
+                    
+                    <div id="add-funds-right-col" class="tabular-cardpick col-lg-6 col">
+                        <ul>
+                             <li>
+                                <span><input type="radio" class="radio"></span>
+                                <span>
+                                    <strong>My Primary Balance</strong>
+                                    <p>Available Balance: <b>&euro; 2,546.91 EUR </b></p>
+                                    <p><b>Info: </b>&euro; 16.21 EUR to be deducted</p>
+                                </span>
+
+                            </li>
+                            <li>
+                                <span><input type="radio" class="radio"></span>
+                                <span>
+                                    <strong>MasterCard x-4882 (Primary)</strong>
+                                        <p>Previously saved and verified debit or credit card</p>
+                                        <p><b>Info:</b> &pound; 13.30 GBP (equivalent) to be deducted</p>
+                                </span>
+                                <span class="card-ico">
+                                    <img src="/assets/ico/mastercard_48.png">
+                                </span>
+                            </li>
+                            <li>
+                                <span><input type="radio" class="radio"></span>
+                                <span>
+                                    <strong>Visa Debit x-9112</strong>
+                                    <p>Previously saved and verified debit or credit card</p>
+                                    <p><b>Info:</b> &pound; 13.30 GBP (equivalent) to be deducted</p>
+                                </span>
+                                <span class="card-ico">
+                                    <img src="/assets/ico/visa_48.png">
+                                </span>
+                            </li>
+                            <li class="no-hover"><h5><b>Total Debit:</b> 1,000.00 EUR (Net)</h5></li>
+                        </ul>
+                    </div>
+                    <a href="javascript:void(0);" id="complete-send-proceed" class="btn btn-primary right-bottom">Process Order</a>
+                    <!-- Transaction Complete card -->
+                    <div id="complete-send-card-panel" class="slided-slide card-slide in-out">
+                           
+                        <div class="tabular-cardpick col-lg-6 col">
+                            <ul>
+                                <li class="no-hover">
+                                    <span><i class="fa fa-check-circle fa-3x text-success"></i></span>
+                                    <span><h5>Transaction ID: <a href="javascript:void(0);">#KN034552345</a></h5></span>
+
+                                </li>
+                                <li class="no-hover">
+                                
+                                <span>
+                                    <strong>MasterCard x-4882 (Primary)</strong>
+                                        <p>Previously saved and verified debit or credit card</p>
+                                        <p><b>Info:</b> Instant, 1.4% + $0.25 USD Fee</p>
+                                </span>
+                                <span class="card-ico">
+                                    <img src="/assets/ico/mastercard_48.png">
+                                </span>
+                            </li>
+                            </ul>
+                        </div>
+                        <div class="tabular-cardpick col-lg-6 col">
+                            <ul>
+                                <li class="no-hover">
+                                    <p class="text-blue"><b>Your transaction has been sucessfully completed</b></p>
+                                    <p>You will receive notification to your email.</p>
+                                    <span>
+                                        <p><b>From:</b> MasterCard x-4482</p>
+                                        <p><b>Bill To:</b> John Smith Junior</p>
+                                        <p><b>Transaction ID:</b> #KN034552345</p>
+                                        <p><b>Funds Added:</b> $4432.01 USD</p>
+                                        <h5><b>Total Debited:</b> $ 4457.00 USD</h5>
+                                    </span>
+                                    
+                                </li>
+                                
+                            </ul>       
+                        </div>
+                        <a href="javascript:void(0);" id="close-complete-send-card-panel" class="btn btn-primary right-bottom">Return To Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+      
+      <!-- old container -->
+    <div class="col-lg-12" style="display:none;">
+      <div class="row">
+        <p class="notice" style="color:green;"><%= notice %></p>
+        
+        <!-- FORM PROCESS PAYMENT CONTENT -->
+        <%= form_for(@transaction, :url=>review_send_money_transactions_path, remote: true) do |f| %>
+          <!-- CARD CONTENT -->
+          <article class="card col-md-6 col-sm-12"> 
+            <div class="panel panel-default"> 
+              <div class="panel-heading">
+                <i class="kk-user light"></i>Single Payment
+              </div> 
+              <div class="panel-body">
+                <label for="amount-payment">Amount</label>
+                <div class="row">
+                  <div class="col-md-12 col-lg-7">
+                   <%= f.text_field :amount, :placeholder=>"Amount eg. 1000.00", class: "form-control", :required=>"required" %>
+                 </div>
+                 <div class="col-xs-12 col-lg-5 pull-right">
+                  <%= f.select :kaenko_currency, KaenkoCurrency.all.map{|k| [k.title,k.id]}, 
+                  {:prompt=>"Currency"} , {:class=>"selectpicker col-xs-12"}
+                  %>                                                  
+                </div>
+              </div>
+
+              <label for="exampleInputEmail1">Email/Account ID</label>
+              <div class="row">
+                <div class="col-sm-12">
+                  <%= f.text_field :transaction_to, :required=>"required",
+                  :label=>false, input_html: {class: "form-control", placeholder: "Email" } %>
+                </div>
+              </div>
+              <label for="payment-method">Payment Method</label>
+              <div class="row">
+                <div class="col-sm-12">
+                  <ul class="list-group"> 
+                    <li class="list-group-item">
+                      <div class="radio"> 
+                        <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked=""> 
+                        <label for="optionsRadios1"> 
+                          From my currency balance (<%=current_user.account.kaenko_currency.unit.capitalize%>) <%=@pcb=primary_currency_balance(current_user.account)%> <%=current_user.account.kaenko_currency.unit.upcase%>
+                        </label> 
+                      </div>
+                    </li> 
+                    <li class="list-group-item">
+                      <div class="radio">
+                        <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                        <label for="optionsRadios2">
+                         Default Credit/Debit Card
+                       </label> 
+                     </div>
+                   </li>
+                 </ul>
+               </div>
+               <div class="col-xs-12 col-lg-12 pull-right">
+                <select class="selectpicker col-xs-12 ">
+                  <option>VISA DEBIT x-3650 (Default)</option>
+                  <option>MASTER CARD x-0021</option>
+                  <option>AMERICAN EXPRESS x-1313</option>
+                </select>
+              </div>
+            </div>
+            <label for="payment-method-who-pay">Decide who will pay the fee</label>
+            <div class="row">
+              <div class="col-sm-12">
+                <ul class="list-group"> 
+                  <li class="list-group-item">
+                    <div class="radio"> 
+                      <input type="radio" name="optionsRadios" id="optionsRadios4" value="option1" checked=""> 
+                      <label for="optionsRadios4"> 
+                        I want to pay the fee.
+                      </label> 
+                    </div>
+                  </li> 
+                  <li class="list-group-item">
+                    <div class="radio">
+                      <input type="radio" name="optionsRadios" id="optionsRadios5" value="option2">
+                      <label for="optionsRadios5">
+                        I want to split the fee, 50% me 50% receiver
+                      </label> 
+                    </div>
+                  </li>
+                  <li class="list-group-item">
+                    <div class="radio">
+                      <input type="radio" name="optionsRadios" id="optionsRadios6" value="option2">
+                      <label for="optionsRadios6">
+                        I wish receiver to pay the fee.(Im paying for goods or services)
+                      </label> 
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <%= f.submit "Process Payment" , class: "btn btn-lg btn-success" , style: "width:100%;" %>
+            </div>
+          </div> 
+        </article>
+      <% end %>
+      <!-- END CARD CONTENT -->
+      <!-- CARD CONTENT -->
+      <%= form_for(@transaction, :url=>review_send_money_transactions_path, remote: true) do |f| %>
+        <article class="card col-md-6 col-sm-12"> 
+          <div class="panel panel-default"> 
+            <div class="panel-heading">
+              <i class="kk-user-group light"></i>Mass Payment (Multiple)
+            </div> 
+
+            <div class="panel-body">
+
+              <label for="amount-payment">Amount</label>
+              <div class="row">
+                <div class="col-md-12 col-lg-7">
+                 <%= f.text_field :amount, :placeholder=>"Amount eg. 1000.00", class: "form-control", :required=>"required" %>
+               </div>
+               <div class="col-xs-12 col-lg-5 pull-right">
+                <%= f.select :kaenko_currency, KaenkoCurrency.all.map{|k| [k.title,k.id]}, 
+                {:prompt=>"Currency"} , {:class=>"selectpicker col-xs-12"}
+                %>                                                  
+               </div>
+              </div>
+
+              <label for="mycircles">My Circles</label>
+              <%= link_to '<i class="kk-pencil white"></i> Add / Edit Circle'.html_safe,  new_circle_path,  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window', :class=>"add-edit-circles"}  %>
+              <div class="row">
+                <div class="col-xs-12 ">
+                  <%= f.select :circle, current_user.owned_circles.map{|k| [k.name,k.id]}, 
+                  {:prompt=>"Circle"} , {:class=>"selectpicker col-xs-12", id: "my_circles"}
+                  %> 
+                </div>
+
+              </div>
+
+              <label for="payment-method">Payment Method</label>
+              <div class="row">
+                <div class="col-sm-12">
+                  <ul class="list-group"> 
+                    <li class="list-group-item">
+                      <div class="radio"> 
+                        <input type="radio" name="optionsRadios" id="optionsRadios10" value="option1" checked=""> 
+                        <label for="optionsRadios10"> 
+                          From my currency balance (<%=current_user.account.kaenko_currency.unit.capitalize%>) <%=@pcb%> <%=current_user.account.kaenko_currency.unit.upcase%>
+                        </label> 
+                      </div>
+                    </li> 
+                    <li class="list-group-item">
+                      <div class="radio">
+                        <input type="radio" name="optionsRadios" id="optionsRadios20" value="option2">
+                        <label for="optionsRadios20">
+                         Default Credit/Debit Card
+                       </label> 
+                     </div>
+                   </li>
+                 </ul>
+                </div>
+                <div class="col-xs-12 col-lg-12 pull-right">
+                  <select class="selectpicker col-xs-12 ">
+                    <option>VISA DEBIT x-3650 (Default)</option>
+                    <option>MASTER CARD x-0021</option>
+                    <option>AMERICAN EXPRESS x-1313</option>
+                  </select>
+                </div>
+              </div>
+
+              <label for="payment-method-who-pay">Decide who will pay the fee</label>
+              <div class="row">
+                <div class="col-sm-12">
+                  <ul class="list-group"> 
+                    <li class="list-group-item">
+                      <div class="radio"> 
+                        <input type="radio" name="optionsRadios" id="optionsRadios40" value="option1" checked=""> 
+                        <label for="optionsRadios40"> 
+                          I want to pay the fee.
+                        </label> 
+                      </div>
+                    </li> 
+                    <li class="list-group-item">
+                      <div class="radio">
+                        <input type="radio" name="optionsRadios" id="optionsRadios50" value="option2">
+                        <label for="optionsRadios50">
+                          I want to split the fee, 50% me 50% receiver
+                        </label> 
+                      </div>
+                    </li>
+                    <li class="list-group-item">
+                      <div class="radio">
+                        <input type="radio" name="optionsRadios" id="optionsRadios60" value="option2">
+                        <label for="optionsRadios60">
+                          I wish receiver to pay the fee.(Im paying for goods or services)
+                        </label> 
+                      </div>
+                    </li>
+                  </ul>
+                  </div>
+                </div>
+                <%= f.submit "Process Payment" , class: "btn btn-lg btn-success" , style: "width:100%;" %>
+              </div>
+            </div> 
+          </article>
+        <% end %>
+      <!-- END CARD CONTENT -->
+    <!--END FORM PROCESS PAYMENT CONTENT -->
+      </div>
+    </div><!-- END col-lg-* -->       
+  </div><!-- END row -->
+</section>
+
+<script>
+$("#complete-send-proceed").click(function(){
+$("#complete-send-card-panel").removeClass("in-out");
+})
+$("#close-complete-send-card-panel").click(function(){
+$("#complete-send-card-panel").addClass("in-out");
+}) 
+</script>
+
+<%= javascript_tag do %>
+  $(function() {
+    $('.selectpicker').selectpicker();
+  })
+<% end %>

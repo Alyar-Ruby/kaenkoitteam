@@ -1,0 +1,7 @@
+<% if @user.errors.any? %>
+	$("#error_msg").html("<%= @user.errors.full_messages.join('') %>").show();
+<% else %>
+	$('#modal-window').modal('toggle');
+	$("#password_update").html("Pin updated").show();
+<% end %>
+$(".ajax-loading").hide();

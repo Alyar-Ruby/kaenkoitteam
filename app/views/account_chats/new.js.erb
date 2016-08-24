@@ -1,0 +1,20 @@
+
+if ($("#chatbox-prototype<%=@account.id%>").length == 0) {
+  $("body").append("<%= j(render :partial =>'chat_prototype', locals: {account: @account}) %>")
+  $("#chatbox-prototype<%=@account.id%>").addClass("opened").show();
+  $("#chat_txt<%=@account.id%>").focus();
+  if ($(".chatbox").length == 0) {
+    $("#chatbox-prototype<%=@account.id%>").css("right", "320px")
+  }
+  else {
+    width = $(".chatbox").length*(290)+20;
+    $("#chatbox-prototype<%=@account.id%>").css('right', width+'px')
+  }
+  $('.content-chatbox').scrollTop($('.content-chatbox')[0].scrollHeight);
+}
+else{
+  $("#chat_txt<%=@account.id%>").focus();
+}
+
+
+$(".ajax-loading").hide();

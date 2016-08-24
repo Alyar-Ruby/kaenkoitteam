@@ -1,0 +1,34 @@
+<div class="row">
+   <div class="col-sm-2">
+       <img  src="http://4.bp.blogspot.com/-Prqp-5wcgTc/UVSLCdgpsaI/AAAAAAAAGoA/LSPv26jcigA/s1600/Jaime+Lannister.jpg" alt="..." class="img-thumbnail"><br><br>
+   </div>
+   <div class="col-sm-10">
+       <div class="alert alert-warning fade in">
+           Your Account status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+       </div>
+
+       <div class="alert alert-warning fade in">
+           Your ID status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+       </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <p><strong>Job Title:</strong> <%= @user.job_title %></p>
+        <p><strong>Authorised as:</strong> Admin of the Account</p>
+        <p><strong>Username:</strong> <%= @user.username %></p>
+        <p><strong>Phone:</strong> <%= @user.phone %></p>
+        <p>
+          <%=link_to 'Add/Edit Contact' , edit_contact_user_path(@user), remote:true, class: "btn btn-xs btn-default", 'data-toggle' => "modal", 'data-target' => '#modal-window' %>
+          
+        </p>
+    </div>
+    <div class="col-sm-6">
+        <p><strong>Full Name:</strong> <%= @user.name %></p>
+        <p><strong>Date Of Birth:</strong> <%= @user.date_of_birth %></p>
+        <p><strong>Gender:</b> <%= @user.gender %></strong>
+        <p><strong>Nationality:</b> <%= country_name(@user.nationality) %></strong>
+        <p><strong>Account Official Email:</strong> <a href="<%= @user.email %>"><%= @user.email %></a></p> 
+    </div>
+</div>

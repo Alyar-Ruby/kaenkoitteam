@@ -1,0 +1,7 @@
+<%if !@error.present? %>
+	$("#su<%= @user.id%>").html('<%= "#{@user.job_title.try(:titleize)} at #{@user.account.roleable.organization_name.try(:titleize)}"%>')
+	$('#modal-window').modal('toggle');
+<% else %>
+	$("#user_error_message").html("<%= @error %>").show();
+<% end %>
+$(".ajax-loading").hide();

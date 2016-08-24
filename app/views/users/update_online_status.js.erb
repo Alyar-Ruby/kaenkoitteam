@@ -1,0 +1,6 @@
+<%if current_user.online_status == true %>
+	$("#online_status").removeClass("avatar-status avatar-offline").addClass("avatar-status")
+<% else %>
+	$("#online_status").addClass("avatar-offline")
+<% end %>
+$(".ajax-loading").hide();

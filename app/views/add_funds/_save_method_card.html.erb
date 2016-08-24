@@ -1,0 +1,63 @@
+ 
+ <%=form_tag process_existing_card_account_add_funds_path(current_user.account) , id: "adding-card-form", remote: true  do %>
+ <a href="javascript:void(0);" class="close-slide"  id="close-add-previous-card-panel"><i class="fa fa-times"></i></a>
+    <div  class="tabular-cardpick col-lg-6 col">
+        <ul>
+            <li class="no-hover">
+                <h5>Selected Payment Method</h5>
+            </li>
+            <li class="always-hover">
+            
+            <span>
+                <strong><%= @card.card_type %> x- <%=@card.card_number[-4..-1]%></strong>
+                <%=hidden_field_tag :card, @card.id %>
+                    <p>Previously saved and verified debit or credit card</p>
+                    <p><b>Info:</b> Instant, 1.4% + $0.25 USD Fee</p>
+            </span>
+            <span class="card-ico">
+                <img src="/assets/ico/mastercard_48.png">
+            </span>
+        </li>
+        </ul>
+    </div>
+    <div  class="tabular-cardpick col-lg-6 col">
+        <ul>
+            <li class="no-hover">
+                <h5>I want to receive:</h5>
+                <div>
+                    <span style="display:inline-block;">
+                        
+                        <p>
+                            <input id="amount-field" name = "amount" type="text" placeholder="$ 0.00 USD" size="21">   
+                        </p>
+                    </span>
+                    <span>
+                        <p>
+                          <%= select_tag :'kaenko_currency_id',
+                            options_for_select(KaenkoCurrency.select("id, unit").collect{|c|[c.unit, c.id]}), id: "currency_list" %>
+                        </p>         
+                    </span>
+                    
+                </div>
+                <h5>Total Debit: <b>$567.88 USD</b></h5>
+            </li>
+            <li class="no-hover">
+                <div>
+                    <span>
+                        <input type="checkbox" class="radio">
+                    </span>
+                    <span>
+                        I accept that i read Kaenko Limited <a href="#">Terms &amp; Conditions</a>
+                    </span>
+                </div>
+            </li>
+            
+        </ul>       
+    </div>
+ <%=submit_tag :'Confirm Order', id: "add-funds-complete" , class: "btn btn-primary right-bottom" %>
+<% end %>
+<script>
+  $("#close-add-previous-card-panel").click(function(){
+    $("#add-previous-card-panel").addClass("in-out");
+  }) 
+</script>

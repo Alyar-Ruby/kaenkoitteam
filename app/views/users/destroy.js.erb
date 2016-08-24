@@ -1,0 +1,8 @@
+<%if !@user.persisted? %>
+	$('#subuser_list').html("<%= j( render 'accounts/subuser_list') %>");
+<% else %>
+	$("#user_error_message").html("<%= @user.errors.full_messages.join(",") %>")
+	$("#user_error_message").show();
+<% end %>
+$('.modal').modal('hide');
+$(".ajax-loading").hide();

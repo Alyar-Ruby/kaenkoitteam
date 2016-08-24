@@ -1,0 +1,11 @@
+$("#ajax-container").html("<%= j(render 'form') %>")
+$(".ajax-loading").hide()
+$("#create_invoice").removeClass("active").addClass("active")
+$("#manage_invoice").removeClass("active")
+$("#request_payment").removeClass("active")
+$(function() {
+	history.pushState(null, "", "<%= new_invoice_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

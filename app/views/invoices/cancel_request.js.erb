@@ -1,0 +1,7 @@
+<%if @invoice.errors.any? %>
+	$("#statusinvoice<%= @invoice.id %>").html("Unable to process")
+<% else %>
+	$("#statusinvoice<%= @invoice.id %>").html("<%= @invoice.status %>")
+	$("#cancelinvoice<%= @invoice.id %>").html("")
+<% end %>
+$(".ajax-loading").hide();

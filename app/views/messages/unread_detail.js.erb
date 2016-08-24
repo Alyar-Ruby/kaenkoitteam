@@ -1,0 +1,11 @@
+$(".ticket").removeClass("ticket-active")
+$("#message_detail").html($('<%= escape_javascript( render( :partial => "show_unread_detail")) %>'))
+$("#conversation<%=@conversation.id%>").addClass("ticket-active")
+$(".ajax-loading").hide()
+$(function() {
+	history.pushState(null, "", "<%= unread_detail_message_path(@conversation.id) %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})
+

@@ -1,0 +1,67 @@
+ <a href="javascript:void(0);" class="close-slide"  id="close-address-change-panel"><i class="fa fa-times"></i></a>
+<ul>
+  <li><h5>Edit Address</h5></li>    
+  <li id = "business_address">
+  <%= form_for(@business, url: update_address_business_path(@business), remote: true, :html => { :method => :put, id: "adding-card-form" }) do |f| %>  
+    <div id="business_address_msg">
+    </div>
+    <div>
+      <span>
+        <label>Address:</label>
+          <p>
+          <%= f.text_field :address, step:4, max:30, size:30 %>
+          </p>
+      </span>
+      <span>
+        <label>City:</label>
+        <p>
+          <%= f.text_field :city %>
+        </p>
+      </span>
+    </div>
+    <div>
+      <span>
+        <label>ZIP/Postal:</label>
+        <p>
+          <%= f.text_field :postal_code, step:4, max:6, size:6, placeholder: "ZIP / Postal Code"   %>
+        </p>
+      </span>
+      <span>
+        <label>Region:</label>
+          <p>
+            <%= f.text_field :region,  placeholder: "Region / District"   %>
+          </p>
+      </span>
+      <span>
+        <label>Country:</label>
+
+          <p>
+           <!--  <select id="country-select-cc" class="ES-cc pd40">
+              <option class="ES-cc">Spain</option>
+              <option class="DE-cc">Germany</option>
+              <option class="ZA-cc">Zimbabwe</option>
+              <option class="GB-cc">United Kingdom</option>
+            </select> -->
+            <%= f.select :country, @kaenko_countries  %>
+          </p>
+      </span>
+    </div>
+    <div>
+      <span>
+        <a href="javascript:void(0);" id="update-address-btn" class="btn btn-success addcard-btn" ><i class="fa fa-repeat"></i>Update Address</a>
+      </span>
+    </div>
+  <% end %>
+  </li>
+</ul>
+<%= javascript_tag do %>
+  $(function() {
+    $("#close-address-change-panel").click(function(){
+      $("#address-change-panel").addClass("in-out");
+    });
+    $("#update-address-btn").click(function() {
+      $("#adding-card-form").submit();
+    });
+  });
+<% end %>
+  

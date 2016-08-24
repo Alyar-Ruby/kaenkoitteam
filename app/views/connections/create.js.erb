@@ -1,0 +1,7 @@
+<% if @connection.persisted? %>
+	$("#connect_message").html("<span><i class='fa fa-link'></i>Connection Request sent</span>")
+	$("#connect_button").remove();
+<% else %>
+	$("#connect_message").html("Errors occurred ")
+<% end %>
+$(".ajax-loading").hide();

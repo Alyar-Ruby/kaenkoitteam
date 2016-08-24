@@ -1,0 +1,9 @@
+$("#ajax-container").html("<%= j (render 'inbox') %>")
+$('[rel^=popover]').popover('hide');
+$(".ajax-loading").hide();
+$(function() {
+	history.pushState(null, "", "<%= messages_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

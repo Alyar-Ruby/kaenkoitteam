@@ -1,0 +1,13 @@
+<% if @error.present? %>
+  $("#modal-window").html("<%= j(render(:partial => 'error_popup', locals: { error_msg: @error})) %>")
+  $("#modal-window").modal('show')
+<% else %>
+  <%if @dispute.is_resolved == true %>
+     $("#modal-window").html("<%= j(render(:partial => 'error_popup', locals: { error_msg: 'Sorry!! Dispute is already closed.'})) %>")
+     $("#modal-window").modal('show')
+  <% else %>
+    $('#modal-window').modal('toggle');
+    $(".message-send").html("<%= j(render 'refund_msg') %>");
+  <% end %>
+<% end %>
+$(".ajax-loading").hide();

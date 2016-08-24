@@ -1,0 +1,7 @@
+$("#li<%=@user.id%>").html('<%= link_to @user.active ? "Inactive" : "Active", active_inactive_user_path(@user), remote: true %>')
+<% if @user.active? %>
+	$("#active_<%=@user.id%>").html("A")
+<% else %>
+	$("#active_<%=@user.id%>").html("<span title='Active' class='badge badge-info' id='active_<%=@user.id%><span>")
+<% end %>
+

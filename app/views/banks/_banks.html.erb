@@ -1,0 +1,31 @@
+<%if @banks.size > 0 %>
+  <% @banks.each do |bank| %>
+    <tr>
+        <td>
+          <%= bank.name %> 
+          <%if bank.primary %>
+          <span class="label label-info">Primary</span>
+          <% end %>
+        </td>
+        <td>
+          <%= bank.kaenko_currency.try(:unit) %>
+        </td>
+        <td>
+          <%= bank_status(bank) %>
+        </td>
+         <td align="right">
+          <%if !bank.primary %>
+            <%=link_to "make primary", make_primary_bank_path(bank), remote: true, 
+              class: "btn btn-sm btn-info" %>
+          <% end %>
+          <%= link_to "Delete", confirm_delete_bank_path(bank) , remote: true,class: "btn btn-sm btn-danger", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+        </td>
+    </tr>
+  <% end %>
+<% else %>
+  <tr>
+    <td>
+      No Banks Available.
+    </td>
+  </tr>
+<% end %>

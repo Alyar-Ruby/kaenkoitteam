@@ -1,0 +1,98 @@
+	<%= simple_form_for [@referral], :html => { :class => 'form-horizontal' } do |f| %>
+		<div class="well-formbox">  
+			<% if @referral.errors.any? %>
+			<div id="errorExplanation">
+				<h2><%= pluralize(@referral.errors.count, "error") %> prohibited this referral from being saved:</h2>
+				<ul>
+				<% @referral.errors.full_messages.each do |msg| %>
+				  <li><%= msg %></li>
+				<% end %>	
+				</ul>
+			</div>
+			<% end %>
+			<div class="control-group">
+				<label class="control-label"> Type: </label>
+				<div class="controls">
+					<%= f.input :account_type,  as: :select, collection: [["World", "world"], ["Business", "business"], ["Premier", "premier"]], :label=>false%>
+				</div>
+			</div>
+
+			<%if @referral.new_record? %>
+				Commissions Level:
+				<div class="control-group">
+					<%= javascript_tag do %>
+							window.count = 1 
+						<% end %>
+					<label class="control-label">Level1</label>
+					<div class="controls">
+						<%= text_field_tag :"commission_level[1]", "", required: true %>
+						<span style="cursor:pointer;"><%=image_tag "/assets/Add.ico" , id: "add_level"%></span>
+					</div>
+				</div>
+			<% end %>
+			<div id	= "more_level">
+				<%if !@referral.new_record?  %>
+					<%if @referral.commission_level.present? %>
+						Commissions Level :
+						<% count = 0 %>
+						<% @referral.commission_level.each do |k, v| %>
+							<% count = count + 1%>
+							<div class="control-group" id="div<%= count %>">
+								<label class="control-label">Level <%= count %></label>
+								<div class="controls">
+									<%=text_field_tag :"commission_level[#{k}]", v  %>
+									<span style="cursor:pointer;" onclick="deleteText('<%=count%>')"><img src="/assets/crossout.png"/></span>
+								</div>
+							</div>
+						<% end %>
+					<% end %>
+					<%if @referral.commission_level.nil? %>
+							<% count = 1 %>
+							<div class="control-group" id="div<%= count %>">
+								<label class="control-label">Level <%= count %></label>
+								<div class="controls">
+									<%=text_field_tag :"commission_level[#{count}]", "", required: true %>
+									<span style="cursor:pointer;" onclick="deleteText('<%=count%>')"><img src="/assets/crossout.png"/></span>
+								</div>
+							</div>
+						<% end %>
+					
+					<div class="control-group">
+						<%= javascript_tag do %>
+							window.count = <%= count %>
+						<% end %>
+						<label class="control-label"></label>
+						<div class="controls">
+							<span id="add_level" style="cursor:pointer;"><%=image_tag "/assets/Add.ico"%> Add More</span>
+						</div>
+					</div>
+				<% end %>
+			</div>
+
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<%= f.submit :class => 'btn btn-info' %>
+					<%= link_to "Cancel", referrals_path, :class => 'btn' %>
+				 </div>
+			</div>
+		</div>
+<% end %>
+<% content_for :script do %>
+  <script src="/assets/admins/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.bootstrap.js"></script>
+  <script src="/assets/admins/date-time/bootstrap-datepicker.min.js"></script>
+  <script>
+  	$(function() {
+  		
+  		$("#add_level").click(function(){
+  			count = count + 1
+  			$("#more_level").append("<div class=\"control-group\" id=div"+count+"><label class=\"control-label\">Level"+count+"</label><div class=\"controls\"><input type=\"text\" id=txt"+count+" "+"name=\"commission_level["+count+"]\" required=\"required\"/><span class=\"icon-fa-times\" style=\"cursor:pointer;\"onclick=\"deleteText("+count+")\"><img src=\"/assets/crossout.png\"/></span></div></div>")
+  		});
+  	});
+  	function deleteText(value) {
+  		$("#div"+value).remove();
+  	}
+  </script>
+<% end %>
+

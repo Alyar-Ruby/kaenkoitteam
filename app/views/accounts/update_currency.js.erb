@@ -1,0 +1,7 @@
+$("#currency_text").html("<%= @account.kaenko_currency.try(:title) %> (<%= @account.kaenko_currency.try(:unit) %>)")
+$("#change_currency").show();
+$("#currency_list").hide();
+$("#currency_text").show()
+$("#cancel_currency").hide();
+$(".ajax-loading").hide();
+

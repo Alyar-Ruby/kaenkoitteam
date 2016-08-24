@@ -1,0 +1,2 @@
+$("#chat_window_title<%=@account.id%>").append("<%= @account.display_name %>")
+$("#chatwindow<%=@account.id%>").append("<%= j (render partial: 'load_message', locals: {account: @account, messages: @messages} )%>")

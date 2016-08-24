@@ -1,0 +1,8 @@
+<%if @error.present? %>
+  $("#add_fund_msg").html("<%= @error %>")
+<% else %>
+  $("#complete-add-card-panel").html("<%= j(render 'transaction_complete') %>")
+  $("#add_fund_msg").html("Transaction Complete")
+  $("#complete-add-card-panel").removeClass("in-out");
+<% end %>
+

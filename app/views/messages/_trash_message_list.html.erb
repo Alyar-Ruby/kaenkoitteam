@@ -1,0 +1,61 @@
+<section class="mail-inbox container-fluid tab-pane fade in active" id="dashboard">
+<h2>Messages<small> | My Inbox </small></h2>
+  <!--<a href="#" class="compose-email btn btn-primary btn-sm"> <i class="kk-pencil"></i>Compose message</a>-->
+    <%= link_to new_message_path ,  remote: true, class: "compose-email btn btn-primary btn-sm", id: "new_message_link" do %> 
+      <i class="kk-pencil"></i>
+      Compose Message
+    <% end %>
+ </section>
+<section class="mail main-container container-fluid">
+
+  <div class="row row-50-top">
+    <div class="col-lg-12">
+      <div class="row">
+        <article class="mail mail-list col-sm-12 col-md-4 col-lg-4">
+          <div class="panel panel-mail">
+            <div class="panel-heading">
+             <ul class="mail-nav list-inline">
+              <li class="inbox-info "><%=link_to "Inbox" , messages_path, remote: true %><span class="badge pull-right"></span></li>
+              <li class="inbox-info"><a href="<%= unread_list_messages_path%>">Unread</a></li>
+              <li class="inbox-info inbox active"><%= link_to 'Archive', show_archive_messages_path, remote: true %></li>
+            </ul>
+            <div class="input-group no-shadow">
+              <input type="text" class="form-control" placeholder="Search for message">
+              <span class="input-group-btn">
+                <button class="btn btn-success" type="button"><i class="kk-search"></i></button>
+              </span>
+            </div><!-- /input-group -->
+          </div>
+          <div class="panel-body">
+            <!-- entry -->
+            <div class="messagelist">
+            <% @messages.each  do |id, v|  %>
+            <% c_users = ConversationUser.where("conversation_id=? and user_id != ?" , id, current_user.id) %>
+            <% c_users.each do |cu| %>
+              
+              <a href="<%= message_path(cu.conversation_id)%>" class="read-mail" data-id="mail-id-123" data-remote = "true">
+                <div class="ticket ticket">
+                  <div class="avatar pull-left">
+                    <img class="img-circle " src="images/av3.png" />
+                  </div>
+                  <div class="content ">
+                    <span><i class="kk-clock"></i><%= relative_time(cu.created_at)%></span>
+                    <h2><%= cu.user.name %></h2>
+                    <p><%= cu.conversation_message.message %></p>
+                  </div>
+                </div>
+              </a>
+              <% end %>
+            <% end %>
+              <!-- END entry -->
+              <!-- entry -->
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mail mail-box col-sm-12 col-md-12 col-lg-8">
+        <div class="panel panel-mail" id="message_detail">
+          No Conversation Selected
+        </div>
+      </article>
+</section>

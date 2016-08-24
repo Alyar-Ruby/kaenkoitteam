@@ -1,0 +1,56 @@
+<% sub_user = current_user.account.users.order("created_at desc").where("account_admin = ? and id != ? and suspend = ?", false, current_user.id, false) %>
+<% sub_user.each do |su| %>
+  <div class="profver profver-user-collapsed" id="sub_user<%= su.id %>">
+    <div class="profver profver-user-collapsed">
+        <div class="twothird">
+          <div class="onethird" id="sub_user_image<%= su.id %>">
+            <img src="<%= su.image.present? ? su.image_url(:profile) : '/assets/av2.png'%>" width="125px" height="auto" /> 
+          </div>
+          <%=file_field_tag :subuser_pic,  style: 'display: none;', 
+            id:"fileimage#{su.id}", accept: "image/*" %>
+          <div class="twothirdless pull-right">
+            <h4 style="font-weight:800">Sub user</h4>
+            <%= su.name %><br>
+            <span style="font-size:12px">
+              <%= "#{su.job_title} at  #{su.account.roleable.try(:organization_name)}"%>
+          </span>
+          </div>
+        </div>
+        <div class="onethird">
+          <%=link_to "View / Edit" , edit_user_path(su) , class:"btn btn-primary" , style:"display:block", remote: true %>
+        </div>
+      </div>
+  </div>
+  <div id="sub_user_detail<%= su.id %>">
+  </div>
+  <script>
+  
+    $(function() {
+      $("#sub_user_image<%=su.id%>").on("click", function() {
+        $("#fileimage<%=su.id%>").click();
+      });
+    $("#fileimage<%=su.id%>").change(function() {
+      var form_data = new FormData(); // Creating object of FormData class
+        file_content = $("#fileimage<%=su.id%>")[0].files[0]
+        form_data.append("user_image", file_content);
+        $.ajax({
+          url: "<%= upload_subuser_image_user_path(su) %>",
+          type: "POST",
+          processData: false,
+          contentType: false,
+          data: form_data,
+          dataType: "JSON",
+          success: function(response) {
+             $("#sub_user_image<%=su.id%>").html("<img  style= 'width:125px;' src='"+response.profile+"' />");    
+          },
+          error: function(response) {
+            $("#sub_user_image<%=su.id%>").html($.parseJSON(response.responseText).errors);
+          }
+        });
+    });  
+  })
+    
+  </script>
+<% end %>
+<span style="text-align: center; display: block; padding: 40px; font-size: 22px; font-weight: 800; color: #E4E5CC; cursor: pointer"><%= link_to "Create new user +", new_user_path, remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal" %>
+</span>

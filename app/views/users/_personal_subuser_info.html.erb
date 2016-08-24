@@ -1,0 +1,317 @@
+<div class="panel panel-default">
+  <div class="panel-body panel-lego">
+    <div class="wrap">
+      <div class="profver">
+        <div class="twothird">
+          <div class="onethird" id="personal_subuser_image">
+            <%= image_tag (current_user.image.present? ? current_user.image_url(:profile) : '/assets/av2.png'), width: "125px" , height: "auto" %>
+          </div>
+          <%= file_field_tag :subuser_pic, id: "personal_subuser_pic" ,  style: 'display: none;', accept: "image/*" %>
+          <div class="twothirdless pull-right">
+            <h4 style="font-weight:800"></h4>
+            <%= current_user.name %><br>
+            <span id="current_user<%= current_user.id%>" style="font-size:12px"><%= "#{current_user.job_title.try(:titleize)} at #{current_user.account.roleable.organization_name.try(:titleize)}"%></span>
+          </div>
+        </div>
+        <div class="onethird">
+          <%= link_to "Hide" , "javascript:void(0);" , class:"btn btn-primary" , 
+            style:"display:block", id: "hide" %> 
+          <br>
+          <%= link_to "Edit Security" , ask_security_pin_user_path(current_user) , class:"btn btn-default" , style:"display:block; border: 1px solid #e3e8e8!important;", remote: true, 
+          'data-target' => "#modal-window", 'data-toggle' => "modal" %>
+        </div>
+        <div class="halfhalf">
+          
+          <p class="hide-content">
+            <strong>Gender:</strong> 
+            <span id="user_gender_text"> <%= current_user.gender %></span>
+            </span>
+          </p>
+          <p class="hide-content">
+            <strong>Birth:</strong> 
+            <span id="user_user_dob_text">
+              <%= current_user.date_of_birth.strftime("%d-%b-%Y") if current_user.date_of_birth.present? %> 
+              <%= ", #{country_name(current_user.nationality)}" if current_user.nationality.present?%>
+            </span>
+          </p>
+           <p>
+            <strong>Address:</strong> 
+            <span id="user_address_text"><%= current_user.address %></span> 
+            <span id="edit_user_address" style="display:none;">
+              <%= text_field_tag :"user[address]", current_user.address, style: "line-height:normal;width:200px;" %>
+              <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_address">Update</a>
+              <a href="javascript:void(0);" class="" id="cancel_user_address">Cancel </a>
+            </span>
+            <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_user_address"><i class="fa fa-pencil"></i></a>
+          </p>
+         <!--  <p>
+            <strong>First Name:</strong> 
+            <span id="user_first_name_text"> <%= current_user.first_name %></span>
+            </span>
+            <span id="edit_user_first_name" style="display:none;">
+              <%= text_field_tag :"user[first_name]", current_user.first_name, style: "line-height:normal;width:200px;" %>
+              <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_first_name">Update</a>
+              <a href="javascript:void(0);" class="" id="cancel_user_first_name">Cancel </a>
+            </span>
+            <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_user_first_name"><i class="fa fa-pencil"></i></a>
+          </p>
+          <p>
+            <strong>Last Name:</strong> 
+            <span id="user_last_name_text"> <%= current_user.last_name %></span>
+            </span>
+            <span id="edit_user_last_name" style="display:none;">
+              <%= text_field_tag :"user[last_name]", current_user.last_name, style: "line-height:normal;width:200px;" %>
+              <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_last_name">Update</a>
+              <a href="javascript:void(0);" class="" id="cancel_user_last_name">Cancel </a>
+            </span>
+            <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_user_last_name"><i class="fa fa-pencil"></i></a>
+          </p>
+           <p><strong>Job Title:</strong> 
+            <span id="user_job_title_text"> <%= current_user.job_title %></span>
+            </span>
+            <span id="edit_user_job_title" style="display:none;">
+              <%= text_field_tag :"user[job_title]", current_user.job_title, style: "line-height:normal;width:200px;" %>
+              <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_job_title">Update</a>
+              <a href="javascript:void(0);" class="" id="cancel_user_job_title">Cancel </a>
+            </span>
+            <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_user_job_title"><i class="fa fa-pencil"></i></a>
+          </p> -->
+          <p>
+            <strong>Email:</strong> 
+              <span id="user_email_text"><%= current_user.email  %></span>  
+              <span id="edit_user_email" style="display:none;">
+                <%= text_field_tag :"user[email]", current_user.email, style: "line-height:normal;width:200px;" %>
+                <span id="error_msg"></span><br>
+                <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_email">Update</a>
+                <a href="javascript:void(0);" class="" id="cancel_user_email">Cancel </a>
+              </span>
+
+              <a href="javascript:void(0);" class="btn btn-default btn-edit btn-small" id="change_user_email"><i class="fa fa-pencil"></i></a>
+          </p>
+        </div>
+        <div class="halfhalf">
+
+          <p class="hide-content">
+            <strong>Country:</strong>
+              <span id="user_country_text">
+                <%= country_name(current_user.country) %> 
+              </span>
+              
+               <%= select_tag :'user[country]',
+                  options_for_select(kaenko_countries), include_blank: false, id: "user_country_list", 
+                    style: "display:none;width:100px;"
+                %>
+                <a href="javascript:void(0);" class="btn btn-sm btn-default"  id="cancel_user_country" style="display:none;">Cancel</a>
+                <a href="javascript:void(0);" 
+                class="btn btn-default btn-edit btn-small" id="change_user_country"><i class="fa fa-pencil"></i>
+                </a>
+              
+          </p>
+         
+          <p>
+            <strong>City & ZIP:</strong> <span id="user_city_postal_text"><%=  "#{current_user.city} (#{current_user.postal_code})"%></span>
+                <span id="user_city_postal" style="display:none;">
+                City:<%= text_field_tag :"user[city]" , current_user.city, style: "line-height:normal;width:50px;" %>
+                Postal:<%= text_field_tag :"user[postal_code]" , current_user.postal_code , style: "line-height:normal;width:50px;"%>
+                
+                <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_city_postal">Update</a>
+                <a href="javascript:void(0);" class="" id="cancel_user_city_postal">Cancel </a>
+                
+              </span>
+                <a href="javascript:void(0);" class="btn btn-default btn-edit btn-small" id="change_user_city_postal"><i class="fa fa-pencil"></i></a>
+          </p>
+           <p>
+              <strong>Phone:</strong>
+              <span id="user_phone_text">
+                <%= current_user.phone %> 
+              </span>
+              <span id="edit_user_phone" style="display:none;">
+              <%= text_field_tag :"user[phone]", current_user.phone, style: "line-height:normal;width:200px;" %>
+              <a href="javascript:void(0);" class="btn btn-default btn-small" id="update_user_phone">Update</a>
+              <a href="javascript:void(0);" class="" id="cancel_user_phone">Cancel </a>
+            </span>
+            <a href="javascript:void(0)" class="btn btn-default btn-edit btn-small" id="change_user_phone"><i class="fa fa-pencil"></i></a>
+            </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_tag do %>
+  $("#hide").click(function() {
+    $("#personal_subuser_detail").hide();
+    $("#personal_subuser_info").show();
+  })
+  function hide_current_userbuser(id) {
+    $("#"+id).hide();
+  }
+  $("#change_user_address").click(function(){
+  $("#edit_user_address").show();
+  $("#user_address_text").hide();
+  $("#change_user_address").hide();
+  $("#update_user_address").click(function(){
+    $.ajax({
+      url: "<%= update_address_user_path(current_user) %>",
+      method: "put",
+      data: "user[address]="+$("#user_address").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_address").click(function(){
+  $("#user_address_text").show();
+  $("#user_address").val($("#user_address_text").html()),
+  $("#change_user_address").show();
+  $("#edit_user_address").hide();
+
+})
+$("#change_user_country").click(function(){
+  $("#user_country_list").show();
+  $("#change_user_country").hide();
+  $("#user_country_text").hide()
+  $("#cancel_user_country").show();
+  $("#user_country_list").change(function(){
+    $.ajax({
+      url: "<%= update_country_user_path(current_user) %>",
+      method: "get",
+      data: "user[country]="+$(this).val() ,
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_country").click(function(){
+  $("#user_country_text").show();
+  $("#change_user_country").show();
+  $("#user_country_list").hide();
+  $(this).hide();
+
+})
+$("#change_user_city_postal").click(function(){
+  $("#user_city_postal").show();
+  $("#change_user_city_postal").hide();
+  $("#user_city_postal_text").hide()
+  $("#cancel_user_city_postal").show();
+  $("#update_user_city_postal").click(function(){
+    city = $("#user_city").val();
+    postal_code = $("#user_postal_code").val();
+    $.ajax({
+      url: "<%= update_city_postal_user_path(current_user) %>",
+      method: "get",
+      data: "user[city]="+city+"&user[postal_code]="+ postal_code,
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_city_postal").click(function(){
+  $("#user_city_postal_text").show();
+  $("#change_user_city_postal").show();
+  $("#user_city_postal").hide();
+  $(this).hide();
+})
+$("#change_user_phone").click(function(){
+  $("#edit_user_phone").show();
+  $("#user_phone_text").hide();
+  $("#change_user_phone").hide();
+  $("#update_user_phone").click(function(){
+    $.ajax({
+      url: "<%= update_phone_user_path(current_user) %>",
+      method: "get",
+      data: "user[phone]="+$("#user_phone").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_phone").click(function(){
+  $("#user_phone_text").show();
+  $("#user_phone").val($("#user_phone_text").html()),
+  $("#change_user_phone").show();
+  $("#edit_user_phone").hide();
+
+})
+$("#change_user_first_name").click(function(){
+  $("#edit_user_first_name").show();
+  $("#user_first_name_text").hide();
+  $("#change_user_first_name").hide();
+  $("#update_user_first_name").click(function(){
+    $.ajax({
+      url: "<%= update_first_name_user_path(current_user) %>",
+      method: "get",
+      data: "user[first_name]="+$("#user_first_name").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_first_name").click(function(){
+  $("#user_first_name_text").show();
+  $("#user_first_name").val($("#user_first_name_text").html()),
+  $("#change_user_first_name").show();
+  $("#edit_user_first_name").hide();
+
+})
+$("#change_user_last_name").click(function(){
+  $("#edit_user_last_name").show();
+  $("#user_last_name_text").hide();
+  $("#change_user_last_name").hide();
+  $("#update_user_last_name").click(function(){
+    $.ajax({
+      url: "<%= update_last_name_user_path(current_user) %>",
+      method: "get",
+      data: "user[last_name]="+$("#user_last_name").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_last_name").click(function(){
+  $("#user_last_name_text").show();
+  $("#user_last_name").val($("#user_last_name_text").html()),
+  $("#change_user_last_name").show();
+  $("#edit_user_last_name").hide();
+
+})
+$("#change_user_job_title").click(function(){
+  $("#edit_user_job_title").show();
+  $("#user_job_title_text").hide();
+  $("#change_user_job_title").hide();
+  $("#update_user_job_title").click(function(){
+    $.ajax({
+      url: "<%= update_job_title_user_path(current_user) %>",
+      method: "get",
+      data: "user[job_title]="+$("#user_job_title").val(),
+      dataType: "script"
+    })
+  })
+})
+$("#cancel_user_job_title").click(function(){
+  $("#user_job_title_text").show();
+  $("#user_job_title").val($("#user_job_title_text").html()),
+  $("#change_user_job_title").show();
+  $("#edit_user_job_title").hide();
+})
+$(function() {
+  $("#personal_subuser_image").on("click", function() {
+      $("#personal_subuser_pic").click();
+    });
+    $("#personal_subuser_pic").change(function() {
+      var form_data = new FormData(); // Creating object of FormData class
+      file_content = $("#personal_subuser_pic")[0].files[0]
+      form_data.append("user_image", file_content);
+      $.ajax({
+        url: "<%= upload_subuser_image_user_path(current_user) %>",
+        type: "POST",
+        processData: false,
+        contentType: false,
+        data: form_data,
+        dataType: "JSON",
+        success: function(response) {
+           $("#personal_subuser_image").html("<img id='p_img' style= 'width:125px;' src='"+response.profile+"' />");    
+            $("aside.nav-fixed-left").find("#circle-image").html("<img  src='"+response.circle+"' />");
+        },
+        error: function(response) {
+          $("#personal_subuser_image").html($.parseJSON(response.responseText).errors);
+        }
+      });
+    });
+})
+
+<% end %>
+

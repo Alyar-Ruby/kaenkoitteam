@@ -1,0 +1,472 @@
+<section class="settings container-fluid tab-pane fade in active" id="dashboard">
+  <h2><i class="kk-settings larger"></i>Account Settings<small> | Your Security and Payment Options </small></h2>
+  <!-- AREA SUB NAV -->
+  <ul class="areas-sub-nav list-inline">  
+    <li class="active"><a href="<%= account_setting_path %>"><i class="kk-info larger"></i>Account Info</a></li>
+    <li> <a href="<%= account_payment_settings_path %>"><i class="kk-credit-card larger"></i>payments</a></li>
+  </ul>
+</section>
+<!-- DATA AREA TITLE -->
+<section class="settings main-container container-fluid">
+    
+  <div class="row">
+    <div class="col-lg-12">
+      <!--TABS NAV -->
+      <div id="overview">
+        <div class="row">
+          <div class="col-lg-12 nav-accounts-warper">
+                <a href="#" title="choose company" class="toggle-company btn btn-primary visible-xs"><i class="fa fa-align-justify"></i> Choose Account - <span>Primary</span></a>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                      <a href="#primary-over" data-toggle="tab"><i class="kk-flag"></i>Primary</a>
+                    </li>
+                    <li class="">
+                      <a href="#zaracom-over" data-toggle="tab"><i class="kk-flag"></i>zara.com</a>
+                    </li>
+                    <li class="">
+                      <a href="#zaracom-over" data-toggle="tab"><i class="kk-flag"></i>zara.co.uk</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+      </div>
+        <!--END TAB NAV -->
+      <div class="tab-content">
+          <!-- TAB CONTENT -->
+      <div class="tab-pane fade in active" id="tab-one">
+          <div class="row">
+              <!-- CARD -->
+            <article class="card col-sm-12 col-md-12 col-lg-12 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading panel-heading-without-i">
+                  <div class="dropdown">
+                      Overview
+                  </div>
+                </div>
+                <div class="panel-body">
+                  <div class="brand-image"><img src="https://www.ragtradejobs.com/up_images/Image/zara-logo.png" style="width:140px;margin-left:10px;"></div>
+                  <div class="col-sm-6">
+                    <p><strong>Account Holder:</strong> <%= current_user.username %> (<%= current_user. email %>)</p>
+                    <p><strong>Account ID:</strong><%=current_user.account.account_number %></p>
+                    <p><strong>Type:</strong> <%= current_user.account.roleable_type %></p>
+                    <p><strong>Status:</strong> 
+                      <%if current_user.account.verified? %>
+                        Verified
+                      <% else %>
+                        <span class='label label-danger'>
+                        Not Verified</span>  <a href= '<%= verified_path%>'
+                        class='btn btn-sm btn-default' data-method="post" >Verify Now</a></p>
+                      <% end %>
+                    </p>
+                    <p><strong>Platform Limit:</strong> <%= @account.platform_limit %> USD <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#verifyID">Lift Up</a></p>
+                    <%=form_for :update_account, :url=>account_path(current_user.account), :html=>{:method=>"put"}, remote: true do %>
+                      <div class="form-group form-inline settings-selectpicker">
+                          <p><strong>Who can Search me: </strong>
+                          <%= select_tag :search, options_for_select(['Everyone','Connections and Network','Nobody'],current_user.account.search_by), :class=>"form-control selectpicker", :style=>"display:none" %>
+                          <input type="submit" class="btn btn-primary btn-sm " value="SAVE" name="save"></p>
+                      </div>
+                    <% end %>
+                  </div>
+                  <div class="col-sm-6">
+                    <p><strong>Default Language:</strong> <%= current_user.language %></p>
+                    <p><strong>Current Time Zone</strong> GTM0</p>
+                    <p><strong>Primary Currency:</strong> <span id="currency_text"><%= @account.kaenko_currency.try(:title) %> (<%= @account.kaenko_currency.try(:unit) %>)</span>
+                      <a href="#" class="btn btn-sm btn-default" data-toggle="modal" data-target="#verifyID" id="change_currency">Change</a>
+                      <%= form_tag :update_currency_accounts, method: :post, id: "currency_form", remote: true do %>
+                        <%= select_tag :'account[kaenko_currency_id]',
+                            options_for_select(KaenkoCurrency.select("id, title").collect{|c|[c.title, c.id]}), :prompt=>"Currency", id: "currency_list", 
+                              style: "display:none;" 
+                        %>
+                      <% end %>
+
+                    </p>
+                    <p><strong>Admin:</strong> <%= @account.users.where("account_admin = ?", true).first.name %></p>
+                    <p><strong>Active Users:</strong> 1</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+              <!-- END CARD -->
+              <!-- CARD -->
+              <% if current_user.account.roleable_type == "Business" %>
+              <article class="card col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading panel-heading-without-i">
+                    <div class="dropdown">
+                        Business Details
+                    </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="alert alert-warning fade in">
+                        Your Business status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+                    </div>
+                    <div class="col-sm-6">
+                        <p><strong>Organization Name:</strong> <%=current_user.account.roleable.organization_name%></p>
+                        <p><strong>Registration Number:</strong> <%=current_user.account.roleable.organization_name%></p>
+                        <p><strong>Legal Form:</strong> <%=current_user.account.roleable.legal_form%></p>
+                        
+                    </div>
+                    <div class="col-sm-6">
+                        <p><strong>Industry:</strong> <%=current_user.account.roleable.industry%></p>
+                        <p><strong>Date of Incorporation:</strong> <%=current_user.account.roleable.date_of_incorporation.strftime("%d-%m-%Y")%></p>
+                        <p><strong>Organization URL:</strong> <%=link_to current_user.account.roleable.organization_url, current_user.account.roleable.organization_url%></p></p>
+
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <% end %>
+            </div>
+            <% if current_user.account.roleable_type == "Business" %>
+            <% c = Country.find_country_by_alpha2(current_user.account.roleable.country)%>
+            <div class="row">
+                <!-- CARD -->
+              <article class="card col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading panel-heading-without-i">
+                      <div class="dropdown">
+                          Registered Address
+                      </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="alert alert-warning fade in">
+                      Your Registered Address status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <p><strong>Country:</strong> <%=c%></p>
+                      <p><strong>Postal Code:</strong> <%=current_user.account.roleable.postal_code%></p>
+                      <p><strong>City:</strong> <%=current_user.account.roleable.city%></p>
+                    </div>
+                    <div class="col-sm-6">
+                      <p><strong>Address:</strong> <%=current_user.account.roleable.address%>,
+                      <%=c.states[current_user.account.roleable.state]["name"]%></p>
+                      <p><strong>Primary Phone Number:</strong> 546545646</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <!-- END CARD -->
+            </div>
+            <% end %>
+            
+            <% if current_user.account.roleable_type == "Personal" %>
+            <% c = Country.find_country_by_alpha2(current_user.country)%>
+            <div class="row">
+                <!-- CARD -->
+              <article class="card col-sm-12 col-md-12 col-lg-12 col-xs-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading panel-heading-without-i">
+                      <div class="dropdown">
+                          Registered Address
+                      </div>
+                  </div>
+                  <div class="panel-body">
+                    <div class="alert alert-warning fade in">
+                      Your Registered Address status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+                    </div>
+                    <div class="col-sm-6">
+                      <p><strong>Country:</strong> <%=c%></p>
+                      <p><strong>Postal Code:</strong> <%=current_user.postal_code%></p>
+                      <p><strong>City:</strong> <%=current_user.city%></p>
+                    </div>
+                    <div class="col-sm-6">
+                      <p><strong>Address:</strong> <%=current_user.address%>,
+                      <%=c.states[current_user.state]["name"]%></p>
+                      <p><strong>Primary Phone Number:</strong> 435545345</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+              <!-- END CARD -->
+            </div>
+            <% end %>
+          </div>
+          <!-- END TAB CONTENT -->
+          <!-- TAB CONTENT -->
+          <div class="tab-pane fade" id="tab-two">
+            <div class="row">
+              <!-- CARD -->
+              <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading ">
+                        <div class="dropdown">
+                            Overview
+                        </div>
+                    </div>
+                    <div class="panel-body">call bootstrap-3 modal
+                       
+                        <div class="row">
+                           <div class="col-sm-2">
+                               <img  src="http://4.bp.blogspot.com/-Prqp-5wcgTc/UVSLCdgpsaI/AAAAAAAAGoA/LSPv26jcigA/s1600/Jaime+Lannister.jpg" alt="..." class="img-thumbnail"><br><br>
+                           </div>
+                           <div class="col-sm-10">
+                               <div class="alert alert-warning fade in">
+                                   Your Account status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+                               </div>
+
+                               <div class="alert alert-warning fade in">
+                                   Your ID status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+                               </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p><strong>Job Title:</strong> Managing Director at Zara S.A.</p>
+                                <p><strong>Authorised as:</strong> Admin of the Account</p>
+                                <p><strong>Username:</strong> JamieLannister</p>
+                                <p><strong>Phone:</strong> +(55)4834 8243</p>
+                                <p><a href="#" class="btn btn-xs btn-default">Add/Edit Contact</a></p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p><strong>Full Name:</strong> Jamie Henrich Lannister</p>
+                                <p><strong>Date Of Birth:</strong> 31/12/1760</p>
+                                <p><strong>Gender:</b> Male</strong>
+                                <p><strong>Nationality:</b> Chinese</strong>
+                                <p><strong>Account Official Email:</strong> <a href="mailto:hello@zara.com">hello@zara.com</a></p> 
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </article>
+                  <!-- END CARD -->
+
+                  <!-- CARD -->
+                <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading ">
+                            <div class="dropdown">
+                                Address Details
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="alert alert-success fade in">
+                                Your Address status is <strong> Verified</strong> Thank You.
+                            </div>
+                            <div class="col-sm-6">
+                                <p><strong>Country of Residence:</strong> Brazil</p>
+                                <p><strong>City:</strong> São Paulo</p>
+                                <p><strong>State/Region/District:</strong> Sao Paulo</p>
+                                
+                            </div>
+                            <div class="col-sm-6">
+                                <p><strong>Address:</strong> Castelo do rei, Sao Paulo, 12GO02</p>
+                                <p><a href="#" class="btn btn-sm btn-default">Add new address</a></p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </article>
+              </div>
+
+              <div class="row">
+                <!-- CARD -->
+                <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                  <div class="panel panel-default">
+                    <div class="panel-heading ">
+                      <div class="dropdown">
+                          Security
+                      </div>
+                    </div>
+                    <div class="panel-body">
+                      <div class="col-sm-6">
+                          <p><strong>Username:</strong> johnsnow</p>
+                          <p><strong>Password:</strong> ******** <a href="#" class="btn btn-sm btn-default">Change Password</a></p>
+                      </div>
+                      <div class="col-sm-6">
+                          <p><strong>Personal Identification Code (PIN):</strong> ******** <a href="#" class="btn btn-sm btn-default">Change PIN</a></p>
+                          <p><strong>Secret Question and Answer: </strong><a href="#" class="btn btn-sm btn-default">Edit</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+                <!-- END CARD -->
+              </div> 
+          </div>
+          <!-- END TAB CONTENT -->
+
+          <!-- TAB CONTENT -->
+          <div class="tab-pane fade " id="tab-three">
+             <div class="row">
+                  <!-- CARD -->
+                <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                    <div class="panel panel-default">
+                          <div class="panel-heading ">
+                              <div class="dropdown">
+                                  Overview
+                              </div>
+                          </div>
+                        <div class="panel-body">
+                           
+                            <div class="row">
+                               <div class="col-sm-2">
+                                   <img style="width:140px;margin-left:5px;" src="http://www.gameofthronescharacters.net/wp-content/uploads/2013/02/Tyrion-Lannister1.jpg" alt="..." class="img-thumbnail">
+                               </div>
+                               <div class="col-sm-10">
+                                   <div class="alert alert-success fade in">
+                                       Your Account status is <strong>Verified</strong> Thank You. 
+                                   </div>
+
+                                   <div class="alert alert-success fade in">
+                                       Your ID status is <strong>Verified</strong> Thank You. 
+                                   </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <p><strong>Job Title:</strong> Sales Representative at Zara S.A.</p>
+                                    <p><strong>Authorised as:</strong>  Subuser of Account</p>
+                                    <p><strong>Username:</strong> TyrionLannister</p>
+                                    <p><strong>Phone:</strong> +(55)4834 8244</p>
+                                    <p><a href="#" class="btn btn-xs btn-default">Add/Edit Contact</a></p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p><strong>Full Name:</strong> Tyrion Marcus Lannister</p>
+                                    <p><strong>Date Of Birth:</strong> 18/11/1760</p>
+                                    <p><strong>Gender:</b> Male</strong>
+                                    <p><strong>Nationality:</b> Chinese</strong>
+                                    <p><strong>Account Official Email:</strong> <a href="mailto:tyrion@zara.com">tyrion@zara.com</a></p> 
+                                </div>
+                            </div>
+                           
+                           
+                        </div>
+                    </div>
+                </article>
+                <!-- END CARD -->
+
+                <!-- CARD -->
+                <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                  <div class="panel panel-default">
+                    <div class="panel-heading ">
+                        <div class="dropdown">
+                            Address Details
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                      <div class="alert alert-warning fade in">
+                        Your Address status is <strong>Not Verified</strong> <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyaddress">Verify Now</a>.
+                      </div>
+                      <div class="col-sm-6">
+                        <p><strong>Country of Residence:</strong> Brazil</p>
+                        <p><strong>City:</strong> São Paulo</p>
+                        <p><strong>State/Region/District:</strong> Sao Paulo</p>
+                      </div>
+                      <div class="col-sm-6">
+                        <p><strong>Address:</strong> Castelo do rei, Sao Paulo, 12GO02</p>
+                        <p><a href="#" class="btn btn-sm btn-default">Add new address</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+              <div class="row">
+                  <!-- CARD -->
+                <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                  <div class="panel panel-default">
+                    <div class="panel-heading ">
+                        <div class="dropdown">
+                            Security
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                      <div class="col-sm-6">
+                        <p><strong>Username:</strong> johnsnow</p>
+                        <p><strong>Password:</strong> ******** <a href="#" class="btn btn-sm btn-default">Change Password</a></p>
+                          
+                      </div>
+                      <div class="col-sm-6">
+                        <p><strong>Personal Identification Code (PIN):</strong> ******** <a href="#" class="btn btn-sm btn-default">Change PIN</a></p>
+                        <p><strong>Secret Question and Answer: </strong><a href="#" class="btn btn-sm btn-default">Edit</a></p>
+                      </div>
+                    </div>
+                  </div>
+                </article>
+                <!-- END CARD -->
+              </div> 
+
+              <div class="row">
+                <!-- CARD -->
+                <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                  <div class="panel panel-default">
+                <div class="panel-heading ">
+                    <div class="dropdown">
+                        Roles and Capabilities
+                    </div>
+                </div>
+                <div class="panel-body">
+                    
+                    <div class="col-sm-6 ">
+                      <ul class="list-unstyled list-success">
+                        <span class="list-titles"><strong>Allowed</strong></span>
+                        <li><strong><i class="fa fa-check-square"></i>Make transfers</strong> <small>($1500.00 USD per day)</small></li>
+                        <li><strong><i class="fa fa-check-square"></i>Make online payments</strong> <small>($2500.00 USD per day)</small></li>
+                        <li><strong><i class="fa fa-check-square"></i>Create invoices to request payments</strong></li>
+                        <li><strong><i class="fa fa-check-square"></i>Exchange currencies</strong> <small>(All, up to $10,000.00 per day)</small></li>
+                        <li><strong><i class="fa fa-check-square"></i>Add connections</strong></li>
+                        <li><strong><i class="fa fa-check-square"></i>Accept connections</strong></li>
+                      </ul>
+                    </div>
+                    <div class="col-sm-6">
+                      <ul class="list-unstyled list-danger">
+                        <span class="list-titles"><strong>Disallowed</strong></span>
+                        <li><strong><i class="fa fa-minus-square"></i>Pay invoices received by email</strong></li>
+                        <li><strong><i class="fa fa-minus-square"></i>Join Groups</strong></li>
+                        <li><strong><i class="fa fa-minus-square"></i>Post comments on groups</strong></li>
+                        <li><strong><i class="fa fa-minus-square"></i>Create circles</strong></li>
+                        <li><strong><i class="fa fa-minus-square"></i>Edit Circles</strong></li>
+                        <li><strong><i class="fa fa-minus-square"></i>Delete circles</strong></li>
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+                <!-- END CARD -->
+              </div> 
+
+              <div class="row">
+                  <!-- CARD -->
+                  <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                    <div class="panel panel-default">
+                      <div class="panel-heading ">
+                        <div class="dropdown">
+                            Admin Options
+                        </div>
+                      </div>call bootstrap-3 modal
+                      <div class="panel-body text-center">
+                        <div class="col-sm-4">
+                           <a href="#" class="btn btn-danger">Delete Account</a>
+                        </div>
+                        <div class="col-sm-4">
+                          <a href="#" class="btn btn-warning">Suspend Account</a>
+                        </div>
+                        <div class="col-sm-4">
+                          <a href="#" class="btn btn-primary">Edit Account</a>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                  <!-- END CARD -->
+              </div> 
+          </div>
+          <!-- END TAB CONTENT -->
+      </div>
+    </div><!-- END col-lg-12 -->       
+  </div><!-- END row -->
+</section>
+<script>
+  $("#change_currency").click(function(){
+    $("#currency_list").show();
+    $("#change_currency").hide();
+
+    $("#currency_list").change(function(){
+
+      $("#currency_form").submit();
+
+    })
+  })
+  
+jQuery(document).ready(function($) {
+	$('.selectpicker').selectpicker();
+});
+</script>

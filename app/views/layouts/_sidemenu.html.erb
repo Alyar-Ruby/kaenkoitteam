@@ -1,0 +1,114 @@
+<aside class="nav-fixed-left" data-sb-width="100px">
+  <nav>
+    <ul >
+      <li class="avatar" >
+          <!-- slided user bar -->
+          <div id="usr-info-bar" class="usr-info-bar hidden">
+            <div class="usr-wrapper">
+                <a href="#" class="usr-avatar">
+                  <%= image_tag (current_user.image_url(:profile)), width: '96px;' %>
+                </a>
+                <div class="usr-content"><div class="usr-name"><%= current_user.name %></div><div class="usr-email"><%= current_user.email %></div>
+                <div class="usr-links"><a href="<%= account_setting_path(:activate => "account-detail") %>" data-remote="true">Account Settings </a>–
+                <%=link_to "Privacy", account_setting_path(:activate => "priv-sett-tab"), remote: "true" %></div>
+                    <a class="btn btn-info usr-view-prof" href="<%= account_setting_path(:activate => "view-profile") %>" data-remote="true">View profile</a>
+                    <%= link_to "<i class='fa fa-power-off'></i>".html_safe , destroy_user_session_path, method: :delete,  class: "btn btn-warning usr-logof" %>
+                    
+                </div>  
+              </div>
+          </div>
+          <!-- end -->
+      <span class= '<%= current_user.online_status ? "avatar-status" : " avatar-status avatar-offline" %>' id="online_status"></span><!-- add this class ('avatar-offline') to offline the avatar -->
+          <div class="avatar-image" id="circle-image">
+            <%= image_tag current_user.image.present? ? current_user.image_url(:circle) : '/assets/av2.png', :id => "trigger-usr-menu" %>
+          </div>
+            My Account
+      </li>
+	  
+      <li class="<%=(@current_tab == "dashboard") ? 'active' : ''%>">
+        <%= link_to dashboard_overview_path, remote: true, :'data-original-title' =>"Manage you account here.", rel: "no-tooltip" , title: "",
+            :'data-toggle' => "no-tooltip" , class: "sidemenu"  do %>
+            <i class="kk-home larger <%=(@current_tab == "dashboard") ? 'active' : ''%>"></i>
+            Dashboard
+        <% end %>
+          
+      </li>
+      <li class="<%=(@current_tab == "add_funds") ? 'active' : ''%>">
+        <%= link_to add_funds_path, remote: true, :'data-original-title' => "Add funds by Credit or Debit Card" , rel: "tooltip" , title: "" , class: "sidemenu" do %>
+          <i class="kk-wallet-top-up larger <%=(@current_tab == "add_funds") ? 'active' : ''%>"></i> 
+          Add Funds
+        <% end %>
+      </li>
+      <li class="<%=(@current_tab == "send_money") ? 'active' : ''%>">
+        <%= link_to send_money_transactions_path , remote: true, :'data-original-title' => "Make a Single or Mass payment" , rel: "tooltip" , title: "" , class: "sidemenu" do %>
+          <i class="kk-money-send larger <%=(@current_tab == "send_money") ? 'active' : ''%>"></i>
+          Send Money
+        <% end %>
+      </li>
+      <li class="<%=(@current_tab == "request") ? 'active' : ''%>">
+        <%= link_to new_request_payment_path,  remote: true, :'data-original-title' => "Request money and create invoice" , rel: "tooltip" , title: "" , class: "sidemenu" do %>
+          <i class="kk-create-invoice larger <%=(@current_tab == "request") ? 'active' : ''%>"></i>
+          Request
+        <% end %>
+      </li>
+    <!--  
+	  <li class="<%=(@current_tab == "exchange") ? 'active' : ''%>">
+          <a href="<%=exchange_path%>" data-original-title="Exchange Currency" rel="tooltip" title=""><i class="kk-exchange-circular larger <%=(@current_tab == "exchange") ? 'active' : ''%>"></i>Exchange</a>
+      </li> 
+	-->
+      <li class="<%=(@current_tab == "withdraw") ? 'active' : ''%>">
+        <%= link_to withdraw_path ,  remote: true, :'data-original-title' => "Withdraw money to your bank account" , rel: "tooltip" , title: "" , class: "sidemenu" do %>
+          <i class="kk-wallet-withdraw larger <%=(@current_tab == "withdraw") ? 'active' : ''%>"></i>
+          Withdraw
+        <% end %>
+      </li>
+      <li class="<%=(@current_tab == "sell_online") ? 'active' : ''%>">
+        <%= link_to sell_online_path, remote: true, :'data-original-title' => "Withdraw money to your bank account" , rel: "tooltip" , title: "" , class: "sidemenu" do %>
+        <i class="kk-open larger <%=(@current_tab == "sell_online") ? 'active' : ''%>"></i>Sell Online
+        <% end %>
+      </li>
+      <li class="<%=(@current_tab == "settings") ? 'active' : ''%>">
+        <%= link_to account_setting_path  , remote: true , :'data-original-title' => "Change your Name, Addres, PIN etc." , rel: "tooltip" , title: "" , class: "sidemenu" do %>
+        <i class="kk-settings larger <%=(@current_tab == "settings") ? 'active' : ''%>" id="setting_menu"></i>Settings
+        <% end %>
+      </li>
+    </ul>
+  </nav>
+</aside>
+<div class="hide userpopover">
+  <div  id="userpopoveractive">
+    <div class="row">
+      <div class="col-sm-4"><h4><a><img width="105px" height="105px" src="<%=current_user.image.present? ? current_user.image_url(:profile) : '/assets/av2.png'%>" class="img-thumbnail"></a></h4></div>
+      <div class="col-sm-8">
+        <h4><%=current_user.name%></h4>
+        <p><%=current_user.email%></p>
+        <%= link_to "View Profile", account_setting_path, remote: true, :onclick => "$('[rel=popoveruser]').popover('hide')" , class: "btn btn-primary btn-sm"  %> 
+        <%= link_to "Logout" , destroy_user_session_path, method: :delete,  class: "btn btn-warning btn-sm" %>
+        <%= link_to "S" , "javascript:void(0);" , class: "btn btn-default btn-sm" %>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function userpopover()
+  {
+    return $('.userpopover').html();
+  }
+
+  $(function(){
+   $("[rel=popoveruser]").popover({ animation:true, placement: 'right', content: userpopover, html: true,
+      template: '<div class="popover popover-user"><div class="arrow"></div><div class="popover-content"></div></div>' });
+  });
+</script>
+<script>
+  $(function() {
+    $('.sidemenu').click(function() {
+      $("i.active").removeClass("active");
+      $("li.active").removeClass("active");
+      $(this).parent().find("i").addClass("active")
+    })
+    $("#online_status").click(function() {
+      $.getScript("<%= update_online_status_users_path %>")
+    })
+  })
+</script>

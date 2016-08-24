@@ -1,0 +1,21 @@
+<section class="mail-inbox container-fluid tab-pane fade in active" id="dashboard">
+  
+  <h2>Messages<small> | My Inbox </small></h2>
+  <!--<a href="#" class="compose-email btn btn-primary btn-sm"> <i class="kk-pencil"></i>Compose message</a>-->
+  	<%= link_to "javascript:void(0);" , class: "compose-email btn btn-primary btn-sm", id: "new_message_link" do %> 
+  		<i class="kk-pencil"></i>
+  		Compose Message
+  	<% end %>
+ 
+</section>
+<script type="text/javascript">
+$(function(){
+	$("#new_message_link").on("click", function(){
+		$.getScript("<%= new_message_path %>")
+		history.pushState(null, "", "<%= new_message_path %>")
+	})
+	$(window).bind("popstate", function(){
+		$.getScript(location.href)
+	})
+})
+</script>

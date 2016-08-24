@@ -1,0 +1,51 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Verify Business</h4>
+    </div>
+      <div class="modal-body">
+          <p style="display:none;" class="alert alert-warning" id="document_error"></p>
+          <p style="display:none;" class="alert alert-success"></p>
+          <div class="form-group">
+            <div class="span3 offset1"><label>Business Document:<label></div>
+            <div>
+                <%= file_field_tag :business_document, id: "business_document" ,    class: "form-control input-sm" %>
+            </div>
+          </div>
+          <br>
+          <div class="row-fluid">
+            <div class="span3 offset1">&nbsp;</div>
+            <div class="span8"><%= submit_tag "Submit", type: "button", id: "doc_button" , :class=>"btn btn-primary" %></div>
+          </div>
+      </div>
+    
+  </div>
+</div>
+<%= javascript_tag do %>
+  $(function() {
+   
+    $("#doc_button").on("click", function() {
+      //$(this).closest('form').submit();
+      var form_data = new FormData(); // Creating object of FormData class
+        file_content = $("#business_document")[0].files[0]
+        form_data.append("business_document", file_content);
+        $.ajax({
+          url: "<%= upload_business_document_businesses_path %>",
+          type: "POST",
+          processData: false,
+          contentType: false,
+          data: form_data,
+          success: function(response) {
+             $("#business_status").text(response);
+             $("#edit_business_detail_btn").remove();
+             $('#modal-window').modal('toggle');
+          },
+          error: function(response) {
+            $("#document_error").html('Your Registered Address status is <strong>Not Verified</strong>');
+          }
+        });
+    });
+    
+  });
+<% end %>

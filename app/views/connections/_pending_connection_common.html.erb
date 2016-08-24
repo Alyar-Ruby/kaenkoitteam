@@ -1,0 +1,99 @@
+<section class="settings container-fluid tab-pane fade in active" id="connection">
+  <h2><i class="kk-settings larger"></i>Connections</h2>
+  <!-- AREA SUB NAV -->
+  <ul class="areas-sub-nav list-inline">  
+    <li >
+      <%=link_to connections_path do %> 
+        <i class="kk-info larger"></i>
+        My Connections
+      <% end %>
+    </li>
+    <li class="active"> <a href="<%= pending_connection_connections_path %>" data-toggle="tab"><i class="kk-credit-card larger"></i>Pending Connections</a></li>
+  </ul>
+</section>
+<!-- DATA AREA TITLE -->
+<section class="settings main-container container-fluid">
+    
+  <div class="row">
+    <div class="col-lg-12">
+      <!--TABS NAV -->
+      <div id="overview">
+        <div class="row">
+          <div class="col-lg-12 nav-accounts-warper">
+                <a href="#" title="choose company" class="toggle-company btn btn-primary visible-xs"><i class="fa fa-align-justify"></i> Choose Account - <span>Primary</span></a>
+                <ul class="nav nav-tabs">
+                  
+                </ul>
+            </div>
+        </div>
+      </div>
+        <!--END TAB NAV -->
+      <div class="tab-content">
+      
+          <!-- TAB CONTENT -->
+          <div class="tab-pane fade in active" id="tab-two">
+            <div class="row">
+              <!-- CARD -->
+              <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading ">
+                        <div class="dropdown">
+                            Pending User
+                        </div>
+                    </div>
+                    <div class="panel-body table-responsive">
+                    <table class="table table-hover">
+                        <thead class="">
+                          <tr>
+                            <td>
+                             User
+                            </td>
+                            <td>
+                              Action
+                            </td>
+
+                          </tr>
+                        </thead>
+                        <tbody>
+                        <%if @pending_connections.size > 0 %>
+                          <%@pending_connections.each do |con| %>
+                            <tr>
+                              <td>
+                                <%= con.from_user.name %>
+                              </td>
+                              <td id="con<%=con.id%>">
+                                <%=link_to "Accept", approve_reject_connection_path(con, _action: "accept"), remote: true, class: "btn btn-primary btn-sm" %> 
+                                <%= link_to "Reject" , approve_reject_connection_path(con, _action: "reject"), remote: true, class: "btn btn-danger btn-sm" %>
+                              </td>
+                              
+                            </tr>
+                          <% end %>
+                        <% else %>
+                          <tr>
+                            <td>No any pending user available.</td>
+                          </tr>
+                        <% end %>
+                        
+                      </tbody>
+                    </table>
+                  </div>
+                  </div>
+                </article>
+                  <!-- END CARD -->
+
+                  <!-- CARD -->
+                <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+                    
+                </article>
+              </div>
+
+              
+          </div>
+          <!-- END TAB CONTENT -->
+
+          
+      </div>
+    </div><!-- END col-lg-12 -->       
+  </div><!-- END row -->
+</section>
+

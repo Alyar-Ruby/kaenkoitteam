@@ -1,0 +1,165 @@
+<%= render 'request_payment_header' %>
+<!-- DATA AREA TITLE -->
+<section class="request-money-invoice main-container container-fluid">
+  <div class="row row-50-top">
+      
+      <!-- Prototyped -->
+      
+      <div class="col-lg-9">
+				<div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="dropdown">Request Payment</div>
+                    </div>
+                    <div class="panel-body panel-overview panel-overview-white">
+                        <div class="col-lg-6 tabular-content">
+                            <ul>
+                                <li class="no-hover">
+                                    <div>
+                                        <span style="display:inline-block;">
+                                            <label>Request to:</label>
+                                            <p>
+                                                <textarea id="request_receipents" class="request-receipents-field" size="3" style="border: 1px solid rgb(227, 231, 231); -webkit-box-shadow: rgba(227, 232, 232, 0.74902) 0px 1px 1px inset; box-shadow: rgba(227, 232, 232, 0.74902) 0px 1px 1px inset; border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; width: 200px; font-weight: normal !important; margin-top: 0px; margin-bottom: 0px; height: 67px; padding: 10px; background-color: rgb(255, 255, 255);"></textarea>   
+                                            </p>
+                                        </span>
+                                        <span class="info-small">
+                                            
+                                            <p>
+                                                <b class="text-blue">Info:</b>For group billing separate each multiple email with comma or return. For Multiple Payment Requests, you can customise the amount on the next step
+                                            </p>
+                                        </span>
+                                        
+                                    </div>
+                                </li>
+                                <li class="no-hover">
+                                    <div>
+                                        <span style="display:inline-block;">
+                                            <label>Amount</label>
+                                            <p>
+                                                <input id="amount-field" type="text" placeholder="$ 0.00 USD" size="15">
+                                                <select>
+                                                    <option>USD</option>
+                                                    <option>HKD</option>        
+                                                </select>   
+                                            </p>
+                                        </span>
+                                        <span class="info-small">
+                                            
+                                            <p>
+                                                <b class="text-blue">Info:</b>Fee will be automatically substracted in Net Amount. Click here for <a href="#">Fees Info</a> 
+                                            </p>
+                                        </span>
+                                        
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6 tabular-content">
+                            <ul>
+                                <li class="no-hover">
+                                    
+                                    <div>
+                                        <span style="display:inline-block;">
+                                            <label>Request Title</label>
+                                            <p>
+                                                <input id="amount-field" type="text" placeholder="Your Request Title" size="35">   
+                                            </p>
+                                        </span>
+                                        
+                                        
+                                    </div>
+                                    
+                                </li>
+                                <li class="no-hover">
+                                    <label>I’m requesting money to</label>
+                                    <p><input type="radio"> My family or friends</p>
+                                    <p><input type="radio"> My Clients</p>
+                                </li>
+                            </ul>
+                        </div>
+                            <a href="javascript:void(0);" id="request-funds-proceed" class="btn btn-primary right-bottom">Process Order</a>
+                    </div>
+                </div>
+            </div>
+      
+      
+      <!-- end -->
+      
+      
+      
+    <div class="col-lg-12" style="display:none">
+       <%= simple_form_for(@request_payment, remote: true) do |f| %>
+          <!-- row -->
+        <div class="row">
+            <!-- CARD CONTENT -->
+          <div class = "alert alert-warning" style="display:none;" id="error_msg"></div>
+          <article class="card col-sm-12 col-md-12 col-lg-12 col-xs-12"> 
+            <div class="panel panel-default"> 
+              <div class="panel-heading">
+                  <i class="kk-create-invoice light"></i>Request Payment
+              </div> 
+              <div class="panel-body"> 
+                  <div class="col-md-6 col-sm-12">
+                      <div class="form-group">
+                          <label for="RequestTo">Request To:</label>
+                          <%= f.input :request_to, 
+                            :placeholder=>"Email / ID", :label=> false, input_html: 
+                            {class: "form-control"}, :required=>"required" 
+                          %>
+                      </div>
+
+                      <div lass="form-group">
+                          <label for="RequestTo3">Title:</label>
+                          <%= f.input :title, 
+                            :placeholder=>"Request Title", :label=> false, input_html: 
+                            {class: "form-control"}, :required=>"required" 
+                          %>
+                      </div>
+
+                  </div>
+                  <div class="col-md-6 col-sm-12">
+                    <div class="row">
+                      <div class="form-group col-xs-12 col-lg-7">
+                        <label for="RequestTo">Amount:</label>
+                        <div lass="form-group">
+                          <%= f.input :amount, 
+                            :placeholder=>"Amount eg. 1000.00", :label=> false, input_html: 
+                            {class: "form-control"}, :required=>"required" 
+                          %>
+                        </div>
+                      </div> 
+                        <div class="form-group col-xs-12 col-lg-4">
+                            <label for="RequestTo">Currency:</label>
+                            <div lass="form-group">
+                               <%= f.input :kaenko_currency_id, :as=>"select", :collection => KaenkoCurrency.all, 
+                                 :prompt=>"Currency", label: false, 
+                                  input_html: {class: "selectpicker col-xs-12"}, 
+                                 :required=>"required" 
+                              %>
+                                                  
+                            </div>
+                        </div>                                               
+                      </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-lg-12">
+                                <label for="request8">Memo:</label> 
+                                <%= f.input :memo, 
+                                :as => "text",  :label=> false, input_html: 
+                                {class: "form-control", rows: "5"}, :required=>"required" 
+                                %>
+                            </div> 
+                        </div>                                          
+                        <!-- <button class="btn btn-success pull-right" type="button">Send Payment Request</button> -->
+                         <%= f.submit "Send Payment Request" , 
+                            class: "btn btn-success pull-right"  
+                         %>
+                    </div>
+                </div> 
+            </div> 
+          </article> 
+          <!-- END CARD CONTENT -->          
+        </div>
+          <!-- END row -->
+      <% end %>
+    </div><!-- END col-lg-12 -->       
+  </div><!-- END row -->
+</section>

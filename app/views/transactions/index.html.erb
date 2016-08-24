@@ -1,0 +1,23 @@
+<h2>Transactions</h2>
+<div>
+<%if @transactions.size > 0 %>
+  <div class="row-fluid" style="font-weight:bold;">
+    <div class="span3">Transaction ID</div>
+    <div class="span3">Transfer To</div>
+    <div class="span3">Amount</div>
+    <div class="span3">Status</div>
+  </div>
+	<% @transactions.each do |transaction| %>
+    <div class="row-fluid">
+			<div class="span3"><%= transaction.transaction_id %></div>
+			<div class="span3"><%= transaction.transaction_to %></div>
+			<div class="span3"><%= transaction.amount.to_f %> <%= transaction.kaenko_currency.unit %></div>
+			<div class="span3"><%= transaction.status %> <%= link_to "Cancel", cancel_transaction_path(transaction) if transaction.status == "pending" %></div>
+		</div>
+		<% end %>
+<% else %>		
+  <div class="row-fluid" style="font-weight:bold;">
+    <div class="span12">No Transactions available</div>
+  </div>
+<% end %>
+</div>

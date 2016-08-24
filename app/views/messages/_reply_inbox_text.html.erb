@@ -1,0 +1,41 @@
+<div class="avatar pull-left <%= current_user.online_status == false ? 'avatar-offline' : '' %> ">
+  <%= image_tag current_user.user_image.present? ? current_user.user_image : '/assets/av2.png', width:50, height: 50, class: "img-circle" %>
+ </div>
+ <div class="content ">
+    <span><i class="kk-clock"></i><%= relative_time(conv_message.created_at)%></span>
+    <h2><%= current_user.try(:business_name) %></h2>
+    <p>
+    	<%= simple_format(truncate(conv_message.message, length: 70, separator: ' ')) %>
+    </p>
+    <%if conv_message.message_images.present? %>
+      <% conv_message.message_images.each do |attach| %>
+        <ul>
+         <li class="img" style="list-style-type: none;">
+          <%extension = attach.attachment.file.extension.downcase %>
+          <%if %w{jpg png jpg gif bmp}.include?(extension)%>
+            <%= image_tag attach.attachment_url(:profile) , width:50, height: 50 , class: "a_image" %>
+            <span data-src="<%= attach.attachment %>"></span>
+          <%else%>
+            <%=link_to attach.attachment.file.filename, download_attachment_message_path(attach.id), method: :post  %>
+          <% end %>
+          
+          </li>
+        </ul>
+      <% end %>
+    <% end %>
+ </div>
+ <%= javascript_tag do %>
+
+   $('.a_image').on('click',function(){
+      var src = $(this).attr('src');
+      var img = '<img src="' + src + '" class="img-responsive"/>';
+      
+      $('#modal-window').html("<div class='modal-dialog'><div class='modal-content'><div class='modal-body'>"+img+"</div></div></div> ");
+     
+      $('#modal-window').modal();
+      $('#modal-window').on('hidden.bs.modal', function(){
+          $('#modal-window .modal-body').html('');
+      });
+    });  
+
+<% end %>	

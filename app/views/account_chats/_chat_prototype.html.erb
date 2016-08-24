@@ -1,0 +1,157 @@
+<div id="chatbox-prototype<%=account.id%>" class="chatbox" style="display:none;">
+    
+  <div class="top-chatbox">
+    <span class="title-min" id="chat-title<%=account.id%>" style="content:normal;">
+        <i class="fa fa-comments"></i>
+        <%= account.display_name %>
+    </span>
+    <a href="<%#= account_account_chat_path(account.id, account.id)%>javascript:void(0);"  id="chat-close<%=account.id%>" class="chatbox-close pull-right" data-toggle="tooltip" data-placement="top" title="" data-original-title="Close">
+        <i class="fa fa-times"></i>
+    </a>
+    <a href="#" class="chatbox-settings pull-right dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+        <i class="fa fa-cog"></i>
+    </a>
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Send Money</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Request Money</a></li>
+        
+    </ul>
+  </div>
+  <div class="content-chatbox" id="content_box<%=account.id%>">
+    <ol class="discussion" id="chatwindow<%=account.id%>">
+        <%if messages.present? && messages.size > 0 %>
+          <%messages.each do |msg| %>
+
+          <li class="<%= (msg.conversation_message.account.id == current_user.account.id) ? 'self' : 'other' %>">
+            <div class="avatar">
+              <%= image_tag msg.conversation_message.account.display_image_profile%>
+                <!-- <img src="http://development.kaenko.com/uploads/user/image/13/profile_me.png" /> -->
+            </div>
+            <div class="messages">
+                <p><%= simple_format(msg.conversation_message.message, {}, sanitize: false) %></p>
+                <time datetime="2009-11-13T20:00"><%= msg.conversation_message.user.name %> • <%= relative_time(msg.created_at)%></time>
+            </div>
+          </li>
+        <% end %>
+      <% end %>
+      <div style="display:none;">
+      <%= paginate messages, params: {controller: "account_chats", action: "load_message", method: :get, account_id: current_user.account.id, id: account.id, } %>
+      </div>
+          
+    </ol>
+  </div>
+  <div class="bottom-chatbox">
+      <a href="#" id="chatbox-attach" class="attach-btn"><i class="fa fa-camera"></i></a>
+      <input type="text" placeholder="Write a reply..." id="chat_txt<%=account.id%>">
+  </div>
+</div>
+
+<script>
+  
+  
+  $("#chat-close<%=account.id%>").on('click',function(e){
+    e.preventDefault();
+    //chat_width = chat_width - 290
+    count = $(".opened").length - 1
+    $("#chatbox-prototype<%=account.id%>").removeClass("opened").css("right", chat_width.toString()+'px').hide();
+    index = chatBoxes.indexOf("<%= account.id %>")
+    chatBoxes.splice(index, 1)
+    restructureChatBoxes();
+  })
+  function restructureChatBoxes() {
+
+    align = 0;
+    width = 290;
+    size = chatBoxes.length
+    width = (chatBoxes.length)*(290)+290
+    for (x in chatBoxes) {
+      chatbox_id = chatBoxes[x];
+      if (align >= 3) {
+        align = 0
+      }
+      if ($("#chatbox-prototype"+chatbox_id).css('display') != 'none') {
+        if (align == 0) {
+          $("#chatbox-prototype"+chatbox_id).css('right', '290px');
+        } else {
+          width = (align)*(290)+290;
+          $("#chatbox-prototype"+chatbox_id).css('right', width+'px');
+
+        }
+        align++;
+      }
+      
+    }
+    
+    if( (chatBoxes.length) == 0 ){
+      chat_width = 0
+    }else {
+      chat_width = (chatBoxes.length)*(290) 
+    }
+    
+
+  }
+/*
+  var chatBoxes = new Array();
+  $('#chat-title<%=account.id%>').on('click',function(e){
+    e.preventDefault();
+    $('#chatbox-prototype<%=account.id%>').toggleClass('opened');
+  })
+  // $("#chat-close<%=account.id%>").click(function(e){
+  //   e.preventDefault();
+  //   $('#chatbox-prototype<%=account.id%>').remove();
+  //   chatBoxes.push($(".chatbox").length)
+    
+  // })
+  function restructureChatBoxes() {
+    align = 0;
+    for (x in $(".chatbox").length) {
+      chatboxtitle = chatBoxes[x];
+
+      if ($("#chatbox-prototype"+chatboxtitle).css('display') != 'none') {
+        if (align == 0) {
+          $("#chatbox-prototype"+chatboxtitle).css('right', '20px');
+        } else {
+          width = (align)*(290)+20;
+          $("#chatbox-prototype"+chatboxtitle).css('right', width+'px');
+        }
+        align++;
+      }
+    }
+  }
+  */
+  $(function (){
+    $('#chat_txt<%=account.id%>').keydown(function(event) {
+      if(event.keyCode == 13 && event.shiftKey == 0)  {
+        message = $("#chat_txt<%=account.id%>").val();
+        message = message.replace(/^\s+|\s+$/g,"");
+        $("#chat_txt<%=account.id%>").val('');
+        $.ajax({
+          url: "<%=account_account_chats_path(account)%>",
+          dataType: "script",
+          method: "post",
+          data: "message="+message,
+        });
+      }
+    })
+  })
+
+</script>
+<%= javascript_tag do %>
+  $(function() {
+    if ($('.pagination').length) {
+      /*$(window).scroll(function() {
+        url = $('.next').children('a').attr('href');
+        if (url && $(window).scrollTop()+$(window).height() > $(document).height()/2) {
+          $('.pagination').text('Fetching more products...')
+          $.getScript(url)
+        }
+      })*/
+       $("#content_box<%=account.id%>").scroll(function() {
+          url = $("#content_box<%= account.id %>").find(".next").children('a').attr('href');
+          if (url && $("#content_box<%=account.id%>").scrollTop() < 134){
+            $.getScript(url)
+          }
+       })
+    }
+  })
+<% end %>

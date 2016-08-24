@@ -1,0 +1,20 @@
+<%if @invoice.present? && @invoice.status == "Pending"%>
+	<h2>Payment request</h2>
+	<div class="row-fluid">Please click on the pay link to complete your invoice request.</div><br>
+	<div class="alert alert-warning" style="display:none;" id="error_msg"></div>
+	<div class="row_fluid">
+	  <div class="span12">
+	    <hr style="width:100%">
+	  </div>
+	</div>
+	<div class="row_fluid">
+	  <div class="span5 offset1">Payment To<br><%= @invoice.user.email %></div>
+	  <div class="span5"><b>Amount: <%= @invoice.total %></b></div>
+	  <div class="span5"><%= @invoice.kaenko_currency.unit %> </div>
+	  <div><%= link_to "Pay", pay_invoice_payment_invoice_path(@invoice), remote: true %></div>
+	</div>
+<% else %>
+	<div> Sorry request of amount to pay has been cancelled </div>
+<% end %>
+
+

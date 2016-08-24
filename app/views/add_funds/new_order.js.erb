@@ -1,0 +1,14 @@
+<%if !@card.present? %>
+  $("#add_fund_msg").html("Please select payment method").css("color", "red")
+<% else %>
+  <%if @card == "new-card" %>
+    $("#add-card-panel").html("<%= j (render 'add_card')%>")
+    $("#add_fund_msg").html("Add card ")
+    $("#add-card-panel").removeClass("in-out");
+  <% else %>
+    $("#add-previous-card-panel").html("<%= j (render 'save_method_card')%>")
+    $("#add-previous-card-panel").removeClass("in-out");
+  <% end %>
+<% end %>
+
+$(".ajax-loading").hide();

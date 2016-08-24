@@ -1,0 +1,87 @@
+
+<div class="modal-dialog">
+  <div class="modal-content">
+    <%=form_tag transaction_disputes_path(@trans.id), id:"dispute_form", remote: true do %>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;</h4>
+      </div>
+      
+      <div class="modal-body">
+
+        <div id="error_msg_social"></div>
+         <div class="container-fluid">
+          <div class="row" style="height:300px;overflow-y:scroll;">
+            <p>
+              <strong>Refund For Transaction ID:</strong> #<%= @trans.transaction_id %>
+            </p>
+            <p>
+              <strong>Payment To: </strong><%= @trans.user.name %>
+            </p>
+            <p>
+              <strong>Total Paid: </strong><%= number_with_precision(@trans.amount, precision:2 || 0) %> <%= @trans.kaenko_currency.unit %>
+            </p>
+            <p>
+              <strong>Reason: </strong> <br>
+            <p>
+
+            <% REFUND_REASON.each do |key, reason|  %>
+            
+              <div> 
+                <span><%=radio_button_tag "reason", reason, true, style:"height:12px;" %> </span>
+                <span><%= reason %></span>
+              </div>
+            <% end %>
+            <p>
+              <strong>Request:</strong>
+            </p>
+            <p>
+              <%= radio_button_tag "request", "full_refund", true, style:"height:12px;" %> Full Refund: <%= number_with_precision(@trans.amount, precision:2 || 0) %> 
+            </p>
+            <p>
+                <%= radio_button_tag "request", "partial_refund" , false, style:"height:12px;" %> 
+                Partial Refund of  <%= @trans.kaenko_currency.unit %> : <%= text_field_tag :amount ,'', disabled: true, id: "txt_partial" %>
+            </p>
+            <p>
+              <strong>Ship Item back? (You may have to pay for the shipment fee)</strong>: <%=radio_button_tag :"shipment", "yes", true, style: "height:12px;" %> YES&nbsp; <%=radio_button_tag :"shipment", "no" , false, style: "height:12px;" %> NO
+            </p>
+            <p>
+              Message: 
+            </p>
+            <p>
+              <%=text_area_tag "message", nil,  rows: 5, cols: 40, placeholder: "Write the details of your request...." %>
+            </p>
+            <p>
+              Evidence/ Document: 
+            </p>
+            <p>
+              <%=file_field_tag :document %>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button  class= "btn btn-danger" data-dismiss="modal">Cancel </button>
+        <%= submit_tag :Submit, class: "btn btn-primary", style: "height:31px;" %>
+      </div>
+     
+    </div>
+    <% end %>
+</div>
+<script>
+  $(function() {
+    $("#request_partial_refund").click(function() {
+        $("#txt_partial").removeAttr("disabled")
+    });
+    $("#request_full_refund").click(function(){
+      // body...
+       $("#txt_partial").prop("disabled", true)
+    }) 
+
+  });
+  
+</script>
+
+
+
+

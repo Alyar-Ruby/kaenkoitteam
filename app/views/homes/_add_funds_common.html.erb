@@ -1,0 +1,155 @@
+<!-- AREA TITLE/NAV-->
+<section class="top-up container-fluid tab-pane fade in active" id="dashboard">
+    
+    <h2></h2>
+   
+</section>
+<!-- DATA AREA TITLE -->
+<section class="top-up main-container container-fluid">
+    
+    <div class="row">
+        
+        <div class="col-lg-9">
+         
+            <div class="panel panel-default">
+                <div class="panel-heading addfund-heading">
+                    <a class="label label-info dropdown-toggle" data-toggle="dropdown" id="countryselector">
+                        <i class="fa fa-globe"></i>
+                        Singapore
+                        <i class="fa fa-sort-down right"></i>
+                    </a>
+                    <ul class="dropdown-menu" aria-labeledby="countryselector">
+                        <li>
+                            <a href="#"><img src="/assets/flag/HK.png"> Hong Kong</a>
+                        </li>
+                        <li>
+                            <a href="#"><img src="/assets/flag/GB.png"> United Kingdom</a>
+                        </li>
+                        <li>
+                            <a href="#"><img src="/assets/flag/PL.png"> Poland</a>
+                        </li>
+                        <li>
+                            <a href="#"><img src="/assets/flag/DE.png"> Germany</a>
+                        </li>
+                        <li>
+                            <a href="#"><img src="/assets/flag/ES.png"> Spain</a>
+                        </li>
+                        <li>
+                            <a href="#"><img src="/assets/flag/FR.png"> France</a>
+                        </li>
+                    </ul>
+                    <div id="add-funds-panel-title" class="dropdown">
+                      <span class="text-blue">Add Funds:</span> 
+                      <span id="add_fund_msg"> Select Payment Method</span>
+                    </div>
+                </div>    
+                
+                <div class="panel-body panel-overview panel-overview-white" >
+                    <div  class="tabular-cardpick col-lg-6 col" style="height:400px;overflow-y:scroll;" >
+                        <ul id="add-funds-left-col">
+                            <li>
+                              <span>
+                                <input type="radio" class="radio" name="add_fund" id="fund-id-1" value="new-card">
+                              </span>
+                              <span>
+                                <strong>Debit/Credit Card</strong>
+                                <p>You can use new debit or credit card</p>
+                              </span>
+                            </li>
+                            <%if @cards.size > 0 %>
+                              <%@cards.each do |card| %>
+                                <li>
+                                  <span>
+                                    <input type="radio" class="radio" name="add_fund"  value="<%= card.id%>">
+                                  </span>
+                                  
+                                    <span>
+                                    <%=link_to account_setting_path(:activate=>"pay-sett-tab"), remote: true do %>
+                                      <strong><%= card.card_type %> x- <%=card.card_number[-4..-1]%></strong>
+                                      <p>Previously saved and verified debit or credit card</p>
+                                      <p><b>Info:</b> Instant, 1.4% + $0.25 USD Fee</p>
+                                    <% end %>
+                                    </span>
+                                  
+                                    <span class="card-ico">
+                                      <img src="/assets/ico/mastercard_48.png">
+                                    </span>
+                                </li>
+                              <% end %>
+                            <% end %>
+
+                        </ul>
+                    </div>
+                    
+                    <div id="add-funds-right-col" class="tabular-cardpick col-lg-6 col">
+                        <ul>
+                            <li class="no-hover"><h5>Regional Payment Methods</h5></li>
+                            <li>
+                                <span><input type="radio" class="radio" name="add_fund" id="fund-id-5" value="option5"></span>
+                                <span>
+                                  <a href="<%= account_setting_path(:activate=>'pay-sett-tab') %>" data-remote= "true">
+                                    <strong>Direct Debit Online Payment (e-NETS)</strong>
+                                        <p>Option available only within Singapore</p>
+                                        <p><b>Info:</b> Instant, 1.2% + $0.55 USD Fee</p>
+                                  </a>
+                                </span>
+                                <span class="card-ico">
+                                    <img src="/assets/ico/enets_48.png">
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <a href="javascript:void(0);" id="add-funds-proceed" class="btn btn-primary right-bottom">Process Order</a>
+                   
+                    <!-- Add card -->
+                      <div id="add-card-panel" class="slided-slide card-slide in-out">
+
+                      </div>
+                    <!-- end add card -->
+                   
+                    <!-- Saved Methods card -->
+                    <div id="add-previous-card-panel" class="slided-slide  in-out">
+                    </div>
+                      <!-- Transaction Complete card -->
+                      <div id="complete-add-card-panel" class="slided-slide card-slide in-out">
+                      </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- OLD CONTAINER -->
+       
+      <!-- END row -->
+</section>
+<script>
+  $("#add-funds-proceed").click(function(){
+   $.ajax({
+        url: "<%= new_order_account_add_funds_path(current_user.account) %>",
+        method: "get",
+        type: "script",
+        data: "card="+$("input[name=add_fund]:checked").val()
+    })
+  })
+
+
+  // $("#close-add-card-panel").click(function(){
+  // $("#add-card-panel").addClass("in-out");
+  // }) 
+  // $("#close-add-previous-card-panel").click(function(){
+  //   $("#add-previous-card-panel").addClass("in-out");
+  // }) 
+
+  $("#1add-funds-complete").click(function(){
+    $("#complete-add-card-panel").removeClass("in-out");
+  })
+  $("#2add-funds-complete").click(function(){
+    $("#complete-add-card-panel").removeClass("in-out");
+  })
+  $("#close-complete-add-card-panel").click(function(){
+    $("complete-add-card-panel").addClass("in-out");
+  })
+
+</script>

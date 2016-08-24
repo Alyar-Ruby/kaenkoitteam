@@ -1,0 +1,36 @@
+<h2>Send Money</h2>
+
+<%= simple_form_for(@transaction, :url=>review_send_money_transactions_path) do |f| %>
+
+  <div class="row-fluid">
+    <div class="span4 offset1">
+      <div><%= f.input :transaction_to, :required=>"required", :label=>"Email ID of Receiver" %></div>
+      <div><%= f.input :kaenko_currency, :as=>"select", :collection=>KaenkoCurrency.all, :placeholder=>"Select", :required=>"required" %></div>
+      <div><%= f.input :amount, :placeholder=>"Amount", :label=>"Amount", :required=>"required" %></div>
+      <div><br><%= f.submit "Send" %><%=link_to "Cancel", dashboard_overview_path, :style=>"float:right"%></div>
+    </div>
+    <div class="span4 offset2">
+      <h4>Account Balance</h4>
+    <% @balances.each do |balance| %>
+      <div class="row-fluid">
+        <div class="span4"><%=balance.balance%></div>
+        <div class="span4 offset2"><%=balance.kaenko_currency.unit%></div>
+      </div>
+    <% end %>
+    </div>
+  </div>
+  
+<% end %>
+
+
+<script>
+	$(function() {
+  $("#user_tokens").tokenInput("/messages/to_user.json", {
+  	propertyToSearch : "email",
+    crossDomain: false,
+    tokenLimit: 1,
+    prePopulate: $("#user_tokens").data("load"),
+    theme: "facebook"
+  });
+});
+</script>

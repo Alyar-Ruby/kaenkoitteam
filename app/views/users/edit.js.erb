@@ -1,0 +1,3 @@
+$("#sub_user<%= @user.id %>").hide();
+$("#sub_user_detail<%= @user.id %>").html("<%= j( render :partial => 'admin_subuser_info' , :locals=>{:su => @user}) %>").show();
+$(".ajax-loading").hide();

@@ -1,0 +1,68 @@
+<div class="row-fluid">  
+  <h3 style="display:none;" class="header smaller lighter blue"></h3>
+  <div class="table-header">
+    timelines
+  </div>
+	
+  <table id="table_report" class="table table-striped table-btimelineed table-hover">
+    <thead>
+      <tr>
+        <th class="hidden-phone">
+          <i class="icon-time hidden-phone"></i>
+          Date
+        </th>
+        <th>User</th>
+        <th>Task</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @timelines.each do |timeline| %>
+        <tr>         
+          <td><%=	timeline.created_at%></td>
+          <td><%= link_to timeline.user.email, user_path(timeline.user) %></td>
+          <td><%= timeline.task %></td>
+        </tr>
+
+      <% end %>
+      
+    </tbody>
+  </table> 
+  <div class = "pull-right" style="padding-top:10px;">
+  	<%#= link_to "New", new_feesfromto_path, :class => 'btn btn-info' %>
+  </div>
+</div>
+
+<% content_for :stylem do %>
+		<link rel="stylesheet" href="/assets/admins/datepicker.css" />
+<% end %>
+<% content_for :script do %>
+  <script src="/assets/admins/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.bootstrap.js"></script>
+  <script src="/assets/admins/date-time/bootstrap-datepicker.min.js"></script>
+  
+<% end %>
+
+<% content_for :inlinescript do %>
+  <script type="text/javascript">
+    $(function() {
+      var oTable1 = $('#table_report').dataTable( {
+    
+      "aoColumns": [
+          null, null, null       
+      ] } );
+      $('table th input:checkbox').on('click' , function(){
+        var that = this;
+        $(this).closest('table').find('tr &gt; td:first-child input:checkbox')
+        .each(function(){
+          this.checked = that.checked;
+          $(this).closest('tr').toggleClass('selected');
+        });
+          
+      });
+    
+      $('[data-rel=tooltip]').tooltip();
+    })
+  </script>
+<% end %>

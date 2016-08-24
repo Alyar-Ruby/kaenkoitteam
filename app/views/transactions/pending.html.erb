@@ -1,0 +1,23 @@
+<h2>Transactions Pending at your end</h2>
+<div>
+<%if @transactions.size > 0 %>
+  <div class="row-fluid" style="font-weight:bold;">
+    <div class="span3">Transaction ID</div>
+    <div class="span3">Received From</div>
+    <div class="span3">Amount</div>
+    <div class="span3">Action</div>
+  </div>
+	<% @transactions.each do |transaction| %>
+    <div class="row-fluid">
+			<div class="span3"><%= transaction.transaction_id %></div>
+			<div class="span3"><%= transaction.transaction_from %></div>
+			<div class="span3"><%= transaction.amount.to_f %> <%= transaction.kaenko_currency.unit %></div>
+			<div class="span3"><%= link_to "Accept", accept_transaction_path(transaction) %> | <%= link_to "Reject", reject_transaction_path(transaction) %></div>
+		</div>
+		<% end %>
+<% else %>		
+  <div class="row-fluid" style="font-weight:bold;">
+    <div class="span12">No Transactions</div>
+  </div>
+<% end %>
+</div>

@@ -1,0 +1,8 @@
+<%if !@error.present? %>
+	$("#user_city_postal_text").html("<%= @user.city %> (<%= @user.postal_code%>)").show()
+<% else %>
+	$("#user_city_postal_text").html("Unable to update").show()
+<% end %>
+ $("#user_city_postal_text").show();
+ $("#change_user_city_postal").show();
+ $("#user_city_postal").hide();

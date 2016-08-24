@@ -1,0 +1,9 @@
+$("#ajax-container").html("<%= j( render 'social_common')%>")
+$(function() {
+		history.pushState(null, "", "<%= social_user_path(@account) %>")
+		$(window).bind("popstate", function(){
+	    $.getScript(location.href)
+	  })
+	})
+$('[rel^=popover]').popover('hide');
+$(".ajax-loading").hide();

@@ -1,0 +1,164 @@
+<h3 style="display:none;" class="header smaller lighter blue">jQuery dataTables</h3>
+
+<% if @premium_request.errors.present? %>
+<div class="alert alert-error">
+  <button data-dismiss="alert" class="close" type="button">
+    <i class="icon-remove"></i>
+  </button>
+  Check Errors Below
+</div>
+<% end %>
+
+<% if flash[:notice] %>
+<div class="alert alert-success">
+  <button data-dismiss="alert" class="close" type="button">
+    <i class="icon-remove"></i>
+  </button>
+  <%=flash[:notice]%>
+</div>
+<% end %>
+
+<div class="table-header">
+  Account Details
+</div>
+<div class="center">
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Username</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.username%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Email</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.email%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Name</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.name%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Account ID</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.account_id%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Account Type</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.account.roleable_type%> <%=(@premium_request.account.premium) ? "(Premium)" : ""%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Gender</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.gender%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Date Of Birth</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.date_of_birth.strftime("%d-%m-%Y")%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Language</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.language%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Nationality</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.nation%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Address</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.full_address%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Phone</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.phone%></div>
+  </div>
+  <% if @premium_request.account.roleable_type == "Business" %>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Representative Position</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.user.representative_position%></div>
+  </div>
+  <% end %>
+</div>
+
+
+<% if @premium_request.account.roleable_type == "Business" %>
+<div class="table-header">
+  Business Details
+</div>
+<div class="center">
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Country of Incorporation</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.account.roleable.incorporation_country%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Organization Name</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.account.roleable.organization_name%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Organization URL</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=link_to @premium_request.account.roleable.organization_url, @premium_request.account.roleable.organization_url, :target=>"_blank"%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Legal Form</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.account.roleable.legal_form%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Registration Number</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.account.roleable.registration_number%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Date Of Incorporation</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.account.roleable.date_of_incorporation.strftime("%d-%m-%Y")%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Industry</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.account.roleable.industry%></div>
+  </div>
+  <div class="row-fluid">
+    <div class="span3 offset2"><strong>Registered Address</strong></div>
+    <div class="span1">:</div>
+    <div class="span6"><%=@premium_request.account.roleable.full_address%></div>
+  </div>
+</div>
+<% end %>
+
+<div class="table-header">
+  Request
+</div>
+<div class="row-fluid">
+  <div class="span9 offset2" style="text-align:justify;"><%=@premium_request.request%></div>
+</div>
+
+<div class="hr hr-double hr-dotted hr18"></div>
+<% if @premium_request.status == "pending" %>
+  <div class="row-fluid">
+    <div class="span5 offset5">
+      <%= link_to '<button class="btn btn-small btn-success"><i class="icon-ok bigger-110"></i>Approve</button>'.html_safe,  approve_admins_premium_request_path(@premium_request),  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
+      <%= link_to '<button class="btn btn-small btn-danger"><i class="icon-remove bigger-110"></i>Reject</button>'.html_safe,  reject_admins_premium_request_path(@premium_request),  {:remote => true, 'data-toggle' =>  "modal", 'data-target' => '#modal-window'}  %>
+    </div>
+  </div>
+<% else %>
+<div class="row-fluid">
+  <div class="span8 offset2">
+    <button class="btn <%=(@premium_request.status == 'rejected') ? 'btn-danger' : 'btn-success'%>">Request <%=@premium_request.status.capitalize%></button>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span3 offset2"><strong>Comments</strong></div>
+  <div class="span1">:</div>
+  <div class="span6"><%=@premium_request.comments%></div>
+</div>
+<% end %>

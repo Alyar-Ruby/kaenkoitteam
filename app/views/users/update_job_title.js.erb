@@ -1,0 +1,8 @@
+<%if !@error.present? %>
+	$("#user_job_title_text").html("<%= @user.job_title %>").show()
+<% else %>
+	$("#user_job_title_text").html("<%= @error %>").show()
+<% end %>
+$("#edit_user_job_title").hide();
+$("#change_user_job_title").show();
+

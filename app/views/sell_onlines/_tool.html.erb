@@ -1,0 +1,288 @@
+<article class="col-lg-9">
+<div class="panel panel-default">
+<div class="panel-heading">
+  <div class="dropdown">
+    <i class="kk-open light"></i> Tools Panel
+  </div>
+</div>
+<div class="panel-body panel-overview">
+  <div class="well-settings col-lg-4">
+    <ul class="well-settings-list" role="tablist">
+      <li class="active"><a href="#api-disp" role="tab" data-toggle="tab">Kaenko API</a></li>
+      <li><a href="#salestax-disp" role="tab" data-toggle="tab">Sales Tax</a></li>
+    </ul>
+  </div>
+<div class="tabular-content extraheight col-lg-8">
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="api-disp">
+            <ul>
+                <li class="no-hover">
+                    <h5><i class="kk-options light"></i> Setting Up API</h5>
+                </li>
+                <li class=no-hover>
+                    <div>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#accordion-grant-perm" class="collapsed i-toggler">
+                            <i class="fa fa-chevron-down"></i>
+                        </a>
+                        <p><b>Grant permissions to a third Party Provider to use certain APIs your behalf If:</b></p>
+                        <p>
+                            • You are using a pre-integrated shopping cart hosted by a third party<br>
+                            • Your website is hosted and managed on your behalf
+                        </p>
+                    </div>
+                    <div id="accordion-grant-perm" class="collapse collapse-detail">
+                        <p>
+                        <b>Add Third-Party Provider</b>
+                        </p>
+                        <ul>
+                        <li>    
+                        <strong>Username: </strong> <input type="text" class="form-control input-sm">
+                        </li>
+                        <li>
+                        <strong>Organization: </strong> <input type="text" class="form-control input-sm">
+                        </li>
+                            </ul>
+                        
+                        <p>Enable (name of organization) to:</p>
+                        
+                        <ul>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-9" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-9"></label>
+                                </div>
+                                <strong class=" ">Process your customer debit or credit payment</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-8" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-8"></label>
+                                </div>
+                                <strong class=" ">Display disputes reports (open, solved and total) and batch ID</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-7" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-7"></label>
+                                </div>
+                                <strong class=" ">Issue Refund to a buyer for Kaenko, debit and credit card transactions</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-6" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-6"></label>
+                                </div>
+                                <strong class=" ">Display your available balance for each of the currencies you hold and the total estimated in your primary currency</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-5" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-5"></label>
+                                </div>
+                                <strong class=" ">Obtain transaction details (date, amount, status, email, phone number, and shipping address)</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-4" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-4"></label>
+                                </div>
+                                <strong class=" ">Search your transaction history to obtain specific results (customer email, dates, transaction status, amount)</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-3" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-3"></label>
+                                </div>
+                                <strong class=" ">Execute Recurring Payments from your customers for Plans and Subscriptions pre-agreed</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-2" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-2"></label>
+                                </div>
+                                <strong class=" ">Generate Reports for Recurring Payments</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-1" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-1"></label>
+                                </div>
+                                <strong class=" ">Execute multiple recipients’ transactions at 1 batch ID (payments for commissions, rewards, etc.)</strong>
+                                
+                            </li>
+                            <li>
+                                <div class="switch">
+                                    <input id="grant-toggle-0" class="cmn-toggle cmn-toggle-round" type="checkbox">
+                                    <label for="grant-toggle-0"></label>
+                                </div>
+                                <strong class=" ">Manage Invoices on your behalf</strong>
+                                
+                            </li>
+                            
+                           
+                        <p style="margin-top: 10px;"><a href="javascript:void(0);" id="save-grant" class="btn btn-success verify-btn"><i class="fa fa-check"></i>Save</a></p>
+                    </div>
+                    
+                </li>
+                <li>
+                    <div>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#accordion-req-api" class="collapsed i-toggler in">
+                            <i class="fa fa-chevron-down"></i>
+                        </a>
+                        <p><b>Request API Credentials (username, password, signature/certificate) if:</b></p>
+                        <p>
+                            • Custom website and online stores<br>
+                            • Pre-integrated shopping carts running on your server
+                        </p>
+                    </div>
+                     <div id="accordion-req-api" class="collapse collapse-detail">
+                    
+                          <p>Request API Credentials:</p>
+
+                         <p><span style="
+display: inline-block;
+vertical-align: super;
+"><input type="radio" class="radio" name="fundAdd" id="fund-id-1" value="option1" style="
+vertical-align: baseline;
+"></span><span style="
+display: inline-block;
+width: 429px;
+/* vertical-align: middle; */
+">Signature (if your shopping cart or solution provider has asked for an Username, Password and Signature or if you are developing a custom shopping cart)</span></p><p><span style="
+display: inline-block;
+vertical-align: super;
+"><input type="radio" class="radio" name="fundAdd" id="fund-id-1" value="option1" style="
+vertical-align: baseline;
+"></span><span style="
+display: inline-block;
+width: 429px;
+/* vertical-align: middle; */
+">Certificate (if your shopping cart or service provider require a file-based
+
+certificate)</span></p><p>By clicking Submit, I agree to the API License Agreement and Terms of Use</p>
+
+                        <p style="margin-top: 10px;"><a href="javascript:void(0);" id="save-req" class="btn btn-success verify-btn"><i class="fa fa-check"></i>Submit</a></p>
+                    </div>
+                </li>
+            </ul>
+          <!-- Grant Success panel -->
+            <div id="grant-success-panel" class="slided-slide card-slide in-out" style="white-space:initial;">
+              
+                     <ul>
+                        <li class="no-hover">       
+                            <span><i class="fa fa-check-circle fa-3x text-success"></i></span>    
+                             <span style="display: inline-block;">
+                                 <h4>Third-Party Premissions Granted</h4>
+                            </span>
+                        </li>
+                         <li class="no-hover">
+                            <p><strong>Username: </strong>bigboss_pancakes.com</p>
+                            <p><strong>Organisation: </strong>ShopDaPancake.com</p>
+                         </li>
+                         <li class="no-hover">
+                         <h5>Permissions Granted</h5>
+                         <p>Enable <b>ShopDaPancake.com</b> to:</p>
+                         </li>
+                         <li class="no-hover">
+                            <p>Process your customer debit or credit payment</p>
+                             <p>Display disputes reports (open, solved and total) and batch ID</p>
+                             <p>Search your transaction history to obtain specific results (customer email, dates, transaction status, amount)</p>
+                             <p>Generate Reports for Recurring Payments</p>
+                             <p>Manage Invoices on your behalf</p>
+                             
+                         </li>
+                         <li class="no-hover">
+                            <span>
+                            <a href="javascript:void(0);" id="close-grant-success-panel" class="btn btn-success addcard-btn"><i class="fa fa-check"></i>Done &amp; Back to menu</a>
+                                
+                            </span>
+                         </li>
+                            </ul>
+                            
+                   
+                
+                    
+            </div>
+            <!-- Req Success panel -->
+            <div id="req-success-panel" class="slided-slide card-slide in-out" style="white-space:initial;">
+             
+                <ul>
+                        <li class="no-hover">       
+                            <span><i class="fa fa-check-circle fa-3x text-success"></i></span>    
+                             <span style="display: inline-block;">
+                                 <h4>API Requested Successfuly</h4>
+                            </span>
+                        </li>
+                         <li class="no-hover">
+                            <p>Warning! Don’t share your credential information with anyone! Keep it on a secure place with limited Access.</p>
+                                <p>For pre-configured shopping cart: Copy/paste the API Username, password and signature into your shopping cart configuration or administration screens.</p>
+                         </li>
+                         <li class="no-hover">
+                            <p>Requested at 4:56 AM, 21st July 2014 (UTC01)</p>
+                         </li>
+                         <li class="no-hover">
+                            <p><strong>Username: </strong>bigboss2014</p>
+                            <p><strong>Password: </strong>iDreamAboutPancakes</p>
+                            <p><strong>Signature: </strong>120e804df50576571e5e4fbbcb132b8df0b7468e</p>
+                         </li>
+                         <li class="no-hover">
+                            <span>
+                            <a href="javascript:void(0);" id="close-req-success-panel" class="btn btn-success addcard-btn"><i class="fa fa-check"></i>Done &amp; Back to menu</a>
+                                <a href="javascript:void(0);" id="remove-req-success-panel" class="btn btn-danger addcard-btn"><i class="fa fa-times"></i>Remove</a>
+                            </span>
+                         </li>
+                            </ul>
+                
+            </div>
+        </div>
+        <div class="tab-pane fad" id="salestax-disp">
+            <ul>
+                <li class="no-hover">
+                <h5><i class="kk-chart light"></i> Sales Tax</h5>
+                </li>
+                <li class="no-hover">
+                    <table class="table table-hover">
+                        <thead class="">
+                            <tr>
+                                <td>Country</td>
+                                <td>ZIP Code</td>
+                                <td>Rate</td>
+                                <td>Status</td>
+                                <td> </td>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><select class="GB-cc pd40" id="language_list" name="user[language]"><option selected="selected" value="English">United Kingdom</option>
+                                    <option value="Hindi">India</option>
+                                    <option value="Chinese">China</option>
+                                    <option value="Japanese">Japan</option></select></td>
+                                <td>Non Applicable</td>
+                                <td><input type="text" value="20%" size="5">                   </td>
+                                <td>
+                                    <a href="#" class="btn btn-success btn-sm">Enabled</a>
+                                </td>
+                                <td><button type="button" class="add-invoice-item btn btn-success" style="
+width: 25px;  height: 25px;  padding-left: 6px;  padding-top: 3px;
+"><i class="fa fa-plus"></i></button></td>
+                                
+                            </tr>    
+                        </tbody>
+                    </table>
+                </li>
+            </ul>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+</article>

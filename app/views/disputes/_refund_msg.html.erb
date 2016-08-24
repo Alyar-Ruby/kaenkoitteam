@@ -1,0 +1,28 @@
+
+<%= form_tag modify_dispute_refund_transaction_dispute_path(@trans.id, @dispute.id), remote: true do %>
+  <span> 
+    <b>Amount:</b>
+    <%= text_field_tag :refund_amount, '' , style: "height:20px;width:100px;" %>(max: <%= @trans.amount %> 
+    <%= @trans.kaenko_currency.unit %> )
+  </span> 
+  <span>
+    <b>Item Back:</b>
+  </span> 
+  <span>
+    <%=radio_button_tag :item_back, true, (@dispute.is_shipment_pay == true) ? true : false, style: "height:13px;" %> Yes  <%=radio_button_tag :item_back, false , (@dispute.is_shipment_pay == false) ? true : false, style: "height:13px;" %> No
+  </span>
+  <br>
+  <span>
+    <b>Evidence:</b>  <%= file_field_tag :document %>
+  </span>
+  <div class="input-group bottom-control">
+    <button class="btn btn-default-border" type="button" id="any_attachment">
+      <i class="kk-attach"></i>Attach File
+    </button>
+    <button class="btn btn-default-border" type="button" id="attach_image">
+      <i class="kk-money-send"></i><strong>Issue Refund</strong>
+    </button>
+    <input type="checkbox" id="press_enter"> Press Enter to send
+    <%= submit_tag "Reply", class: "btn-send btn btn-primary btn-sm" ,  id: "btn_send" %>
+  </div>
+<% end %>

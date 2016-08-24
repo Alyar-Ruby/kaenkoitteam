@@ -1,0 +1,41 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title">Account</h4>
+    </div>
+    <%= simple_form_for(@account, remote: true, :html => { :method => :put }) do |f| %>
+      <div class="modal-body">
+          <p style="display:none;" class="alert alert-warning"></p>
+          <p style="display:none;" class="alert alert-success"></p>          
+          <div class="form-group">
+            <div class="span3 offset1"><%= f.label "First Name:" %></div>
+            <div>
+                <%= f.input :first_name, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "Middle Name:" %></div>
+            <div>
+                <%= f.input :middle_name, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "Last Name:" %></div>
+            <div>
+                <%= f.input :last_name, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "Email:" %></div>
+            <div>
+                <%= f.input :email, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <div class="span3 offset1"><%= f.label "Avatar:" %></div>
+            <div>
+                <%= f.input :image, label: false,  input_html: {class: "form-control input-sm"} %>
+            </div>
+            <br>
+            <div class="row-fluid">
+              <div class="span3 offset1">&nbsp;</div>
+              <div class="span8"><%= f.submit "Submit", :class=>"btn btn-primary" %></div>
+            </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

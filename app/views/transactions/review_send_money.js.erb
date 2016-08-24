@@ -1,0 +1,13 @@
+$(".ajax-loading").hide();
+<% if @error.present? %>
+	$("#send_money_msg").html("<%= @error %>").show();
+<% else %>
+	$("#ajax-container").html("<%= j(render 'review_send_money_common') %>")
+	$(function() {
+		history.pushState(null, "", "<%= review_send_money_transactions_path %>")
+		$(window).bind("popstate", function(){
+	    $.getScript(location.href)
+	  })
+	})
+<% end %>
+

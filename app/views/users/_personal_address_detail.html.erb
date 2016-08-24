@@ -1,0 +1,70 @@
+<article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12" id="personal_address">
+  <div class="panel panel-default">
+    <div class="panel-heading ">
+        <div class="dropdown">
+            Registered Address
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="alert <%= current_user.address_verified == true ? 'alert-success' : 'alert-warning' %>  fade in" id="user_address_status">
+          <%if current_user.address_verified == true %>
+            Your Registered Address status is <strong>Verified</strong>.
+          <% else %>
+            Your Registered Address status is <strong>Not Verified</strong>.
+            <%= link_to "Verify now" , edit_address_document_user_path(current_user), remote: true, class: "btn btn-xs btn-default" , 'data-target' => "#modal-window", 'data-toggle' => "modal" %>
+          <% end %>
+            
+        </div>
+
+        <div class="col-sm-6">
+            <p><strong>Country:</strong> <%= country_name(current_user.country) %></p>
+            <p><strong>Postal Code:</strong> <%= current_user.postal_code %> </p>
+            <p><strong>City:</strong> <%= current_user.city %></p>
+            
+        </div>
+        <div class="col-sm-6">
+            <p><strong>Address:</strong> <%= current_user.address %></p>
+            <p><strong>Primary Phone Number:</strong> <%= current_user.phone %></p>
+        </div>
+        <%if current_user.address_verified == false %>
+          <div id="address_edit_btn">
+            <%= link_to "Edit", edit_personal_address_user_path(current_user) , remote: true,
+            class: "btn btn-sm btn-default", 'data-target' => "#modal-window", 'data-toggle' => "modal"   %>
+          </div>
+        <% end %>
+        
+    </div>
+  </div>
+
+  <div class="panel panel-default">
+      <div class="panel-heading ">
+        <div class="dropdown">
+          Security
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="col-sm-6">
+          <div class="alert alert-success" id="password_update" style="display:none;">
+
+          </div>
+          <p><strong>Username:</strong> <%= current_user.username %></p>
+          <p><strong>Password:</strong> ******** 
+           <%= link_to "Change Password", change_password_path , remote: true, class: "btn btn-sm btn-default", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+         </p>
+
+       </div>
+       <div class="col-sm-6">
+        <p><strong>Personal Identification Code (PIN):</strong> ******** 
+          <%= link_to 'Change PIN' , edit_security_pin_user_path(current_user), class: "btn btn-sm btn-default", remote: true, :'data-toggle' => "modal" , :'data-target' => "#modal-window" %></p>
+        <p>
+          <strong>Secret Question and Answer: 
+            <span id="secret_question"><%= current_user.secret_question_answer %> </span>
+          </strong>
+          <%= link_to "Edit", edit_secret_user_path(current_user) , remote: true,class: "btn btn-sm btn-default", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+        </p>
+
+      </div>
+    </div>
+  </div>
+  </article>
+

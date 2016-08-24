@@ -1,0 +1,26 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h4 class="modal-title" id="myModalLabel">Contacting <%= @account.display_name.try(:capitalize) %></h4>
+    </div>
+    <%= form_for(@conversation, url: create_social_message_user_path(@account), remote: true) do |f| %>
+    <div class="modal-body">
+      <div id="error_msg_social"></div>
+       <div class="container-fluid">
+        <div class="row">
+          <p>
+            <%= f.text_area :title,  rows:10, cols: 40, class: "form-control", placeholder: "Write your message here..." , style: "height:200px;"%>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-primary">Send</button>
+    </div>
+    <% end %>
+  </div>
+</div>
+
+
+

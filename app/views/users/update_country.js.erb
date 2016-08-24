@@ -1,0 +1,10 @@
+<%if !@error.present? %>
+	$("#user_country_text").html("<%= country_name(@user.country) %>").show()
+<% else %>
+	$("#user_country_text").html("<%= @error %>").show()
+<% end %>
+$("#cancel_user_country").hide();
+$("#user_country_list").hide();
+$("#change_user_country").show();
+$(".ajax-loading").hide();
+

@@ -1,0 +1,46 @@
+<div class="row-fluid">
+	<div class="span2" style="text-align:left;">
+    Welcome <%=@user.username%>,<br>
+    Account ID: <%=@user.account.account_number%><br>
+    E-mail: <%=@user.email%><br>
+    Status: <%=(@user.account.verified) ? "Verified" : "Not Verified"%>
+	</div>
+  <div class="span8 offset2">
+    <h4>Account Member Profile</h4><br>
+    <div class="row-fluid">
+      <div class="span3"><b>Username:</b></div>
+      <div class="span9"><%=@user.username%></div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3"><b>Name:</b></div>
+      <div class="span9"><%=@user.first_name%> <%=@user.middle_name%> <%=@user.last_name%></div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3"><b>Date Of Birth:</b></div>
+      <div class="span9"><%=@user.date_of_birth.strftime("%d-%m-%Y")%></div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3"><b>Gender:</b></div>
+      <div class="span9"><%=@user.gender%></div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3"><b>Nationality:</b></div>
+      <div class="span9"><%=Country.find_country_by_alpha2(@user.nationality)%></div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3"><b>Language:</b></div>
+      <div class="span9"><%=@user.language%></div>
+    </div>
+    <div class="row-fluid">
+      <div class="span3"><b>Location:</b></div>
+      <div class="span9">
+        <% c = Country.find_country_by_alpha2(@user.country)%>
+        <%=@user.address%><br>
+        <%=@user.city%><br>
+        <%=c.states[@user.state]["name"]%> - <%=@user.postal_code%><br>
+        <%=c%>
+      </div>
+    </div>
+    
+  </div>
+</div>

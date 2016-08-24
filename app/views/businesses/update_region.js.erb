@@ -1,0 +1,8 @@
+<%if !@error.present? %>
+	$("#business_region_text").html("<%= @business.region %>").show()
+<% else %>
+	$("#business_region_text").html("<%= @error %>").show()
+<% end %>
+$("#edit_business_region").hide();
+$("#change_business_region").show();
+

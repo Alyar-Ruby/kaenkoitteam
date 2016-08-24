@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <h3 id="myModalLabel">Approve Premium Request</h3>
+</div>
+
+<p style="display:none;" class="alert alert-success"></p>
+<%= simple_form_for([@premium_request]) do |f| %>
+<div class="row-fluid">
+  <div class="span8 offset2">
+    <p style="display:none;" class="alert alert-error"></p>
+    <%=f.input :status, :as=>"hidden" %>
+    <%=f.input :comments, :as=>"text", :input_html=>{:class=>"span12"}, :required=>"required" %>
+    <% if @premium_request.account.roleable_type == "Business" %>
+      <%= f.fields_for :business do |business| %>
+        <%=business.input :commission, :required=>"required" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="span5 offset5">
+    <%=f.submit "Submit", :class=>"btn btn-small btn-success" %>
+  </div>
+</div>
+<% end %>

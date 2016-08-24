@@ -1,0 +1,58 @@
+<div class="panel-heading">
+  <a href="#" class="go-mail-list"><i class="kk-close"></i></a>
+  <h2>
+    <i class="kk-chat-active larger"></i> 
+    <%= @latest_user.try(:user).try(:business_name) %> 
+  </h2>
+  <%=form_tag search_within_message_message_path(@conversation),
+     remote: true, method: :get do %>
+    <div class="input-group no-shadow pull-left" style="width:260px;">
+      <input type="text" name="query" class="form-control" placeholder="Search within the message">
+      <span class="input-group-btn" >
+        <button class="btn  btn-success" type="submit"><i class="kk-search"></i></button>
+      </span>
+    </div><!-- /input-group -->
+  <% end %>
+  <div class="input-group pull-left">
+    <%=link_to "#" , class: "btn btn-default-border", confirm: "Are you sure you want to delete permanently the History of this conversation? Yes/No" do %>
+      <i class="kk-trash"></i>
+    <% end %>
+    <%= link_to archive_message_path(@conversation), method: :post, remote:true, class: "btn btn-default-border" do %>
+      <i class="kk-files"></i>
+    <% end %>
+  </div>
+  <div class="clearfix"></div>
+</div>
+ 
+<div class="panel-body ">
+ <div class="messagecontent" style="overflow: hidden; width: auto; height: 460px;">
+      <!-- entry -->
+      <div class="ticket mail-body">
+         <%if @conversation_messages.size > 0 %>
+            <% @conversation_messages.each do |cnv_msg| %>
+              <% receipt_user = cnv_msg.account %>
+                <a href="">
+                  <div class="avatar pull-left <%= receipt_user.online_status == false ? 'avatar-offline' : '' %> ">
+                     <%= image_tag receipt_user.display_image, width:50, height: 50, class: "img-circle" %>
+                  </div>
+                  <div class="content ">
+                    <span>
+                      <i class="kk-clock"></i>
+                      <%= relative_time(cnv_msg.created_at) %>
+                    </span>
+                    <h2><%=(receipt_user.try(:id) == current_user.account.id) ? "#{current_user.business_name} (me)" : receipt_user.display_name %></h2>
+                    <p><%= cnv_msg.message.try(:html_safe) %></p>
+                  </div>
+                </a>
+              
+            <% end %>
+
+        <% else %>
+          <div class="ticket mail-body">
+            No search results.
+          </div>
+        <% end %>
+      </div>
+      <!-- END entry -->
+  </div>
+</div>

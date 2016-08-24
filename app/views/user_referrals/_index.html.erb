@@ -1,0 +1,24 @@
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+  <h3 id="myModalLabel">Invited Users</h3>
+</div>
+<br>
+<% if @invites.present? %>
+  <% @invites.each do |invite| %>
+  <div class="row-fluid">
+    <% u = User.find_by_email(invite.email) %>
+    <% if u.present? %>
+      <div class="span8 offset1"><%=link_to invite.email, view_profile_path(u.username) %></div>
+      <div class="span3">Joined</div>
+    <% else %>
+      <div class="span8 offset1"><%=invite.email%></div>
+      <div class="span3">Pending</div>
+    <% end %>
+  </div>
+  <% end %>
+<% else %>
+  <br>
+  <p class="alert alert-error">No Invitees Sent.</p>
+  <br>
+<% end %>
+<br>

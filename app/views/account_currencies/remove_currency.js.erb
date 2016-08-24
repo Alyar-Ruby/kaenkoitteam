@@ -1,0 +1,9 @@
+$(".ajax-loading").hide();
+$("#primary_currency_list").html("<%= escape_javascript( render 'primary_currency_list') %>")
+$("#currency_list").hide();
+$("#currency_text").show();
+$("#cancel_currency").hide();
+$(function() {
+  $.getScript("<%= show_currency_account_currencies_path %>")
+ })
+

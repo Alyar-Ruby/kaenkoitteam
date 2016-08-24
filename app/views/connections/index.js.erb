@@ -1,0 +1,9 @@
+$("#ajax-container").html("<%= j(render 'connections_common') %>")
+$(".ajax-loading").hide();
+$("[rel=popovernotif]").popover('hide');
+$(function() {
+	history.pushState(null, "", "<%= connections_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

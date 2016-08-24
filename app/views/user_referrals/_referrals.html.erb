@@ -1,0 +1,103 @@
+ 
+  
+
+<!-- DATA AREA TITLE -->
+<section class="withdraw main-container container-fluid">
+  <div class="row row-50-top">
+<div class="col-lg-12">
+      <div class="row">
+        <form action="">
+            <!-- CARD CONTENT -->
+              <article class="card col-lg-3 col-md-6 col-sm-12"> 
+                <div class="panel panel-default"> 
+                  <div class="panel-heading balance-heading">
+                    My Commissions<span class="label label-info">EUR (Primary)</span>
+                  </div> 
+                  <div class="panel-body "> 
+                    <div class="xbig-text text-center"><span id="total-referral">350.00 EUR</span>
+
+                    <br><a href="#" class="btn btn-lg btn-info btn-sm">Transfer to <b>My Balance</b></a>
+
+                  </div>
+                     
+                  </div> 
+                  </div> 
+              </article>
+          <!--END  CARD CONTENT -->   
+          <!-- CARD CONTENT -->
+          <article class="card col-lg-3 col-md-6 col-sm-12"> 
+            <div class="panel panel-default"> 
+                <div class="panel-heading balance-heading">
+                  My Referrals
+                </div> 
+                <div class="panel-body">
+                  <div class="xbig-text text-center"><span id="total-referral">89 Active</span>
+                    <br><small>1314 Total Invited</small>
+                  </div>
+                </div>
+
+            </div> 
+          </article>
+          <!--END CARD CONTENT -->
+            <!-- CARD CONTENT -->
+          <article class="card col-lg-3 col-md-6 col-sm-12"> 
+            <div class="panel panel-default"> 
+                <div class="panel-heading balance-heading">My Referral ID</div> 
+                <div class="panel-body">
+                  <div class="xbig-text text-center"><span id="total-referral">info@keanko.com</span>
+                    <br><%= link_to "Invite Friends", new_user_referral_path , remote: true,class: "btn btn-lg btn-default btn-sm", :'data-toggle' => "modal" , :'data-target' => "#modal-window" %>
+<a href="#" class="btn btn-lg btn-default btn-sm"><i class="fa fa-link"></i></a>
+                  </div>
+                </div>
+
+            </div> 
+          </article>
+          <!--END CARD CONTENT -->
+        </form>
+        </div>
+        <div class="row">
+            <!-- CARD TABLE -->
+          <article class="card card-table col-lg-9">
+            <div class="panel panel-default">
+                <div class="panel-heading panel-heading-without-i recent-heading">
+                  
+                    My Commisions <span class="label label-info">EUR (Primary)</span>
+                  
+                </div>
+                <div class="panel-body table-responsive">
+                  <table class="table table-hover">
+                      <thead class="">
+                        <tr>
+                          <td>
+                            Email
+                          </td>
+                         
+                          <td>
+                            Status
+                          </td>
+                          <td align="right">
+                            Current Earnings
+                          </td>
+                            <td align="right">
+                            Total Earned (3,214.12 EUR)
+                          </td>
+                          
+                        </tr>
+                      </thead>
+                      <tbody id="referral-list">
+                          <tr>
+                            <td colspan="4">
+                              No Referral Available.
+                            </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                </div>
+              </div>
+          </article>
+            <!-- END CARD TABLE -->
+        </div>
+    </div>
+  </div><!-- END row -->
+</section>
+

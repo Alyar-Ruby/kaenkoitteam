@@ -1,0 +1,14 @@
+development:
+  server: "http://localhost:9292/faye"
+  secret_token: "secret"
+server:
+  server: "http://development.kaenko.com/faye"
+  secret_token: "e5de27d49114c477059ab8f96914e34e6adeb483a848ac528f81fd8417419cd9"
+  signature_expiration: 3600 # one hour
+test:
+  server: "http://localhost:9292/faye"
+  secret_token: "secret"
+production:
+  server: "http://development.kaenko.com/faye"
+  secret_token: "e5de27d49114c477059ab8f96914e34e6adeb483a848ac528f81fd8417419cd9"
+  signature_expiration: 3600 # one hour

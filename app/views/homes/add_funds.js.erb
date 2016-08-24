@@ -1,0 +1,8 @@
+$("#ajax-container").html("<%= j(render 'add_funds_common') %>")
+$(".ajax-loading").hide()
+$(function() {
+	history.pushState(null, "", "<%= add_funds_path %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})

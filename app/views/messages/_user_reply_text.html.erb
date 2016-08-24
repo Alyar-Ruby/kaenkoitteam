@@ -1,0 +1,39 @@
+<style>
+p {
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -o-user-select: text;
+    user-select: text;
+  }
+</style>
+ 
+<li class= "content  other">
+  <div class="avatar">
+     <%= image_tag current_user.image.present? ? current_user.image_url(:profile) : "/assets/av2.png"%>
+  </div>
+  <div class="messages">
+    <p>
+      <%= simple_format(conv_msg.message.try(:html_safe)) %>
+      <%if conv_msg.message_images.present? %>
+        <% conv_msg.message_images.each do |attach| %>
+          <ul>
+           <li class="img" style="list-style-type: none;">
+            <%extension = attach.attachment.file.extension.downcase %>
+            <%if %w{jpg png jpg gif bmp}.include?(extension)%>
+              <%= image_tag attach.attachment_url(:profile) , width:50, height: 50 , class: "a_image"%>
+              <span data-src="<%= attach.attachment %>"></span>
+            <%else%>
+              <%=link_to attach.attachment.file.filename, download_attachment_message_path(attach.id), method: :post  %>
+            <% end %>
+            
+            </li>
+          </ul>
+        <% end %>
+      <% end %>
+        </p>
+        <time datetime="2009-11-13T20:14"><%=current_user.name %> • <%= relative_time(conv_msg.created_at) %></time>
+  </div>
+  <p></p>         
+</li>
+ 

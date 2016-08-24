@@ -1,0 +1,83 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+      <h4 class="modal-title" id="myModalLabel">Transaction overview</h4>
+    </div>
+    
+    <div class="modal-body">
+      <div id="error_msg_social"></div>
+       <div class="container-fluid">
+        <div class="row">
+          <p>
+          <%if @trans.present? %>
+            <%if @trans.transaction_type == "AddFund" %>
+            <% user =  User.where(id: @trans.transaction_from_id).first%>
+              <% if @trans.status == "Completed" %>
+                <strong> Transaction ID: # <%=@trans.transaction_id%>  COMPLETED</strong> <br>
+                <strong>Payment From : </strong> <%= user.try(:name) %> (Account ID: <%=user.account.account_number %>)<br>
+                <strong>Gross Received :</strong> <%= @trans.amount %> <%= @trans.kaenko_currency.unit %><br>
+                <strong> Net Credited : </strong> <%= @trans.amount %> <%= @trans.kaenko_currency.unit %><br>
+                <strong> Paid By: </strong>
+                 <% desposit = Deposit.where(transaction_id: @trans.id).first %>
+                 <%= desposit.roleable.card_type%> x- <%=desposit.roleable.card_number[-4..-1] %><br>
+                <strong>Contact Info: </strong> <%= user.try(:email) %><br>
+                <strong>For further info, check <%= user.try(:name) %> Profile</strong><br>
+
+                <br><br><br>
+                <strong>Recurring Pay-In? </strong> Yes ACTIVE<br>
+                <strong>Started: </strong> <br>
+                <strong>Periodicity: </strong> <br>
+                <strong>Debit From: </strong> <%= desposit.roleable.card_type%> x- <%=desposit.roleable.card_number[-4..-1] %> <br>
+                <strong>Gross Amount: </strong> <%= @trans.amount %> <%= @trans.kaenko_currency.unit %><br>
+                <strong>Net Amount: </strong> <%= @trans.amount %> <%= @trans.kaenko_currency.unit %><br>
+                <strong>Ending: </strong>  When Subscriber cancel it
+
+              <% elsif @trans.status == "Pending" %>  
+                <% deposit = Deposit.where(transaction_id: @trans.id).first %>
+                <strong> Transaction ID: # <%=@trans.transaction_id%>  PENDING </strong> <br>
+
+                <strong>Add Funds  From : </strong>  
+                <%if deposit.roleable_type == "Bank" %>
+                   <%= deposit.roleable.name%> x- <%=deposit.roleable.account_number[-4..-1] %><br>
+                  <strong>Contact Info: </strong> <%= user.try(:email) %><br>
+                  <strong> We must receive: </strong><%= @trans.amount %> (in <%= @trans.kaenko_currency.unit %>)<br>
+                  <strong>Total to be credited: </strong> <%= @trans.amount %>
+                   <br><br><br>
+
+                   <strong>Our Bank Info</strong> <br>
+                   <strong>Account Name: </strong> <br>
+                   <strong>IBAN: ES3434 3433 3433 34333</strong> <br>
+                   <strong>SWIFT/BIC*: DB34334</strong> <br>
+                   <strong>Country: <%= country_name() %></strong> <br>
+                   <strong>Memo: #<%= @trans.transaction_id %></strong> <br>
+                   You must send the funds from your Verified Bank Account.
+                <% else %>
+                    <%= deposit.roleable.card_type%> x- <%=deposit.roleable.card_number[-4..-1] %><br>
+                  <strong>Contact Info: </strong> <%= user.try(:email) %><br>
+                  <strong> We must receive: </strong><%= @trans.amount %> (in <%= @trans.kaenko_currency.unit %>)<br>
+                  <strong>Total to be credited: </strong> <%= @trans.amount %>
+                   <br><br><br>
+
+                   <strong>Card  Info</strong> <br>
+                   <strong>Card holder Name: </strong> <br>
+                   <strong>Card number: xxxx-xxxx-xxxxxx<%=deposit.roleable.card_number[-4..-1] %></strong> <br>
+                   <strong>Memo: #<%= @trans.transaction_id %></strong> <br>
+                <% end %>
+
+
+              <% end %>
+            <% end %>
+          <% end %>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+    </div>
+   
+  </div>
+</div>
+
+
+

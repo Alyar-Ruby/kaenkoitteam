@@ -1,0 +1,117 @@
+<div class="row-fluid">
+  <h3 style="display:none;" class="header smaller lighter blue">Referrals</h3>
+  <div class="table-header">
+    FeesRedemption
+  </div>	
+  <table id="table_report" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+      <!--
+        <th class="center">
+          <label>
+            <input type="checkbox" />
+            <span class="lbl"></span>
+          </label>
+        </th>
+        -->
+        <th class="hidden-phone">
+          	Payment Option
+        </th>
+        <th>Type</th>
+        <th>Currencies for Payout</th>
+        <th>Brute Fee</th>
+        <th>Total Fee</th>
+        <th>Our Margin</th>
+        <th>Limits</th>
+        <th>Provider</th>
+        <th>Timing</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @feesredemptions.each do |account, value| %>
+        
+        <!--
+          <td class="center">
+            <label>
+              <input type="checkbox" />
+              <span class="lbl"></span>
+            </label>
+          </td>
+         -->
+         <tr>
+		       <td colspan="9" style="background:orange;text-align:center;">
+		       	<%=account %>
+		       <td>
+         </tr>
+					<% value.each do |feesredemption|  %>
+					<tr>
+            <td>
+              <%= feesredemption.payment_option %>
+            </td>
+            <td><%= feesredemption.account_type %></td>
+            <td>
+              <%feesredemption.payout_currencies.each do |c|%>
+                <%= c.kaenko_currency.unit %>
+              <% end %>
+            </td>
+            <td><%= feesredemption.brute_fee_percent.present? ? "#{feesredemption.brute_fee_percent}% + USD #{feesredemption.brute_fee_value}" : "USD #{feesredemption.brute_fee_value}" %> </td>
+            <td><%= feesredemption.total_fee_percent.present? ? "#{feesredemption.total_fee_percent}% + USD #{feesredemption.total_fee_value}" : "USD #{feesredemption.total_fee_value}" %></td>
+            <td><%= number_with_precision(feesredemption.our_margin, :precision => 0 || 0) %> % </td>
+            <td><%= feesredemption.limits %></td>
+            <td><%= feesredemption.provider %></td>
+            <td><%= feesredemption.timings %></td>
+            <td class="td-actions">
+              <div class="inline position-relative">
+                <button data-toggle="dropdown" class="btn btn-minier btn-primary dropdown-toggle">
+                  <i class="icon-cog icon-only bigger-110"></i>
+                </button>
+
+                <ul class="dropdown-menu dropdown-icon-only dropdown-light pull-right dropdown-caret dropdown-close">
+                  <li>
+                    <a data-placement="left" title="" data-rel="tooltip" class="tooltip-success" href="<%= edit_fees_redemption_path(feesredemption) %>" data-original-title="Edit">
+                      <span class="green">
+                        <i class="icon-edit"></i>
+                      </span>
+                    </a>
+                  </li>
+                  
+                  <li>
+                    <a data-placement="left" title="" data-rel="tooltip" class="tooltip-error" href="<%= fees_redemption_path(feesredemption) %>" data-original-title="Delete" data-method = "delete", data-confirm = "Are you sure?">
+                      <span class="red">
+                        <i class="icon-trash"></i>
+                      </span>
+                    </a>
+                  </li> 
+                </ul>
+              </div>
+            </td> 
+          </tr>
+
+        <% end %>
+      <% end %>
+      
+    </tbody>
+  </table> 
+  <div class = "pull-right" style="padding-top:10px;">
+  	<%= link_to "New", new_fees_redemption_path, :class => 'btn btn-info' %>
+  </div>
+</div>
+
+<% content_for :style do %>
+		<link rel="stylesheet" href="/assets/admins/datepicker.css" />
+<% end %>
+<% content_for :script do %>
+  <script src="/assets/admins/jquery-ui-1.10.3.custom.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.min.js"></script>
+  <script src="/assets/admins/jquery.dataTables.bootstrap.js"></script>
+  <script src="/assets/admins/date-time/bootstrap-datepicker.min.js"></script>
+  <script>
+  	$(function() {
+  		$(".date-picker").datepicker();
+  	})
+  </script>
+<% end %>
+
+

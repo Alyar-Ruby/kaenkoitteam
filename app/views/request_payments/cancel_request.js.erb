@@ -1,0 +1,7 @@
+<%if @request_payment.errors.any? %>
+	$("#statusrequest_payment<%= @request_payment.id %>").html("Unable to process")
+<% else %>
+	$("#statusrequest_payment<%= @request_payment.id %>").html("<%= @request_payment.status %>")
+	$("#cancelrequest_payment<%= @request_payment.id %>").html("")
+<% end %>
+$(".ajax-loading").hide();

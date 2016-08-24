@@ -1,0 +1,24 @@
+<div class ="row-fluid">
+	<div class="span12" id="main_content">
+		<p>
+			<strong>Name:</strong>
+			<%= @circle.name %>
+		</p>
+
+		<strong>Users:</strong>
+		<ul>
+		<% @circle.users.each do |user| %>
+			<li><%= user.name %></li>
+		<% end %>
+		</ul>
+
+		<p>
+			<%= link_to "Edit", edit_circle_path(@circle) %> |
+			<%= link_to "Destroy", @circle, :confirm => 'Are you sure?', :method => :delete %> |
+			<%= link_to "View All", circles_path %> 
+		</p>
+	</div>
+	<div id="compose_email">
+		
+	</div>
+</div>

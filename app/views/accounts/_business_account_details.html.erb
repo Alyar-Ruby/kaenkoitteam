@@ -1,0 +1,88 @@
+<% business_account = current_user.account.roleable %>
+<article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading ">
+        <div class="dropdown">
+            Business Details
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="alert alert-warning fade in">
+            Your Business status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+        </div>
+        <div class="col-sm-6">
+          <p><strong>Organization Name:</strong> <%= business_account.organization_name %></p>
+          <p><strong>Registration Number:</strong> <%= business_account.registration_number %></p>
+          <p><strong>Legal Form:</strong> <%= business_account.legal_form %></p>
+            
+        </div>
+        <div class="col-sm-6">
+          <p><strong>Industry:</strong> <%= business_account.industry %></p>
+          <p><strong>Date of Incorporation:</strong> <%= business_account.date_of_incorporation %></p>
+          <p><strong>Organization URL:</strong> <a href="<%= business_account.organization_url %>" > <%= business_account.organization_url %></a></p></p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+<div>
+  <article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading ">
+        <div class="dropdown">
+            Business Details
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="alert alert-warning fade in">
+            Your Business status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+        </div>
+        <div class="col-sm-6">
+          <p><strong>Organization Name:</strong> <%= business_account.organization_name %></p>
+          <p><strong>Registration Number:</strong> <%= business_account.registration_number %></p>
+          <p><strong>Legal Form:</strong> <%= business_account.legal_form %></p>
+            
+        </div>
+        <div class="col-sm-6">
+          <p><strong>Industry:</strong> <%= business_account.industry %></p>
+          <p><strong>Date of Incorporation:</strong> <%= business_account.date_of_incorporation %></p>
+          <p><strong>Organization URL:</strong> <a href="<%= business_account.organization_url %>" > <%= business_account.organization_url %></a></p></p>
+        </div>
+      </div>
+    </div>
+  </article>
+
+</div>
+
+<div class="row">
+  <!-- CARD -->
+<article class="card col-sm-9 col-md-9 col-lg-9 col-xs-12">
+  <div class="panel panel-default">
+      <div class="panel-heading ">
+          <div class="dropdown">
+              Registered Address
+          </div>
+      </div>
+      <div class="panel-body">
+          <div class="alert alert-warning fade in">
+              Your Registered Address status is <strong>Not Verified</strong>. <a href="#" class="btn btn-xs btn-default" data-toggle="modal" data-target="#verifyID">Verify Now</a>
+          </div>
+
+          <div class="col-sm-6">
+              <p><strong>Country:</strong> <%= country_name(current_user.country) %></p>
+              <p><strong>Postal Code:</strong> <%= current_user.postal_code %> </p>
+              <p><strong>City:</strong> <%= current_user.city %></p>
+              
+          </div>
+          <div class="col-sm-6">
+              <p><strong>Address:</strong> <%= current_user.address %></p>
+              <p><strong>Primary Phone Number:</strong> <%= current_user.phone %></p>
+          </div>
+          <% if current_user.account.roleable_type == "Business" and current_user.account_admin == true %>
+              <%= link_to "Edit", 
+            edit_address_business_path(current_user.account.roleable_id) , 
+            class: "btn btn-sm btn-default", remote: true, 'data-target' => "#modal-window", 'data-toggle' => "modal"  %>
+          <% end %>
+      </div>
+  </div>
+</article>

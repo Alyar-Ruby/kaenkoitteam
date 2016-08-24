@@ -1,0 +1,9 @@
+<% if @account.verified == true %>
+  $("#account_status").html("Verified")
+  $("#header_account_status").html('Account Status : <a href="<%= account_setting_path %>"><strong> Verified </strong><i class="kk-ok"></i></a>')
+<% else %>
+	$("#status").html("<span class='label label-danger'>Not Verified</span>  
+	  <%= link_to 'Verify Now', verified_path, method: :post, 
+	  class: 'btn btn-sm btn-default', remote: true %>")
+<% end %>
+$(".ajax-loading").hide();

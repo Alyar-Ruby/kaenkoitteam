@@ -1,0 +1,204 @@
+<style>
+  .messages/*.contenteditable?*/ {
+    -webkit-touch-callout:default;
+    -webkit-user-select:text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+  }
+</style>
+<ul style="margin-bottom:0;">
+    
+    <li class="no-hover message-bodywork">
+    <div id="messagecontent" class="messagecontent">
+        <!-- entry -->
+        <div class="ticket mail-body">
+            <ol class="discussion">
+              <% @conversation_messages.each do |cnv_msg| %>
+                <% receipt_user = cnv_msg.user %>
+
+                  <li class= "<%=(receipt_user.try(:id) == current_user.id) ? 'content self' : 'content other' %>">
+                    <div class="avatar <%= receipt_user.online_status == false ? 'avatar-offline' : '' %> ">
+                       <%= image_tag receipt_user.image.present? ? receipt_user.image_url(:profile) : '/assets/av2.png' %>
+                    </div>
+                    <div class="messages">
+                      <p>
+                        <%= simple_format(cnv_msg.message.try(:html_safe), {}, sanitize: false) %>
+                        <%if cnv_msg.message_images.present? %>
+                          <% cnv_msg.message_images.each do |attach| %>
+                            <ul>
+                             <li class="img" style="list-style-type: none;">
+                              <%extension = attach.attachment.file.extension.downcase %>
+                              <%if %w{jpg png jpg gif bmp}.include?(extension)%>
+                                <%= image_tag attach.attachment_url(:profile) , width:50, height: 50 , class: "a_image"%>
+                                <span data-src="<%= attach.attachment %>"></span>
+                              <%else%>
+                                <%=link_to attach.attachment.file.filename, download_attachment_message_path(attach.id), method: :post  %>
+                              <% end %>
+                              
+                              </li>
+                            </ul>
+                          <% end %>
+                        <% end %>
+                       </p>
+                        <time datetime="2009-11-13T20:14"><%=(receipt_user.try(:id) == current_user.id) ? "#{current_user.name} (me)" : receipt_user.name %> • <%= relative_time(cnv_msg.created_at) %></time>
+                      
+                      </div>
+                  </li>
+                  <p></p>
+              <% end %>
+            </ol>
+        </div>
+        <!-- END entry -->
+    </div>
+    </li>
+    
+    <li class="message-send" >
+        <%= form_tag reply_message_path(@conversation.id), remote: true , id: "reply_form" do %>
+      <%= file_field_tag :'attachment_pic[]', id: "attachment_pic", style: 'display: none;', accept: "image/*", multiple: true %>
+      <%= file_field_tag :'file_attachment[]', id: "file_attachment", style: 'display: none;',  multiple: true %>
+      
+      <%= text_area_tag  "body", "", name: "body", class: "form-control" , rows: "6" , style: "resize:none;" , id: "msg_body", placeholder: "Write a reply..." %>
+      <div class="input-group bottom-control">
+        <button class="btn btn-default-border" type="button" id="any_attachment"><i class="kk-attach"></i>Attach File</button>
+        <button class="btn btn-default-border" type="button" id="attach_image"><i class="kk-money-send"></i>Send Money</button>
+        <input type="checkbox" id="press_enter"> Press Enter to send
+        <%= submit_tag "Reply", class: "btn-send btn btn-primary btn-sm" , type: "button" , id: "btn_send" %>
+        
+      </div>
+    <% end %>
+    </li>
+</ul>
+
+<div class="panel-heading" style="display:none;">
+    <a href="#" class="go-mail-list"><i class="kk-close"></i></a>
+    <h2>
+        <i class="kk-chat-active larger"></i> 
+        <%if @latest_user.size >= 2 %>
+        <% s = 1 %>
+          <%@latest_user.each do |k, v| %>
+            <%= "#{Account.find_by_id(k).try(:display_name)} " %> <%= ", " if s < @latest_user.size %>
+            <% s = s + 1%>
+          <% end %>
+        <% else %>
+          <% other_user = ConversationUser.where("conversation_id = ? and account_id <> ?", @conversation.id, current_user.account.id).first %>
+          <%= other_user.try(:account).try(:display_name) %>
+        <% end %>
+    </h2>
+    <%=form_tag search_within_message_message_path(@conversation), remote: true, method: :get do %>
+      <div class="input-group no-shadow pull-left" style="width:260px;">
+        <%=text_field_tag :query , params[:query], class:"form-control" , placeholder: "Search within the message" %>
+        <span class="input-group-btn" >
+          <button class="btn  btn-success" type="submit"><i class="kk-search"></i></button>
+        </span>
+      </div><!-- /input-group -->
+    <% end %>
+    <div class="input-group pull-left">
+      <%=link_to trash_message_path(@conversation) , method: :post, remote: true, class: "btn btn-default-border", confirm: "Are you sure you want to delete this conversation?" do %>
+        <i class="kk-trash"></i>
+      <% end %>
+      <%= link_to archive_message_path(@conversation), method: :post, remote:true, class: "btn btn-default-border" do %>
+        <i class="kk-files"></i>
+      <% end %>
+      <%= link_to export_conversation_message_path(@conversation, format: "pdf"), method: :post,  
+       class: "btn btn-default-border"  do %>
+        save
+      <% end %>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+   
+<script>
+//$('#messagecontent').slimScroll({scrollTo : $('#messagecontent').prop('scrollHeight') })
+jQuery(document).ready(function($) {
+    $('#messagecontent').slimScroll({
+        height: '400px',
+        alwaysVisible: true
+    });
+    $('#messagecontent').slimScroll({scrollTo : $('#messagecontent').prop('scrollHeight') })
+    $("#conversation<%=@conversation.id%>").addClass("ticket-active")
+});
+</script>
+<%=javascript_tag do %>
+  $(function() {
+    $("#msg_body").focus();
+
+    $('#msg_body').keydown(function(event) {
+      if (event.keyCode == 13 && $("#press_enter").is(":checked") == true) {
+       event.preventDefault();
+       validate_image();
+      }
+      
+    }).focus(function(){
+      if(this.value == "Write a reply..."){
+        this.value = "";
+      }
+    })
+    
+    //========== attachment================
+    $("#attach_image").on("click", function() {
+      $("#attachment_pic").click();
+    });    
+
+    $("#attachment_pic").change(function() {
+      $("#msg_body").focus();
+    })
+
+    $("#btn_send").click(function() {
+      validate_image();
+    })
+
+    $('.a_image').on('click',function(){
+      var src = $(this).next().data('src');
+      var img = '<img src="' + src + '" class="img-responsive"/>';
+
+      $('#modal-window').html("<div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button><h4 class='modal-title'>&nbsp;</h4></div><div class='modal-body'>"+img+"</div></div></div> ");
+
+      $('#modal-window').modal();
+      $('#modal-window').on('hidden.bs.modal', function(){
+          $('#modal-window .modal-body').html('');
+      });
+    });  
+
+    //=============image attachment=============
+    $("#any_attachment").on("click", function() {
+      $("#file_attachment").click();
+    });    
+    $("#file_attachment").change(function() {
+      $("#msg_body").focus();
+    });
+
+
+  })
+
+  function validate_image() {
+    fileName = $("#attachment_pic").val();
+    if(fileName.length > 0) {
+
+        if (!(/\.(gif|jpg|jpeg|tiff|png)$/i).test(fileName)) {              
+          alert('Sorry!! You must select an image file only');               
+          return
+        }
+        else {
+          $("#reply_form").submit();
+        }
+      }
+      else {
+        $("#reply_form").submit();
+      }
+      $("#msg_body").val("")
+
+      $("#msg_body").focus();
+      return false;
+  }
+
+  function accept_solution(tid, did) {
+    $.getScript("/transactions/"+tid+"/disputes/"+did+"/modify_solution")
+
+  }
+
+  function modify_solution(tid, did) {
+    $.getScript("/transactions/"+tid+"/disputes/"+did+"/accept_solution")
+  }
+
+<% end %>

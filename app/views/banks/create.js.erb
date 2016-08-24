@@ -1,0 +1,9 @@
+<%if @bank.errors.present? %>
+	$(".alert-warning").html("<%= @errors.join("") %>")
+  $(".alert-warning").show()
+<% else %>
+	$('#modal-window').modal('toggle');
+	$(".alert-warning").hide();
+	$("#bank-list").html("<%= escape_javascript(render 'banks') %>");
+<% end %>
+$(".ajax-loading").hide();

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Kaenko (Client panel) - Locally Global</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        
+    </head>
+    
+        <!--[if lt IE 7]>
+        <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>   
+        <![endif]-->
+<header class="main ">
+  <nav class="navbar navbar-fixed-top nav-top" role="navigation">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="logo-warper">
+          <div class="pull-left">
+            <a class="open-menu" href="#" title="open-menu">
+              <i class="kk-thumb-list"></i>
+            </a>
+              <h1>
+                <%= link_to  root_path, remote: true, 
+                class: "ir #{current_user.account.roleable_type.downcase}"  do %>
+                Kaenko <%=current_user.account.roleable_type%>
+                <% end %>
+              </h1>
+          </div>
+          <div class="account-status" id="header_account_status">
+          <%if current_user.present? && current_user.account.verified == true %>
+            Account Status : 
+            <%= link_to account_setting_path, remote: true do %>
+              <strong> Verified </strong><i class="kk-ok"></i>
+            <% end %>
+          <% else %>
+            <%= link_to account_setting_path , remote: true, title: "Your Accont is NOT VERIFIED. Go to your settings to complete Verification." ,  :'data-toggle' => "tooltip" , 
+              :'data-placement' => "bottom"  do %>
+                Account Status : 
+                <strong>Not Verified </strong><i class="kk-close"></i>
+            <% end %>
+          <% end %> 
+          </div>
+        </div>
+          <!-- FORM SEARCH -->
+          <form action="<%= advance_search_users_path %>">
+            <div class="input-group no-shadow">
+              <!--<input type="text" class="form-control" placeholder="Search for Contacts and Merchants" id="user">-->
+              <%#= autocomplete_field_tag 'user-list', '', autocomplete_user_email_messages_path ,  class: "form-control", placeholder: "Search for Contacts and Merchants" , id: "user_list_auto"%>
+              <span class="input-group-btn">
+                      <span>
+                        <i class="fa fa-search"></i>  
+                    </span>
+              </span>
+                <input id="search_contact" class="form-control" placeholder="Search for Contacts and Merchants" >
+              
+            </div><!-- /input-group -->
+            <div id="divResult" style="overflow:auto;">
+			
+            </div>
+          </form>
+          <ul class="notification pull-right" role="menu" aria-labelledby="dLabel">
+          	<li class="<%=(@current_top_menu == "referrals") ? 'active' : ''%>">
+                <%= link_to referrals_path, remote: true, title: "My Referrals", 
+                  :'data-toggle' => "tooltip", style: "color:white;" , :'data-remote' => true, :'data-placement' => "bottom", class: "top_menu"  do %>
+                  	<i class="kk-user-like larger <%=(@current_top_menu == "referrals") ? 'active' : ''%>"></i>
+                <% end %>
+            </li>
+            <li class="<%=(@current_top_menu == "social") ? 'active' : ''%>">
+                <%= link_to social_user_path(current_user.account.id), title: "My Social Page", 
+                  :'data-toggle' => "tooltip" , :'data-remote' => true, :'data-placement' => "bottom" , class: "top_menu" do %>
+                  <i class="kk-user-group <%=(@current_top_menu == "social") ? 'active' : ''%>"></i>
+                <% end %>
+            </li>
+            <li class="<%=(@current_top_menu == "message") ? 'active' : ''%>">
+              <% @messages = current_user.conversation_users.unread_message.group("conversation_id").count %>
+
+              
+              <%= link_to "javascript:void(0)",  id: "msg_circle" , rel: "popovermsg" , class: "top_menu" do %>
+                <% if @messages.size > 0  %> 
+                    <span class="badge pull-right" id="message_circle_size"> <%= @messages.size %></span>
+                  <% end %>
+                  <i class="kk-message <%=(@current_top_menu == "message") ? 'active' : ''%>"></i>
+              <% end %>
+            </li>
+            <li class="<%=(@current_top_menu == "chat") ? 'active' : ''%>">
+              <%= link_to "javascript:void(0)", title: "Live Chat" , 
+                :'data-toggle' => "tooltip" , :'data-placement' => "bottom" , class: "top_menu open-chat" do %>
+                  <i  class="kk-chat-group <%=(@current_top_menu == "chat") ? 'active' : ''%>"></i>
+              <% end %>
+            </li>
+            <li class="notification-parent <%=(@current_top_menu == "notification") ? 'active' : ''%>">
+              <%= link_to "javascript:void(0)", id: "notification_circle", rel: "popovernotif" , class: "top_menu" do %>
+                  <%= notification_count().html_safe%>
+                  <i class="kk-bell <%=(@current_top_menu == "notification") ? 'active' : ''%>"></i>
+              <% end %>
+            </li>
+            <%if current_user.present? %>
+              <li>
+                <a href="<%= destroy_user_session_path %>" , data-method = "delete" title="Log Out" data-toggle="tooltip" data-placement="bottom"  class = "top_menu"><i class="kk-shutdown"></i></a>
+              </li>
+            <% else %>
+            	<li>
+              <a href="<%= new_user_session_path %>" ,  title="Log Off" data-toggle=" tooltip" data-placement="bottom"  class = "top_menu"><i class="kk-shutdown"></i></a>
+              </li>
+            <% end %>
+          </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+<%if current_user.present? %>
+  <script>
+    window.setInterval(function(){
+      $.getScript("<%= unread_message_messages_path %>") 
+      $.getScript("<%= unread_notification_kaenko_notifications_path %>")
+      }, 5000
+    );
+  </script>
+<% end %>
+<script>
+   //  $("#user-list").tokenInput("/search_users.json", {
+	  // 	propertyToSearch : "email",
+	  //   crossDomain: false,
+	  //   prePopulate: $("#user_email").data("load"),
+	  //   theme: "facebook",
+	  //   preventDuplicates: false,
+	  //   tokenValue: "email",
+   //    tokenLimit: 1,
+   //    placeholder: 'Place holder text...',
+   //    onAdd: function (item){
+   //      if(typeof item.social === 'undefined')
+   //      {}  
+   //      else
+   //      {  window.location.href = item.social; }
+   //    },
+   //  	onResult: function (item) {
+   //      if($.isEmptyObject(item)){
+   //            return [{id:'0', email: $("tester").text()}]
+   //      }else{
+   //            return item
+   //      }
+   //  },
+
+	  // });
+  $(function() {
+    $('#user_list_auto').bind('railsAutocomplete.select', function(event, data){
+      window.location.href = "/users/"+data.item.id+"/social"
+    });
+    $( "#user_list_auto" ).autocomplete({ html: true });
+    $( "#user-list" ).autocomplete({ html: true });
+  })
+  
+</script>
+<script>
+  $(function() {
+    function log( message ) {
+      $( "<div>" ).text( message ).prependTo( "#log" );
+      $( "#log" ).scrollTop( 0 );
+    }
+    $( "#search_contact" ).autocomplete({
+      source: "<%#=autocomplete_user_email_messages_path%>",
+      minLength: 2,
+      select: function( event, ui ) {
+        window.location.href = "/users/"+ui.item.id+"/social"
+      }
+    }).data( "ui-autocomplete" )._renderItem = function( ul, item ) {
+      return $( "<li>" )
+      .append( "<a>" + item.label + "</a>" )
+      .appendTo( ul );
+    };
+  });
+</script>
+
+<script>
+  $(function(){
+    $("#search_contact").keyup(function() { 
+      var inputSearch = $(this).val();
+      var dataString = 'searchword='+ inputSearch;
+      if(inputSearch!='' && inputSearch.length >= 2){
+        $.ajax({
+          type: "POST",
+          url: "<%= autocomplete_user_users_path %>",
+          data: dataString,
+          cache: false,
+          success: function(html)
+          {
+            $("#divResult").html(html).show();
+          }
+        });
+      } else {
+        $("#divResult").html('');
+      }
+      return false;    
+    });
+	
+    $("#divResult").on("click",function(e){ 
+      var $clicked = $(e.target);
+      var $name = $clicked.find('.name').html();
+      $('#search_contact').val('');
+      $("#divResult").fadeOut(); 
+    });
+    $(document).on("click", function(e) { 
+        var $clicked = $(e.target);
+        if (! $clicked.hasClass("search")){
+          $("#divResult").fadeOut(); 
+        }
+    });
+    $('#search_contact').click(function(){
+      //$("#divResult").fadeIn();
+    });
+  });
+
+</script>
+<script>
+  $(function() {
+    $('.top_menu').click(function() {
+      $("i.active").removeClass("active");
+      $("li.active").removeClass("active");
+      $(this).parent().addClass("active")
+      $(this).parent().find("i").addClass("active")
+    })
+  })
+</script>
+
+<div class="modal fade" id="timeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Time Zone</h3></div>
+        <div class="modal-body" id="time_message">
+          
+        </div>
+        <div class="modal-footer">
+          <a href="<%= update_popup_time_zone_account_path(current_user.account, :active => "yes") %>" class="btn btn-default-border confirm" data-remote="true">Yes</a>
+          <a href="<%= update_popup_time_zone_account_path(current_user.account, :active => "no") %>" data-remote = "true" aria-hidden="true" class="btn btn-default-border">No</a>
+        </div>
+      </div>
+    </div>
+</div>
+<%= javascript_tag do %>
+  <%if current_user._account_type == "Personal" && (current_user.account.time_zone != browser_timezone) && session[:time_zone] != "cancel" %>
+    $(function() {
+      $("#time_message").html("<p>We detected you are on a different time zone"+" "+"<b><%= time_zone_diff %></b>"+" "+". Do you want to adapt your new time zone to your Account?</p>")
+      $("#timeModal").modal('show');
+    })
+  <% end %>
+<% end %>
+
+
+
+
+
+
+
+

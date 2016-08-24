@@ -1,0 +1,17 @@
+<% if @error.present? %>
+	$("#message_error").html("<%= @error %>").show();
+<% else %>
+	$("#ajax-container").html("<%= escape_javascript( render 'inbox' ) %>")
+	<% @recipients.each do |recipient| %>
+		<% publish_to "/messages/private/#{recipient.id}" do%>
+			$("#ajax-container").html("<%= escape_javascript( render 'inbox' ) %>")	
+		<% end %>
+	<% end %>
+	$(function() {
+		history.pushState(null, "", "<%= message_path(@conversation.id) %>")
+		$(window).bind("popstate", function(){
+	    $.getScript(location.href)
+	  })
+	})
+<% end %>
+$(".ajax-loading").hide();

@@ -1,0 +1,299 @@
+<!-- DATA AREA TITLE -->
+<%= render 'dashboard_header' %>
+<section class="main-container container-fluid">
+  
+  <div class="row">
+    <div class="col-lg-12">
+      
+      <div style="padding-top:40px;">
+        <!--CONTENT -->
+        <div id="everything">
+          
+          <div class="row">
+            <!-- CARD -->
+            <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12 card-active" id="expected_pay_ins" style="cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Click here for more info">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                  <span class="label label-info">April 2014</span>
+                    <div class="dropdown">
+                    
+                    Expected Pay-Ins
+                    
+                  </div>
+                </div>
+                <div class="panel-body big-text text-center">
+                  + 99.69 USD<br>
+                  <small>Available</small>
+                </div>
+              </div>
+            </article>
+            <!-- END CARD -->
+              <!-- CARD -->
+            <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12 " id="expected_pay_outs" style="cursor:pointer" data-toggle="tooltip" data-placement="bottom" title="Click here for more info">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                  <span class="label label-info">April 2014</span>
+                    <div class="dropdown">
+                    
+                    Expected Pay-Outs
+                    
+                  </div>
+                </div>
+                <div class="panel-body big-text text-center">
+                  - 99.69 USD<br>
+                  <small>Available</small>
+                </div>
+              </div>
+            </article>
+            <!-- END CARD -->
+            <!-- CARD -->
+            <article class="card col-sm-6 col-md-4 col-lg-3 col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading balance-heading">
+                  <span class="label label-info">Mastercard</span>
+                    <div class="dropdown">
+                    
+                    <!--i class="kk-wallet light"></i-->Default Card<br>
+                    
+                  </div>
+                </div>
+                <div class="panel-body text-center panel-def-card">
+                    <img src="/assets/ico/mastercard_32.png">
+                    <span class="card-def">MasterCard X-3560</span>
+                  <a href="#" class="btn btn-success btn-sm" style="position: relative;margin-top: 11px;">Change card</a>
+                </div>
+              </div>
+            </article>
+            <!-- END CARD -->
+            
+          </div>
+          <!-- row -->
+          <div class="row">
+            <!-- CARD TABLE -->
+            <article class="card card-table col-lg-9">
+              <div class="panel panel-default">
+                <div class="panel-heading recent-heading">
+                    <span class="label label-info">USD</span>
+                  <div class="dropdown">
+                    <!--i class="kk-trophy light"></i-->&nbsp;<span id="payment_title"><strong>Expected Pay-Ins </strong></span>
+                    <a href="#" class="pull-right dropdown-toggle" data-toggle="dropdown"><i class="kk-settings "></i></a>
+                    <ul class="dropdown-menu">
+                      <li>
+                                <a href="#">All Currencies</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/US.png"> USD</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/EU.png"> EUR</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/CA.png"> CAD</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/PL.png"> PLN</a>
+                            </li>
+                            <li>
+                                <a href="#"><img src="/assets/flag/BR.png"> BRL</a>
+                            </li>
+                    </ul>
+                  </div>
+
+                </div>
+
+                <div class="panel-body table-responsive" id="payment_table_common">
+                  <table class="table table-hover">
+                    <thead class="">
+                      <tr>
+                        <td>
+                          Date
+                        </td>
+                        <td>
+                          From 
+                        </td>
+                        <td>
+                          Product Ref#
+                        </td>
+                        <td>
+                          Subscriber
+                        </td>
+                          <td>
+                          Status
+                          </td>
+                          <td>
+                          Gross Amount
+                          </td>
+                          <td>
+                          Net Amount
+                          </td>
+                          <td>
+                          &nbsp;
+                          </td>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          1 April
+                        </td>
+                        <td>    
+                          zara.com
+                        </td>
+                        <td>
+                          34323243
+                        </td>
+                        <td>
+                          melaniemartins@kaenko.com
+                        </td>
+                          <td>
+                          <span class="label label-success">Active</span>
+                          </td>
+                          <td>
+                          USD $59.00
+                          </td>
+                          <td>
+                          USD $56.00
+                          </td>
+                          <td>
+                          i+
+                          </td>
+                        </tr>
+                        <tr>
+                        <td>
+                          1 April
+                        </td>
+                        <td>    
+                          zara.com
+                        </td>
+                        <td>
+                          34323243
+                        </td>
+                        <td>
+                          melaniemartins@kaenko.com
+                        </td>
+                          <td>
+                          <span class="label label-success">Active</span>
+                          </td>
+                          <td>
+                          USD $59.00
+                          </td>
+                          <td>
+                          USD $56.00
+                          </td>
+                          <td>
+                          i+
+                          </td>
+                        </tr>
+                        <tr>
+                        <td>
+                          1 April
+                        </td>
+                        <td>    
+                          zara.com
+                        </td>
+                        <td>
+                          34323243
+                        </td>
+                        <td>
+                          luismendes@kaenko.com
+                        </td>
+                          <td>
+                          <span class="label label-success">Active</span>
+                          </td>
+                          <td>
+                          USD $59.00
+                          </td>
+                          <td>
+                          USD $56.00
+                          </td>
+                          <td>
+                          i+
+                          </td>
+                        </tr>
+                        <tr>
+                        <td>
+                          1 April
+                        </td>
+                        <td>    
+                          zara.com
+                        </td>
+                        <td>
+                          34323243
+                        </td>
+                        <td>
+                          diogonovo@kaenko.com
+                        </td>
+                          <td>
+                          <span class="label label-success">Active</span>
+                          </td>
+                          <td>
+                          USD $59.00
+                          </td>
+                          <td>
+                          USD $56.00
+                          </td>
+                          <td>
+                          i+
+                          </td>
+                        </tr>
+                        <tr>
+                        <td>
+                          1 April
+                        </td>
+                        <td>    
+                          zara.com
+                        </td>
+                        <td>
+                          34323243
+                        </td>
+                        <td>
+                          karlmalota@kaenko.com
+                        </td>
+                          <td>
+                          <span class="label label-success">Active</span>
+                          </td>
+                          <td>
+                          USD $59.00
+                          </td>
+                          <td>
+                          USD $56.00
+                          </td>
+                          <td>
+                          i+
+                          </td>
+                        </tr>
+            
+          </tbody>
+        </table>
+      </div>
+      <div class="panel-footer">
+        <a href="#" class="btn btn-primary btn-sm">
+          Show All Subscribers
+        </a>
+      </div>
+    </div>
+  </article>
+  <!-- END CARD TABLE -->
+</div>
+<!-- END row -->
+</div>
+<!-- END CONTENT -->
+
+
+
+</div>
+</div><!-- END col-lg-12 -->       
+</div><!-- END row -->
+</section>
+<%=javascript_tag do %>
+  $("#expected_pay_outs").click(function(){
+    $(this).addClass("card-active");
+    $("#expected_pay_ins").removeClass("card-active") 
+    $.getScript("<%= expected_pay_outs_payments_path %>")
+  })
+   $("#expected_pay_ins").click(function(){
+    $.getScript("<%= dashboard_payment_path %>")
+  })
+<% end %>
+

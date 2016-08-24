@@ -1,0 +1,8 @@
+$("#message_detail").html("<%= j (render 'search_within_message_result') %>")
+$(".ajax-loading").hide()
+$(function() {
+	history.pushState(null, "", "<%= search_within_message_message_path(@conversation, :query => params[:query]) %>")
+	$(window).bind("popstate", function(){
+    $.getScript(location.href)
+  })
+})
